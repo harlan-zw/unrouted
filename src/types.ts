@@ -9,6 +9,7 @@ export type UnroutedPlugin = (router: UnroutedRouter) => void
 export type Hook = `serve:before-route:${string|''}`|'serve:before-route'
 
 export interface UnroutedResolvedConfig {
+  debug: boolean
   cors: boolean
   handle404: boolean
   plugins: UnroutedPlugin[]

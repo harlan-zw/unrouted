@@ -23,7 +23,7 @@
     "lint": "eslint --fix --ext ts .",
     "profile": "0x -o -D .profile -P 'autocannon -c 100 -p 10 -d 40 http://localhost:$PORT' ./hello.js",
     "release": "yarn test && yarn build && standard-version && npm publish && git push --follow-tags",
-    "test": "yarn lint && jest"
+    "test": "jest"
   },
   "dependencies": {
     "defu": "^5.0.0",
@@ -61,6 +61,7 @@
     "jiti": "1.12.9",
     "koa": "^2.13.4",
     "listhen": "0.2.5",
+    "release-it": "^14.11.8",
     "siroc": "latest",
     "standard-version": "9.3.2",
     "supertest": "latest",
