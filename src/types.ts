@@ -1,27 +1,25 @@
 import { IncomingMessage, ServerResponse } from 'http'
-import type { AppOptions, Handle, Middleware } from 'h3'
+import type { Handle, Middleware } from 'h3'
 import { Hookable } from 'hookable'
 import { HTTPMethod } from 'h3'
 import { RouteMethod } from './plugins'
 
 export type UnroutedPlugin = (router: UnroutedRouter) => void
 
-export type Hook = `serve:before-route:/${string|''}`
-
-export interface UnroutedUserConfig extends AppOptions {
-  cors?: boolean
-  middleware?: Middleware[]|Handle[]
-  plugins?: UnroutedPlugin[]
-  prefix?: string
-  hooks?: Record<Hook, () => Promise<void>|void>
-}
+export type Hook = `serve:before-route:${string|''}`|'serve:before-route'
 
 export interface UnroutedResolvedConfig {
   cors: boolean
+  handle404: boolean
   plugins: UnroutedPlugin[]
   middleware: Middleware[]|Handle[]
   prefix: string
+  hooks: Record<Hook, () => Promise<void>|void>
 }
+
+export type DeepPartial<T> = T extends Function ? T : (T extends object ? { [P in keyof T]?: DeepPartial<T[P]>; } : T)
+
+export type UnroutedUserConfig = DeepPartial<UnroutedResolvedConfig>
 
 export interface UnroutedRouter {
   config: UnroutedResolvedConfig

@@ -12,6 +12,7 @@ export const serve: UnroutedPlugin = (router) => {
     const handle = promisifyHandle((req: AbstractIncomingMessage, res: ServerResponse) => {
       // we need to strip the path from the req.url for sirv to work
       req.url = withTrailingSlash(req.url?.replace(path, '') || '/')
+      router.hooks.callHook('serve:before-route')
       router.hooks.callHook(`serve:before-route:${req.url}`)
 
       sirv(dirname, {

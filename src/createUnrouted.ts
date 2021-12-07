@@ -27,6 +27,8 @@ export function createUnrouted(config = {} as UnroutedUserConfig): UnroutedRoute
     cors: true,
     prefix: '/',
     middleware: [],
+    hooks: [],
+    handle404: false,
   }) as UnroutedResolvedConfig
 
   if (resolvedConfig.cors)
@@ -116,7 +118,7 @@ export function createUnrouted(config = {} as UnroutedUserConfig): UnroutedRoute
     }
 
     // no routes to run
-    if (!handlingRoutes.length)
+    if (!handlingRoutes.length && config.handle404)
       return sendError(res, createError({ statusCode: 404 }))
 
     // eslint-disable-next-line no-restricted-syntax
