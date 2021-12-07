@@ -1,6 +1,6 @@
 {
   "name": "unrouted",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Expressive Universal Router",
   "repository": "harlan-zw/unrouted",
   "license": "MIT",
