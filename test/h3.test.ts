@@ -4,7 +4,11 @@ import createApi from './fixtures/api/myApi'
 import * as assertions from './assertions'
 
 describe('h3 provider', () => {
-  const app = createH3App()
+  const app = createH3App({
+    onError() {
+      // do nothing
+    },
+  })
 
   const api = createApi({ debug: true })
   const request: SuperTest<Test> = supertest(app)

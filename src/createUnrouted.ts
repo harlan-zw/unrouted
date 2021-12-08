@@ -127,8 +127,11 @@ export function createUnrouted(config = {} as UnroutedUserConfig): UnroutedRoute
       if (!h || res.writableEnded)
         return false
 
+      const hasBody = ['PATCH', 'POST', 'PUT', 'DELETE'].includes(method)
+
       getParamContext.set(h.params, true)
-      getBodyContext.set(await useBodyH3(req), true)
+      if (hasBody)
+        getBodyContext.set(await useBodyH3(req), true)
 
       // good to execute
       const val = await h.handle(req, res)

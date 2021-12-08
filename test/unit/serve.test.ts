@@ -4,7 +4,11 @@ import simpleServeApi from '../fixtures/api/simpleServeApi'
 import { serve } from '../assertions'
 
 describe('config test', () => {
-  const app = createH3App()
+  const app = createH3App({
+    onError() {
+      // do nothing
+    },
+  })
 
   const api = simpleServeApi()
   const request: SuperTest<Test> = supertest(app)
