@@ -62,7 +62,7 @@ export interface UnroutedContext {
   handle: HandleFn
   routes: Route[]
   methodStack: Record<HttpMethod, (RadixRouter<Route>|null)>
-  logger: Consola
+  logger: Consola | Console
   hooks: UnroutedHookable
   setup: (fn: () => void) => Promise<void>
 }

@@ -1,4 +1,5 @@
 import type { ServerResponse } from 'http'
+import { URL } from 'url'
 import { createContext } from 'unctx'
 import { MIMES, promisifyHandle, send, useBody as useBodyH3, useMethod } from 'h3'
 import { createHooks } from 'hookable'
@@ -27,7 +28,7 @@ export const useUnrouted = unroutedCtx.use
 export async function createUnrouted(config = {} as ConfigPartial): Promise<UnroutedContext> {
   const resolvedConfig = await resolveConfig(config)
 
-  const logger = createLogger(resolvedConfig.name, resolvedConfig.debug)
+  const logger = await createLogger(resolvedConfig.name, resolvedConfig.debug)
 
   // contains references to the stack
   const methodStack: Record<HttpMethod, (RadixRouter<Route>|null)> = {

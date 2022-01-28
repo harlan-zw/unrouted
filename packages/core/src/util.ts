@@ -7,12 +7,12 @@ import { useUnrouted } from './unrouted'
 /**
  * All route paths have a leading slash and no trailing slash.
  */
-export const fixSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
+const fixSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
 
 /**
  * Create a normalised route from numerous inputs.
  */
-export const normaliseRoute: NormaliseRouteFn = (method, path, handle, options?) => {
+const normaliseRoute: NormaliseRouteFn = (method, path, handle, options?) => {
   const { prefix } = useUnrouted()!
   // ensure consistency, apply prefix, this could be from a group or something
   path = withBase(fixSlashes(path), prefix)
