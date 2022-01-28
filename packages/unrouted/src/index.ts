@@ -11,4 +11,5 @@ export function createUnrouted(config: Partial<PresetUnroutedOptions> = {}) {
   })
 }
 
+export * from '@unrouted/core'
 export * from '@unrouted/preset-unrouted'
