@@ -26,8 +26,8 @@ Status: <b>Public Beta 🎉</b><br>
 - 🤝 **Portable** Run it on any HTTP server with any middleware - connect, express, Koa, etc. Powered by [h3](https://github.com/unjs/h3) utilities
 - 🌳 **Speedy Routing** [radix3](https://github.com/unjs/radix3) routing, supporting named params (`/user/:id`, `/user/{id}` and wildcards (`/user/*`)
 - 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled and composable utility for [sirv](/)
-- 🧩 **Composable** Built beautiful simple APIs with composable utilities `get`, `post` `put`, `del`, `redirect`, `group` etc
-- 🇹 **Generates Types** Create automatic types for your routes paths (payloads coming soon)
+- 🧩 **Composable utils** `get`, `post` `put`, `del`, `redirect`, `group` etc
+- 🇹 **Generates Types** Automatic types for route paths _(payloads coming soon)_
 - ✅ **Built to Test** Testing utility package provided: `@unrouted/test-kit`
 - 🐱 **Built to Hack** [hookable hooks](/), preset and plugin system.
 
@@ -153,7 +153,6 @@ boot().then(() => {
 })
 ```
 </details>
-<br>
 <details>
  <summary>Using <a href="https://github.com/senchalabs/connect">connect</a>.</summary>
 
@@ -193,7 +192,6 @@ boot().then(() => {
 })
 ```
 </details>
-<br>
 <details>
  <summary>Using <a href="https://github.com/expressjs/express">express</a>.</summary>
 
@@ -233,7 +231,6 @@ boot().then(() => {
 })
 ```
 </details>
-<br>
 <details>
  <summary>Using <a href="https://github.com/koajs/koa">koa</a>.</summary>
 
@@ -402,6 +399,13 @@ export default async (options : ConfigPartial = {}) => {
 ```
 </details>
 
+
+## Guides
+
+### Generating types
+
+### Using test-kit
+
 ## API
 
 ### Creating routes
@@ -540,15 +544,6 @@ Specify the location of a config file.
 
   - **Type:** `UnroutedHooks`
   - **Default:** `{}`
-
-
-## Guides
-
-### Generating types
-
-### Using test-kit
-
-
 
 ## Sponsors
 
