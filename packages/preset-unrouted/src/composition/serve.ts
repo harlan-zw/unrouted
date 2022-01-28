@@ -14,7 +14,7 @@ declare module '@unrouted/core' {
   }
 }
 
-interface ServeArguments {
+export interface ServeArguments {
   path: string
   dirname: string
   sirvOptions?: Options
