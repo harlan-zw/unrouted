@@ -32,8 +32,14 @@ npm install unrouted
 yarn add unrouted
 ```
 
-@todo
+## Sponsors
+
+<p align="center">
+  <a href="https://cdn.jsdelivr.net/gh/harlan-zw/static/sponsors.svg">
+    <img src='https://cdn.jsdelivr.net/gh/harlan-zw/static/sponsors.svg'/>
+  </a>
+</p>
 
 ## License
 
-MIT
+MIT License © 2022 [Harlan Wilton](https://github.com/harlan-zw)
