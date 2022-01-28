@@ -1,16 +1,18 @@
-import supertest, { SuperTest, Test } from 'supertest'
+import type { SuperTest, Test } from 'supertest'
+import supertest from 'supertest'
 import { createApp as createH3App } from 'h3'
 import simpleServeApi from '../fixtures/api/simpleServeApi'
 import { serve } from '../assertions'
+import { describe, expect, it } from 'vitest'
 
-describe('config test', () => {
+describe('serve static test', async() => {
   const app = createH3App({
     onError() {
       // do nothing
     },
   })
 
-  const api = simpleServeApi()
+  const api = await simpleServeApi()
   const request: SuperTest<Test> = supertest(app)
 
   app.use(api)
@@ -20,5 +22,5 @@ describe('config test', () => {
     expect(subApiResponse.ok).toBeTruthy()
   })
 
-  serve(request)
+  await serve(request)
 })

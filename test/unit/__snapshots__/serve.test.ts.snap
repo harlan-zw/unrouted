@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`config test serving static works 1`] = `
+exports[`serve static test > serving static works 1`] = `
 "<html>
 <head>
     <meta charset=\\"UTF-8\\">

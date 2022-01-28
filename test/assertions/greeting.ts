@@ -1,6 +1,9 @@
-import { SuperTest, Test } from 'supertest'
+import type { Test } from 'supertest'
+import { expect, it } from 'vitest'
+import type { RouteFns } from '@unrouted/test-kit'
+import type { RequestPathSchema } from '../../api-routes'
 
-export function greeting(request: SuperTest<Test>) {
+export function greeting(request: RouteFns<RequestPathSchema, Test>) {
   it('simple GET greeting work', async() => {
     const res = await request.get('/greeting')
 

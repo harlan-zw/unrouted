@@ -1,6 +1,6 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
+// Vitest Snapshot v1
 
-exports[`h3 provider serving static works 1`] = `
+exports[`h3 provider > serving static works 1`] = `
 "<html>
 <head>
     <meta charset=\\"UTF-8\\">

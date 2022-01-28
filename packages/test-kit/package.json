@@ -1,0 +1,40 @@
+{
+  "name": "@unrouted/test-kit",
+  "version": "0.1.2",
+  "homepage": "https://github.com/harlan-zw/unrouted#readme",
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harlan-zw/unlighthouse.git",
+    "directory": "packages/test-kit"
+  },
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "sideEffects": false,
+  "type": "module",
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    },
+    "./*": "./*"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "@types/supertest": "latest",
+    "supertest": "^6.2.2"
+  }
+}

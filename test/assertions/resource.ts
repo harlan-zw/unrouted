@@ -1,4 +1,7 @@
-import { SuperTest, Test } from 'supertest'
+import type { Test } from 'supertest'
+import { expect, it } from 'vitest'
+import type { RouteFns } from '@unrouted/test-kit'
+import type { RequestPathSchema } from '../../api-routes'
 
 const base = '/blog/articles'
 
@@ -13,7 +16,7 @@ const createArticles = [
   },
 ]
 
-export function resource(request: SuperTest<Test>) {
+export function resource(request: RouteFns<RequestPathSchema, Test>) {
   it('can create 2 articles', async() => {
     let article = createArticles[0]
     let res = await request.post(base).send(article)

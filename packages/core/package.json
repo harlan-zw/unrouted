@@ -1,0 +1,45 @@
+{
+  "name": "@unrouted/core",
+  "version": "0.1.2",
+  "homepage": "https://github.com/harlan-zw/unrouted#readme",
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harlan-zw/unlighthouse.git",
+    "directory": "packages/core"
+  },
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "sideEffects": false,
+  "type": "module",
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    },
+    "./*": "./*"
+  },
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "defu": "^5.0.1",
+    "h3": "^0.3.9",
+    "hookable": "^5.1.1",
+    "radix3": "^0.1.0",
+    "ufo": "^0.7.9",
+    "unconfig": "^0.2.2",
+    "unctx": "^1.0.2"
+  }
+}

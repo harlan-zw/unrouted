@@ -1,4 +1,5 @@
-import { SuperTest, Test } from 'supertest'
+import type { SuperTest, Test } from 'supertest'
+import { expect, it } from 'vitest'
 
 export function cors(request: SuperTest<Test>) {
   it('shows cors headers on get', async() => {

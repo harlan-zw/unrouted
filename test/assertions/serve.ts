@@ -1,6 +1,9 @@
-import { SuperTest, Test } from 'supertest'
+import type { Test } from 'supertest'
+import { expect, it } from 'vitest'
+import type { RouteFns } from '@unrouted/test-kit'
+import type { RequestPathSchema } from '../../api-routes'
 
-export async function serve(request: SuperTest<Test>) {
+export async function serve(request: RouteFns<RequestPathSchema, Test>) {
   const path = '/static'
   it('serving static works', async() => {
     const indexHtml = await request.get(path)
