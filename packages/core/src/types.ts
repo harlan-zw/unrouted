@@ -57,6 +57,8 @@ export type RegisterRouteFn = (method: HttpMethodInput, urlPattern: string, hand
 
 export type ConfigPartial = DeepPartial<ResolvedConfig>
 
+export type MethodStack = PartialRecord<HttpMethod, RadixRouter<Route>|null>
+
 export interface UnroutedContext {
   /**
    * Runtime configuration for the current prefix path.
@@ -78,7 +80,7 @@ export interface UnroutedContext {
   /**
    * The routes grouped by method, this is internally used by the handle function for quicker lookups.
    */
-  methodStack: Record<HttpMethod, (RadixRouter<Route>|null)>
+  methodStack: MethodStack
   /**
    * The logger instance. Will be Consola if available, otherwise console.
    */
@@ -96,6 +98,10 @@ export interface UnroutedContext {
 
 export type HttpMethod = HTTPMethod | '*'
 export type HttpMethodInput = HttpMethod | HttpMethod[]
+
+export type PartialRecord<K extends keyof any, T> = {
+  [P in K]?: T;
+}
 
 export interface AbstractIncomingMessage extends IncomingMessage {
   protocol?: string
