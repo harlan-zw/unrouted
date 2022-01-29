@@ -9,7 +9,7 @@ import type {
   AbstractIncomingMessage,
   ConfigPartial,
   HandleFn,
-  HttpMethod,
+  HttpMethod, Nullable,
   Route,
   UnroutedContext,
   UnroutedHooks,
@@ -28,7 +28,7 @@ export const useUnrouted = unroutedCtx.use as () => UnroutedContext
 const paramCtx = createContext()
 const bodyCtx = createContext()
 export const useParams: <T>() => T = paramCtx.use
-export const useBody: <T>() => T = bodyCtx.use
+export const useBody: <T>() => Nullable<T> = bodyCtx.use
 
 export async function createUnrouted(config = {} as ConfigPartial): Promise<UnroutedContext> {
   const resolvedConfig = await resolveConfig(config)

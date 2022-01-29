@@ -4,6 +4,8 @@ import type { Hookable } from 'hookable'
 import type { RadixRouter } from 'radix3'
 import type { Consola } from 'consola'
 
+export type Nullable<T> = { [K in keyof T]: T[K] | null }
+
 export type HookResult<T = void> = Promise<T> | T
 
 export interface UnroutedHooks {
