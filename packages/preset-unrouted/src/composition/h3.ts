@@ -16,13 +16,16 @@ import {
   useRawBody as h3UseRawBody,
 } from 'h3'
 import { useRequest, useResponse, useUnrouted } from '@unrouted/core'
+import type { QueryObject } from 'ufo'
+
+type Nullable<T> = { [K in keyof T]: T[K] | undefined }
 
 export function useRawBody(encoding?: false | 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'latin1' | 'binary' | 'hex') {
   return h3UseRawBody(useRequest(), encoding)
 }
 
-export function useQuery() {
-  return h3UseQuery(useRequest())
+export function useQuery<T extends QueryObject>() {
+  return h3UseQuery(useRequest()) as Nullable<T>
 }
 
 export function useMethod(defaultMethod?: HTTPMethod) {
