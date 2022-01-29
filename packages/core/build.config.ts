@@ -10,6 +10,5 @@ export default defineBuildConfig({
     { input: 'src/index' },
   ],
   externals: [
-    'consola',
   ],
 })

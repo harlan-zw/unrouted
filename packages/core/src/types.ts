@@ -84,7 +84,7 @@ export interface UnroutedContext {
   /**
    * The logger instance. Will be Consola if available, otherwise console.
    */
-  logger: Consola | Console
+  logger: Consola
   /**
    * The hookable instance, allows hooking into core functionality.
    */
