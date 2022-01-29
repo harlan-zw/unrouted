@@ -1,4 +1,4 @@
-export const createLogger = async(key: string, debug = false) => {
+export const createLogger = async(key = 'unrouted', debug = false) => {
   try {
     const consola = (await import('consola')).default
     const logger = consola.withScope(key)
