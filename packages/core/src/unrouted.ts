@@ -5,7 +5,7 @@ import { MIMES, promisifyHandle, send, useBody as useBodyH3, useMethod } from 'h
 import { createHooks } from 'hookable'
 import type { MatchedRoute, RadixRouter } from 'radix3'
 import { createRouter } from 'radix3'
-import { setStatusCode } from '@unrouted/preset-unrouted'
+import { withoutTrailingSlash } from 'ufo'
 import type {
   AbstractIncomingMessage,
   ConfigPartial,
@@ -49,7 +49,7 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
 
   const innerHandle = async(req: AbstractIncomingMessage, res: ServerResponse) => {
     req.originalUrl = req.originalUrl || req.url || '/'
-    const requestPath = new URL(req.url || '/', `${req.protocol || 'http'}://${req.headers.host}`).pathname
+    const requestPath = withoutTrailingSlash(new URL(req.url || '/', `${req.protocol || 'http'}://${req.headers.host}`).pathname)
 
     for (const middleware of resolvedConfig.middleware) {
       await (middleware.length > 2 ? promisifyHandle(middleware) : middleware)(req, res,
