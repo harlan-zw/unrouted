@@ -13,7 +13,7 @@ const fixSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
  * Create a normalised route from numerous inputs.
  */
 const normaliseRoute: NormaliseRouteFn = (method, path, handle, options?) => {
-  const { prefix } = useUnrouted()!
+  const { prefix } = useUnrouted()
   // ensure consistency, apply prefix, this could be from a group or something
   path = withBase(fixSlashes(path), prefix)
   if (handle.length > 2)
@@ -36,6 +36,11 @@ const normaliseRoute: NormaliseRouteFn = (method, path, handle, options?) => {
  */
 export const registerRoute: RegisterRouteFn = (method, path, handle, options?) => {
   const route = normaliseRoute(method, path, handle, options)
-  const ctx = useUnrouted()!
-  ctx.routes.push(route)
+  const { routes, logger } = useUnrouted()
+  if (routes.map(r => r.path).includes(path)) {
+    logger.debug('Skipping duplicate route registration')
+    return
+  }
+  logger.debug(`Registering route \`${method}\` \`${route.path}\`.`)
+  routes.push(route)
 }
