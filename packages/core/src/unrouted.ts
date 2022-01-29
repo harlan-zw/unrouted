@@ -5,6 +5,7 @@ import { MIMES, promisifyHandle, send, useBody as useBodyH3, useMethod } from 'h
 import { createHooks } from 'hookable'
 import type { MatchedRoute, RadixRouter } from 'radix3'
 import { createRouter } from 'radix3'
+import { setStatusCode } from '@unrouted/preset-unrouted'
 import type {
   AbstractIncomingMessage,
   ConfigPartial,
@@ -16,7 +17,6 @@ import type {
 } from './types'
 import { createLogger } from './logger'
 import { resolveConfig } from './config'
-import {setStatusCode} from "@unrouted/preset-unrouted";
 
 const requestCtx = createContext<AbstractIncomingMessage>()
 const responseCtx = createContext<ServerResponse>()
