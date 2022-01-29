@@ -66,7 +66,7 @@ To get your API setup, you need to make use of two functions: [setup](#context) 
 3. Create your routes using `setup` and composable functions.
 
 ```ts
-import { createUnrouted, get, post } from 'unrouted'
+import { createUnrouted, get, post, useBody } from 'unrouted'
 // ...
 async function createApi() {
   // ctx is the unrouted context  
@@ -76,7 +76,7 @@ async function createApi() {
   
   await setup(() => {
     // example api routes
-    get('/hello-world', 'api is working')
+    get('/ping', 'ok')
     
     post('/contact', () => {
       const { email } = useBody<{ email: string }>()
@@ -275,6 +275,57 @@ boot().then(() => {
 ```
 </details>
 
+## Guides
+
+### Writing your API
+
+#### Composables
+
+- `get(path: string, res)` - GET route
+- `post(path: string, res)` - POST route
+- `put(path: string, res)` - PUT route
+- `del(path: string, res)` - DELETE route
+- `head(path: string, res)` - HEAD route
+- `options(path: string, res)` - OPTIONS route
+- `any(path: string, res)` - Matches any HTTP method
+- `group(prefix: string, () => void)` - Allows you to group composables under a specific prefix
+- `match(method: string, path: string, res)` - Matches a specific HTTP method, useful for dynamic method matching
+- `permanentRedirect(path: string, toPath: string)` - Performs a permanent redirect
+- `redirect(path: string, toPath: string, statusCode: number = 302)` - Performs a temproary redirect by default, you can change the status code
+- `serve(path: string, dirname: string, sirvOptions: Options = {})` - Serve static content using [sirv](https://github.com/lukeed/sirv)
+
+For each function which uses res, you can return the following as a primitive or as an async / sync function which returns a primitive:
+
+- `string|boolean` - Will be assumed an HTML response and set the content-type to text/html
+- `number` - Will be assumed a status code
+- `object` - Will be assumed a JSON response and set the content-type to application/json
+
+```ts
+// text/html -> 'api is working' - 200
+get('/hello-world', 'api is working')
+
+// application/json -> { success: true, time: 1245456789 } - 200
+post('/time', () => {
+  return {
+    success: true,
+    time: new Date().toTimeString(),
+  }
+})
+
+get('/secret-zone', async () => {
+  const authenticated = await authenticate()
+  
+  if (!authenticated) {
+      return 401
+  }
+  
+  return {
+    success: true,
+    message: 'Welcome to the secret zone!',
+  }
+})
+```
+
 ### Full API Examples
 
 <details>
@@ -433,65 +484,6 @@ export default async (options : ConfigPartial = {}) => {
 ```
 </details>
 
-
-## Guides
-
-### Writing your API
-
-#### Composables
-
-The following composable functions are available out-of-the-box when building your API.
-
-- `get(path: string, res)` - GET route
-- `post(path: string, res)` - POST route
-- `put(path: string, res)` - PUT route
-- `del(path: string, res)` - DELETE route
-- `head(path: string, res)` - HEAD route
-- `options(path: string, res)` - OPTIONS route
-- `any(path: string, res)` - Matches any HTTP method
-- `group(prefix: string, () => void)` - Allows you to group composables under a specific prefix
-- `match(method: string, path: string, res)` - Matches a specific HTTP method, useful for dynamic method matching
-- `permanentRedirect(path: string, toPath: string)` - Performs a permanent redirect
-- `redirect(path: string, toPath: string, statusCode: number = 302)` - Performs a temproary redirect by default, you can change the status code
-- `serve(path: string, dirname: string, sirvOptions: Options = {})` - Serve static content using [sirv](https://github.com/lukeed/sirv)
-
-If you'd like to create your own composable utility functions,
-you can use the low-level `registerRoute` or use the existing composable functions.
-
-**Examples**
-
-Using `registerRoute` we create a new composable function to deny certain paths.
-
-```ts
-export const deny = (route: string) => {
-  registerRoute('*', route, () => {
-    setStatusCode(400)
-    return {
-      success: false,
-      error: 'you\'re not allowed here'
-    }
-  })
-}
-
-// ...
-deny('/private-zone/**')
-```
-
-We can build on top of existing composable functions to create more complex utilities.
-
-```ts
-export const resource = (route: string, factory) => {
-  get(route, factory.getAll)
-  group(`${route}/:id`, () => {
-    get('/', factory.getResource)
-    post('/', factory.saveResource)
-    del('/', factory.deleteResource)
-  })
-}
-//...
-resource('/posts', factory)
-```
-
 #### Setup
 
 Use of the `setup` function is optional.
@@ -561,6 +553,47 @@ See the [h3 docs](https://www.jsdocs.io/package/h3#package-functions) for more d
 - `setStatusCode(statusCode: number)` - Sets the status code of the response
 - `sendError(error: Error | H3Error)` - Sends an error response
 - `appendHeader(name: string, value: string)` - Appends a header to the response
+
+
+### Extending composables
+
+If you'd like to create your own composable utility functions,
+you can use the low-level `registerRoute` or use the existing composable functions.
+
+**Examples**
+
+Using `registerRoute` we create a new composable function to deny certain paths.
+
+```ts
+export const deny = (route: string) => {
+  registerRoute('*', route, () => {
+    setStatusCode(400)
+    return {
+      success: false,
+      error: 'you\'re not allowed here'
+    }
+  })
+}
+
+// ...
+deny('/private-zone/**')
+```
+
+We can build on top of existing composable functions to create more complex utilities.
+
+```ts
+export const resource = (route: string, factory) => {
+  get(route, factory.getAll)
+  group(`${route}/:id`, () => {
+    get('/', factory.getResource)
+    post('/', factory.saveResource)
+    del('/', factory.deleteResource)
+  })
+}
+//...
+resource('/posts', factory)
+```
+
 
 ### Using test-kit with auto-completion
 

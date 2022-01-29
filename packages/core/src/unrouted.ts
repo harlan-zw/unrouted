@@ -16,6 +16,7 @@ import type {
 } from './types'
 import { createLogger } from './logger'
 import { resolveConfig } from './config'
+import {setStatusCode} from "@unrouted/preset-unrouted";
 
 const requestCtx = createContext<AbstractIncomingMessage>()
 const responseCtx = createContext<ServerResponse>()
@@ -127,7 +128,12 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
 
       logger.debug(`Matched path has returned type \`${type}\`: ${method} \`${r.path}\``)
       await hooks.callHook('request:payload', { req, route: r, payload: val })
-      if (type === 'boolean') {
+      if (type === 'number' && val <= 500 && val > 200) {
+        setStatusCode(val)
+        mime = MIMES.html
+        payload = ''
+      }
+      else if (type === 'boolean') {
         payload = val.toString()
         mime = MIMES.html
       }
