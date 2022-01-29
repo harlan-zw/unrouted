@@ -3,7 +3,7 @@ import { registerRoute } from '@unrouted/core'
 
 type HttpMethod = HTTPMethod | '*'
 type HttpMethodInput = HttpMethod | HttpMethod[]
-type MatchFn = (methods: HttpMethodInput, route: string, action: Function | string | object) => void
+type MatchFn = (methods: HttpMethodInput, route: string, action: (() => (string|object|number|void)|Promise<string|object|number|void>) | string|object|number) => void
 type RouteMethod = (route: string, handle: Handle|string|object) => void
 
 const match: MatchFn = (methods, route, handle) => {
