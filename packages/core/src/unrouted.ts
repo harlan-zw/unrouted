@@ -32,22 +32,15 @@ export const useParams: <T>() => T = paramCtx.use
 export const useBody: <T>() => Nullable<T> = bodyCtx.use
 
 export async function createUnrouted(config = {} as ConfigPartial): Promise<UnroutedContext> {
+  const existingCtx = unroutedCtx.use()
+  if (existingCtx) {
+    existingCtx.logger.debug('Not creating new unrouted instance, we already have an instance.')
+    return existingCtx
+  }
+
   const resolvedConfig = await resolveConfig(config)
 
   const logger = await createLogger(resolvedConfig.name, resolvedConfig.debug)
-
-  // contains references to the stack
-  const methodStack: Record<HttpMethod, (RadixRouter<Route>|null)> = {
-    '*': null,
-    'GET': null,
-    'HEAD': null,
-    'POST': null,
-    'PUT': null,
-    'DELETE': null,
-    'CONNECT': null,
-    'OPTIONS': null,
-    'TRACE': null,
-  }
 
   // setup hooks
   const hooks = createHooks<UnroutedHooks>()
@@ -65,6 +58,8 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
       if (res.writableEnded)
         return false
     }
+
+    const { methodStack } = useUnrouted()
 
     const method = useMethod(req)
     logger.debug(`Handling request: ${method} \`${requestPath}\``)
@@ -171,16 +166,20 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     handle,
     hooks,
     logger,
-    methodStack,
+    methodStack: {},
     config: resolvedConfig,
     routes: [],
     prefix: resolvedConfig.prefix,
   }
 
   ctx.setup = async(fn) => {
+    // clear old routes
+    ctx.methodStack = {}
+    ctx.routes = []
     await ctx.hooks.callHook('setup:before', ctx)
     await unroutedCtx.call(ctx, fn)
     await ctx.hooks.callHook('setup:routes', ctx.routes)
+    logger.debug(`Setting up ${ctx.routes.length} routes.`)
     ctx.routes.forEach((route) => {
       // register them with our radix3 router
       route.method.forEach((m) => {
