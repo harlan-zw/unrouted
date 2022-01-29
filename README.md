@@ -728,6 +728,50 @@ Specify the location of a config file.
   - **Type:** `UnroutedHooks`
   - **Default:** `{}`
 
+## Types
+
+### Unrouted Context
+
+```ts
+
+export interface UnroutedContext {
+  /**
+   * Runtime configuration for the current prefix path.
+   */
+  prefix: string
+  /**
+   * Resolved configuration.
+   */
+  config: ResolvedConfig
+  /**
+   * Function used to handle a request for the Unrouted instance.
+   * This should be passed to a server such as h3, connect, express, koa, etc.
+   */
+  handle: HandleFn
+  /**
+   * A flat copy of the normalised routes being used.
+   */
+  routes: Route[]
+  /**
+   * The routes grouped by method, this is internally used by the handle function for quicker lookups.
+   */
+  methodStack: Record<HttpMethod, (RadixRouter<Route>|null)>
+  /**
+   * The logger instance. Will be Consola if available, otherwise console.
+   */
+  logger: Consola | Console
+  /**
+   * The hookable instance, allows hooking into core functionality.
+   */
+  hooks: UnroutedHookable
+  /**
+   * Composable setup function for declaring routes.
+   * @param fn
+   */
+  setup: (fn: () => void) => Promise<void>
+}
+```
+
 ## Sponsors
 
 <p align="center">
