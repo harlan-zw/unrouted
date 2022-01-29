@@ -11,5 +11,14 @@ export const createLogger = async(key = 'unrouted', debug = false) => {
   catch (e) {
     // no consola available, use console
   }
-  return console
+  if (debug)
+    return console
+
+  // fake logger
+  return {
+    debug() {},
+    success() {},
+    log() {},
+    trace() {},
+  }
 }
