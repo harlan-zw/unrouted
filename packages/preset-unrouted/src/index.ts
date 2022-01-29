@@ -26,7 +26,7 @@ const presetUnrouted = defineUnroutedPreset<PresetUnroutedOptions>({
     corsOptions: {},
   },
   setup(ctx, options) {
-    if (options.generateTypes)
+    if (options.generateTypes && ctx.config.dev)
       ctx.config.plugins.push(generateTypes())
     if (options.laravelNamedParams)
       ctx.config.plugins.push(laravelNamedParams())

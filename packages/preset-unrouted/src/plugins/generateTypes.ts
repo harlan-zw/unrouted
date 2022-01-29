@@ -1,3 +1,4 @@
+import { join } from 'path'
 import type { HttpMethod, Route } from '@unrouted/core'
 import { defineUnroutedPlugin } from '@unrouted/core'
 import { outputFile } from 'fs-extra'
@@ -65,7 +66,7 @@ export default defineUnroutedPlugin({
         types += `  ${m}: ${typeName}\n`
       }
       types += '}\n'
-      await outputFile(`${config.name}-routes.d.ts`, types, { encoding: 'utf-8' })
+      await outputFile(join(config.root, `${config.name ? `${config.name}-` : ''}routes.d.ts`), types, { encoding: 'utf-8' })
     })
 
     // Payload types @todo re-implement
