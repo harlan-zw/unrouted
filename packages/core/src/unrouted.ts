@@ -17,13 +17,18 @@ import type {
 import { createLogger } from './logger'
 import { resolveConfig } from './config'
 
-const paramCtx = createContext()
-const bodyCtx = createContext()
+const requestCtx = createContext<AbstractIncomingMessage>()
+const responseCtx = createContext<ServerResponse>()
 const unroutedCtx = createContext<UnroutedContext>()
 
+export const useRequest = requestCtx.use as () => AbstractIncomingMessage
+export const useResponse = responseCtx.use as () => ServerResponse
+export const useUnrouted = unroutedCtx.use as () => UnroutedContext
+
+const paramCtx = createContext()
+const bodyCtx = createContext()
 export const useParams: <T>() => T = paramCtx.use
 export const useBody: <T>() => T = bodyCtx.use
-export const useUnrouted = unroutedCtx.use
 
 export async function createUnrouted(config = {} as ConfigPartial): Promise<UnroutedContext> {
   const resolvedConfig = await resolveConfig(config)
@@ -101,8 +106,10 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
       if (hasBody)
         bodyCtx.set(await useBodyH3(req), true)
 
-      // good to execute
       const val = await r.handle(req, res)
+
+      if (!val)
+        continue
 
       // clean up
       paramCtx.unset()
@@ -144,7 +151,11 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
       res = req.res
       req = req.req
     }
+    responseCtx.set(res, true)
+    requestCtx.set(req, true)
     await promisifyHandle(innerHandle)(req, res)
+    responseCtx.unset()
+    requestCtx.unset()
     if (next)
       next()
   }

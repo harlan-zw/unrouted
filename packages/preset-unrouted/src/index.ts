@@ -37,18 +37,4 @@ const presetUnrouted = defineUnroutedPreset<PresetUnroutedOptions>({
 })
 
 export * from './composition'
-export {
-  appendHeader,
-  assertMethod,
-  createError,
-  isMethod,
-  sendError,
-  sendRedirect,
-  setCookie,
-  useCookie,
-  useCookies,
-  useMethod,
-  useQuery,
-  useRawBody,
-} from 'h3'
 export { presetUnrouted }
