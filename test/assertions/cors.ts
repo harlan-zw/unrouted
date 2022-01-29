@@ -1,7 +1,8 @@
-import type { SuperTest, Test } from 'supertest'
 import { expect, it } from 'vitest'
+import type { RequestTester } from '@unrouted/test-kit'
+import type { RequestPathSchema } from '../fixtures/api/__routes__/api-routes'
 
-export function cors(request: SuperTest<Test>) {
+export function cors(request: RequestTester<RequestPathSchema>) {
   it('shows cors headers on get', async() => {
     const res = await request.get('/greeting')
     expect(res.headers['access-control-allow-origin']).toEqual('*')

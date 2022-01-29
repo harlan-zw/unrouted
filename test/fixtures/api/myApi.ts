@@ -12,7 +12,10 @@ let articles : Article[] = []
 export default async (options : ConfigPartial = {}) => {
   const { setup, handle } = await createUnrouted({
     name: 'api',
+    dev: true,
     prefix: options.prefix ?? undefined,
+    generateTypes: true,
+    root: join(__dirname, '__routes__')
   })
 
   await setup(() => {
@@ -30,12 +33,12 @@ export default async (options : ConfigPartial = {}) => {
     get('/greeting', 'Hello :)')
 
     // named parameters
-    get('/greeting/:name', (req) => {
+    get('/greeting/:name', () => {
       const params = useParams<{ name: string }>()
       const args = {
         greeting: 'Hello',
         smiley: ':)',
-        ...useQuery(req)
+        ...useQuery()
       }
       const {greeting, smiley} = args
       return `${greeting} ${params.name} ${smiley}`

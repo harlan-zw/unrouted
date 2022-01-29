@@ -1,9 +1,8 @@
-import type { SuperTest, Test } from 'supertest'
 import { expect, it } from 'vitest'
-import type { RouteFns } from '@unrouted/test-kit'
-import type { RequestPathSchema } from '../../api-routes'
+import type { RequestTester } from '@unrouted/test-kit'
+import {RequestPathSchema} from "../fixtures/api/__routes__/api-routes";
 
-export async function groups(request: RouteFns<RequestPathSchema, Test>) {
+export async function groups(request: RequestTester<RequestPathSchema>) {
   it('', async() => {
     const res = await request.post('/names')
       .set('Accept', 'application/json')

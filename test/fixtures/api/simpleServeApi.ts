@@ -4,7 +4,10 @@ import {get, serve} from "unrouted";
 
 const simpleServeApi = async () => {
   const { handle, setup } = await createUnrouted({
-    name: 'simpleServeApi'
+    name: 'simpleServeApi',
+    dev: true,
+    generateTypes: true,
+    root: join(__dirname, '__routes__')
   })
 
   await setup(() => {

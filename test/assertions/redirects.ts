@@ -1,9 +1,8 @@
-import type { SuperTest, Test } from 'supertest'
 import { expect, it } from 'vitest'
-import type { RouteFns } from '@unrouted/test-kit'
-import type { RequestPathSchema } from '../../api-routes'
+import type { RequestTester } from '@unrouted/test-kit'
+import {RequestPathSchema} from "../fixtures/api/__routes__/api-routes";
 
-export async function redirects(request: RouteFns<RequestPathSchema, Test>) {
+export async function redirects(request: RequestTester<RequestPathSchema>) {
   it('temporary redirect works', async() => {
     const redirect = await request.get('/old-link')
     expect(redirect.redirect).toBeTruthy()

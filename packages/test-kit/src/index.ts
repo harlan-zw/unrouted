@@ -1,4 +1,4 @@
-import type { CallbackHandler } from 'supertest'
+import type { CallbackHandler, Test } from 'supertest'
 import supertest from 'supertest'
 
 export interface RouteSchema {
@@ -13,7 +13,7 @@ export interface RouteSchema {
   trace: string
 }
 
-export interface RouteFns<T extends Partial<RouteSchema>, Req> {
+export interface RequestTester<T extends Partial<RouteSchema>, Req = Test> {
   get(url: T['get'], callback?: CallbackHandler): Req
   put(url: T['put'], callback?: CallbackHandler): Req
   post(url: T['post'], callback?: CallbackHandler): Req
@@ -27,5 +27,5 @@ export interface RouteFns<T extends Partial<RouteSchema>, Req> {
 }
 
 export default function<T extends Partial<RouteSchema>>(app: any) {
-  return supertest(app) as RouteFns<T, supertest.Test> & supertest.SuperTest<supertest.Test>
+  return supertest(app) as RequestTester<T, supertest.Test> & supertest.SuperTest<supertest.Test>
 }
