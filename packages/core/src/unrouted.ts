@@ -3,14 +3,14 @@ import { URL } from 'url'
 import { createContext } from 'unctx'
 import { MIMES, promisifyHandle, send, useBody as useBodyH3, useMethod } from 'h3'
 import { createHooks } from 'hookable'
-import type { MatchedRoute, RadixRouter } from 'radix3'
+import type { MatchedRoute } from 'radix3'
 import { createRouter } from 'radix3'
 import { withoutTrailingSlash } from 'ufo'
 import type {
   AbstractIncomingMessage,
   ConfigPartial,
   HandleFn,
-  HttpMethod, Nullable,
+  Nullable,
   Route,
   UnroutedContext,
   UnroutedHooks,
@@ -202,7 +202,7 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
   }
   for (const plugin of resolvedConfig.plugins) {
     await plugin.setup(ctx)
-    logger.debug(`Using preset: \`${plugin.meta.name}\`@\`${plugin.meta.version}\``)
+    logger.debug(`Using plugin: \`${plugin.meta.name}\`${plugin.meta?.version ? `@\`${plugin.meta.version}\`` : ''}`)
   }
 
   unroutedCtx.set(ctx)
