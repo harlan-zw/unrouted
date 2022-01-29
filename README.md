@@ -1,8 +1,10 @@
 ![unrouted - A minimal, composable router built for speed, portability and easy prototyping.](https://repository-images.githubusercontent.com/432034546/262d14fd-f00c-46b9-8b72-423a07dca06f)
 <p align="center">
-<a href="https://npmjs.com/package/unrouted" target="_blank"><img src="https://img.shields.io/npm/dm/unrouted.svg?style=flat-square"/></a>
 <a href="https://www.npmjs.com/package/@unrouted/core" target="__blank"><img src="https://img.shields.io/npm/v/@unrouted/core?color=2B90B6&label=" alt="NPM version"></a>
-<a href="https://www.npmjs.com/package/@unrouted/core" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/@unrouted/core?color=349dbe&label="></a>
+<a href="https://www.npmjs.com/package/unrouted" target="__blank"><img alt="NPM Downloads" src="https://img.shields.io/npm/dm/unrouted?color=349dbe&label="></a>
+<a href='https://github.com/harlan-zw/unrouted/actions/workflows/test.yml'>
+<img src='https://github.com/harlan-zw/unrouted/actions/workflows/test.yml/badge.svg' >
+</a>
 </p>
 
 <br>
@@ -23,12 +25,12 @@ Status: <b>Public Beta 🎉</b><br>
 
 ## Features
 
-- 🤝 **Portable** Run it on any HTTP server with any middleware - connect, express, Koa, etc. Powered by [h3](https://github.com/unjs/h3) utilities
-- 🌳 **Speedy Routing** [radix3](https://github.com/unjs/radix3) routing, supporting named params (`/user/:id`, `/user/{id}` and wildcards (`/user/*`)
-- 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled and composable utility for [sirv](/)
-- 🧩 **Composable utils** `get`, `post` `put`, `del`, `redirect`, `group` etc
+- 🤝 **Portable** Run on any HTTP server - connect, express, Koa, etc. Powered by [h3](https://github.com/unjs/h3)
+- 🌳 **Fast Param Routing** blazing speed of [radix3](https://github.com/unjs/radix3), supporting named params (`/user/:id`, `/user/{id}` and `/user/**`)
+- 🧩 **Composable Design** Utility functions for defining your api, handling requests and serving responses
+- 🏖️ **Easy Prototyping** Default [cors](https://github.com/expressjs/cors) enabled and composable utility for [sirv](/)
 - 🇹 **Generates Types** Automatic types for route paths _(payloads coming soon)_
-- ✅ **Built to Test** Testing utility package provided: `@unrouted/test-kit`
+- ✅ **Built to Test** Testing utility package provided: `@unrouted/test-kit` using [supertest](https://github.com/visionmedia/supertest)
 - 🐱 **Built to Hack** [hookable hooks](/), preset and plugin system.
 
 
@@ -51,15 +53,15 @@ pnpm add unrouted
 import { createUnrouted } from 'unrouted'
 // ...
 async function createApi() {
-  // ctx is the unrouted context  
+  // ctx is the unrouted context
   const ctx = await createUnrouted({
     // options
   })
 }
 ```
 
-Creating unrouted will return the unrouted context.
-To get your API setup, you need to make use of two functions: `setup` and `handle`.
+Creating unrouted will return the [Unrouted Context](#context).
+To get your API setup, you need to make use of two functions: [setup](#context) and [handle](#handle).
 
 3. Create your routes using `setup` and composable functions.
 
@@ -73,6 +75,7 @@ async function createApi() {
   })
   
   await setup(() => {
+    // example api routes
     get('/hello-world', 'api is working')
     
     post('/contact', () => {
@@ -278,10 +281,24 @@ boot().then(() => {
  <summary>Fixture: myApi.ts</summary>
 
 ```ts
-import { createUnrouted, useQuery } from 'unrouted'
+import {
+  createUnrouted,
+  useQuery,
+  ConfigPartial,
+  useBody,
+  useParams,
+  any,
+  del,
+  get,
+  group,
+  match,
+  serve,
+  permanentRedirect,
+  post,
+  redirect,
+  setStatusCode
+} from 'unrouted'
 import { join, resolve } from "path";
-import { ConfigPartial, useBody, useParams} from "@unrouted/core";
-import { any, del, get, group, match, serve, permanentRedirect, post, redirect } from "unrouted";
 
 type Article = {
   id: number
@@ -292,7 +309,10 @@ let articles : Article[] = []
 export default async (options : ConfigPartial = {}) => {
   const { setup, handle } = await createUnrouted({
     name: 'api',
+    dev: true,
     prefix: options.prefix ?? undefined,
+    generateTypes: true,
+    root: join(__dirname, '__routes__')
   })
 
   await setup(() => {
@@ -310,12 +330,12 @@ export default async (options : ConfigPartial = {}) => {
     get('/greeting', 'Hello :)')
 
     // named parameters
-    get('/greeting/:name', (req) => {
+    get('/greeting/:name', () => {
       const params = useParams<{ name: string }>()
       const args = {
         greeting: 'Hello',
         smiley: ':)',
-        ...useQuery(req)
+        ...useQuery<{ greeting?: string, smiley?: string }>()
       }
       const {greeting, smiley} = args
       return `${greeting} ${params.name} ${smiley}`
@@ -329,8 +349,15 @@ export default async (options : ConfigPartial = {}) => {
       const names: string[] = []
 
       get('/', names)
-      post('/', async () => {
+      post('/', async (req, res) => {
         const {name} = useBody<{ name: string }>()
+        if (!name) {
+          res.statusCode = 422
+          return {
+            success: false,
+            error: 'missing name'
+          }
+        }
         names.push(name)
         return {
           success: true,
@@ -355,7 +382,14 @@ export default async (options : ConfigPartial = {}) => {
       // create
       post('articles', () => {
         const article = useBody<Article>()
-        articles.push(article)
+        if (!article) {
+          setStatusCode(422)
+          return {
+            success: false,
+            error: 'missing article'
+          }
+        }
+        articles.push(article as Article)
         return article
       })
       // update
@@ -369,7 +403,7 @@ export default async (options : ConfigPartial = {}) => {
           }
           newArticle = {
             ...article,
-            ...updateData,
+            ...updateData as Article,
           }
           return newArticle
         })
@@ -402,30 +436,181 @@ export default async (options : ConfigPartial = {}) => {
 
 ## Guides
 
-### Generating types
+### Writing your API
 
-### Using test-kit
+#### Composables
 
-## API
+The following composable functions are available out-of-the-box when building your API.
 
-### Creating routes
+- `get(path: string, res)` - GET route
+- `post(path: string, res)` - POST route
+- `put(path: string, res)` - PUT route
+- `del(path: string, res)` - DELETE route
+- `head(path: string, res)` - HEAD route
+- `options(path: string, res)` - OPTIONS route
+- `any(path: string, res)` - Matches any HTTP method
+- `group(prefix: string, () => void)` - Allows you to group composables under a specific prefix
+- `match(method: string, path: string, res)` - Matches a specific HTTP method, useful for dynamic method matching
+- `permanentRedirect(path: string, toPath: string)` - Performs a permanent redirect
+- `redirect(path: string, toPath: string, statusCode: number = 302)` - Performs a temproary redirect by default, you can change the status code
+- `serve(path: string, dirname: string, sirvOptions: Options = {})` - Serve static content using [sirv](https://github.com/lukeed/sirv)
 
-- `any(path: string, res)`
-- `post(path: string, res)`
-- `put(path: string, res)`
-- `del(path: string, res)`
-- `get(path: string, res)`
-- `group(path: string, res)` 
-- `head(path: string, res)`
-- `match(path: string, res)`
-- `options(path: string, res)`
-- `permanentRedirect(path: string, toPath: string)`
-- `redirect(path: string, toPath: string, statusCode: number = 302)`
-- `serve(path: string, dirname: string, sirvOptions: Options = {})`
+If you'd like to create your own composable utility functions,
+you can use the low-level `registerRoute` or use the existing composable functions.
 
-### Interacting with the Request / Response
+**Examples**
 
-Most functions provided by [h3](https://github.com/unjs/h3) are exposed on `unrouted`. See the [docs](https://www.jsdocs.io/package/h3#package-functions) for more details.
+Using `registerRoute` we create a new composable function to deny certain paths.
+
+```ts
+export const deny = (route: string) => {
+  registerRoute('*', route, () => {
+    setStatusCode(400)
+    return {
+      success: false,
+      error: 'you\'re not allowed here'
+    }
+  })
+}
+
+// ...
+deny('/private-zone/**')
+```
+
+We can build on top of existing composable functions to create more complex utilities.
+
+```ts
+export const resource = (route: string, factory) => {
+  get(route, factory.getAll)
+  group(`${route}/:id`, () => {
+    get('/', factory.getResource)
+    post('/', factory.saveResource)
+    del('/', factory.deleteResource)
+  })
+}
+//...
+resource('/posts', factory)
+```
+
+#### Setup
+
+Use of the `setup` function is optional.
+By defining all of your routes in a predictable way unrouted is able
+to provide runtime enhancements through the hooks' system, such as generating types.
+
+For example plugins can make use of the defined routes as:
+```ts
+const { hooks } = useUnrouted()
+
+hooks.hook('setup:after', ctx => {
+    // ctx.routes contains all of the routes defined in the setup function
+})
+```
+
+### Handling requests and responses
+
+The two main functions you'll use are `useBody` and `useParams`, both are provided as composables with generics.
+
+**Body and Params example**
+```ts
+interface User {
+  name: string
+  age: number
+}
+
+post('/user/:name', () => {
+  const { name } = useParams<{ name: string }>()
+  const { age } = useBody<User>()
+  // ...
+  return {
+    success: true,
+    user: {
+      name,
+      age
+    }
+  }
+})
+```
+
+```ts
+const { name } = useBody<{ name: string }>()
+// ts works, name is a string
+console.log(name.toUpperCase())
+```
+
+Note: Unrouted does not come with validation.
+
+
+Most functions provided by [h3](https://github.com/unjs/h3) are exposed on `unrouted` as composable utilities.
+See the [h3 docs](https://www.jsdocs.io/package/h3#package-functions) for more details.
+
+**Request Utils**
+
+- `useRawBody(encoding?: string)` - Reads the raw body of the request
+- `useQuery<T>()` - Reads the query string of the request, has generics support
+- `useMethod(defaultMethod?: string)` - Reads the HTTP method of the request
+- `isMethod(method: string)` - Checks if the request method is the same as the provided method
+- `assertMethod(method: string)` - Asserts that the request method is the same as the provided method
+- `useCookies()` - Reads the cookies of the request
+- `useCookies(name: string)` - Reads a specific cookie of the request
+
+**Response Utils**
+
+- `setCookie(name: string, value: string, serializeOptions?: any)` - Sets cookie on the response
+- `sendRedirect(path: string, statusCode?: number)` - Performs a redirect
+- `setStatusCode(statusCode: number)` - Sets the status code of the response
+- `sendError(error: Error | H3Error)` - Sends an error response
+- `appendHeader(name: string, value: string)` - Appends a header to the response
+
+### Using test-kit with auto-completion
+
+Unrouted comes with package called `@unrouted/test-kit` which provides a simple way to write tests that make use of
+generated types. 
+
+1. Add the dependency
+
+```bash
+npm install -D @unrouted/test-kit
+```
+
+2. Have Unrouted generate types
+
+```ts
+import { createUnrouted } from 'unrouted'
+
+await createUnrouted({
+  // dev should be dynamic, must be on to generate types
+  dev: true,
+  generateTypes: true,
+  // Optional: if you want to change the output directory of the routes
+  root: join(__dirname, '__routes__')
+})
+```
+
+Now when your code next runs the setup function, the route definitions will be generated.
+
+3. Use the test-kit to write tests
+
+Here we bootstrap Unrouted on our server (such as connect) and create a `request` instance which we'll use to test.
+
+```ts
+import { test } from '@unrouted/test-kit'
+// this should point to your routes
+import { RequestPathSchema } from '../../routes.d.ts'
+
+// createApi is a function which builds the api and returns the handle function  
+const api = await createApi({ debug: true })
+// tell our server to use the api
+app.use(api)
+// create a test request instance
+const request = testKit<RequestPathSchema>(app)
+```
+
+Now you can start testing. See [supertest](https://github.com/visionmedia/supertest) documentation for further testing instructions.
+```ts
+// /hello-world is autocompleted
+request.get('/hello-world')
+```
 
 ### Unrouted functions
 
@@ -436,17 +621,6 @@ Most functions provided by [h3](https://github.com/unjs/h3) are exposed on `unro
 - `useUnrouted` - Use the global unrouted instance
 
 ## Hooks
-
-*Example*
-```ts
-import { useUnrouted } from 'unrouted'
-
-const { hooks } = useUnrouted()
-
-hooks.hook('setup:before', () => {
-  console.log('before setup')
-})
-```
 
 - `setup:before: (ctx: UnroutedContext) => HookResult;`
 
@@ -463,7 +637,6 @@ to the router.
 
 - `request:payload: (ctx: PayloadCtx) => HookResult`
 
-
 When the payload is resolved from your routes.
 
 - `request:lookup:before`: (requestPath: string) => HookResult;
@@ -474,6 +647,16 @@ Before the radix3 router is used to look up the route path.
 
 By default, unrouted, does not handle 404s; this lets you handle it.
 
+*Example*
+```ts
+import { useUnrouted } from 'unrouted'
+
+const { hooks } = useUnrouted()
+
+hooks.hook('setup:before', () => {
+  console.log('before setup')
+})
+```
 
 ## Configuration
 
