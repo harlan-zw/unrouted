@@ -1,9 +1,9 @@
 import type { SuperTest, Test } from 'supertest'
 import supertest from 'supertest'
 import { createApp as createH3App } from 'h3'
+import { describe, expect, it } from 'vitest'
 import simpleServeApi from '../fixtures/api/simpleServeApi'
 import { serve } from '../assertions'
-import { describe, expect, it } from 'vitest'
 
 describe('serve static test', async() => {
   const app = createH3App({

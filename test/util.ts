@@ -9,7 +9,6 @@ export async function bootstrap(app: any) {
   const request = testKit<RequestPathSchema>(app)
   app.use(api)
 
-
   Object.values(assertions)
     .forEach(assertion => assertion(request))
 }

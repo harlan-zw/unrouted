@@ -1,7 +1,21 @@
-import { createUnrouted, useQuery } from 'unrouted'
+import {
+  createUnrouted,
+  useQuery,
+  ConfigPartial,
+  useBody,
+  useParams,
+  any,
+  del,
+  get,
+  group,
+  match,
+  serve,
+  permanentRedirect,
+  post,
+  redirect,
+  setStatusCode
+} from 'unrouted'
 import { join, resolve } from "path";
-import { ConfigPartial, useBody, useParams} from "@unrouted/core";
-import { any, del, get, group, match, serve, permanentRedirect, post, redirect } from "unrouted";
 
 type Article = {
   id: number
@@ -38,7 +52,7 @@ export default async (options : ConfigPartial = {}) => {
       const args = {
         greeting: 'Hello',
         smiley: ':)',
-        ...useQuery()
+        ...useQuery<{ greeting?: string, smiley?: string }>()
       }
       const {greeting, smiley} = args
       return `${greeting} ${params.name} ${smiley}`
@@ -52,8 +66,15 @@ export default async (options : ConfigPartial = {}) => {
       const names: string[] = []
 
       get('/', names)
-      post('/', async () => {
+      post('/', async (req, res) => {
         const {name} = useBody<{ name: string }>()
+        if (!name) {
+          res.statusCode = 422
+          return {
+            success: false,
+            error: 'missing name'
+          }
+        }
         names.push(name)
         return {
           success: true,
@@ -78,7 +99,14 @@ export default async (options : ConfigPartial = {}) => {
       // create
       post('articles', () => {
         const article = useBody<Article>()
-        articles.push(article)
+        if (!article) {
+          setStatusCode(422)
+          return {
+            success: false,
+            error: 'missing article'
+          }
+        }
+        articles.push(article as Article)
         return article
       })
       // update
@@ -92,7 +120,7 @@ export default async (options : ConfigPartial = {}) => {
           }
           newArticle = {
             ...article,
-            ...updateData,
+            ...updateData as Article,
           }
           return newArticle
         })

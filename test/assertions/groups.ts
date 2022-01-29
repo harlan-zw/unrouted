@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 import type { RequestTester } from '@unrouted/test-kit'
-import {RequestPathSchema} from "../fixtures/api/__routes__/api-routes";
+import type { RequestPathSchema } from '../fixtures/api/__routes__/api-routes'
 
 export async function groups(request: RequestTester<RequestPathSchema>) {
   it('simple group POST works', async() => {

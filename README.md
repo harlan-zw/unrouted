@@ -555,4 +555,4 @@ Specify the location of a config file.
 
 ## License
 
-MIT License © 2022 [Harlan Wilton](https://github.com/harlan-zw)_
+MIT License © 2022 [Harlan Wilton](https://github.com/harlan-zw)
