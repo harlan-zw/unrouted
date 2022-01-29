@@ -29,7 +29,7 @@ Status: <b>Public Beta 🎉</b><br>
 - 🤝 **Portable** Run on any HTTP server - connect, express, Koa, etc. Powered by [h3](https://github.com/unjs/h3)
 - 🌳 **Fast Param Routing** blazing speed of [radix3](https://github.com/unjs/radix3), supporting named params (`/user/:id`, `/user/{id}` and `/user/**`)
 - 🧩 **Composable Design** Utility functions for defining your api, handling requests and serving responses
-- 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled by default, easy debugging and composable utility for [sirv](https://github.com/lukeed/sirv/tree/master/packages/sirv)
+- 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled by default, easy debugging with [consola](https://github.com/unjs/consola) and composable utility for [sirv](https://github.com/lukeed/sirv/tree/master/packages/sirv)
 - 🇹 **Generates Types** Automatic types for route paths _(payloads coming soon)_
 - ✅ **Built to Test** Testing utility package provided: `@unrouted/test-kit` using [supertest](https://github.com/visionmedia/supertest)
 - 🐱 **Built to Hack** [hookable hooks](/), preset and plugin system.
