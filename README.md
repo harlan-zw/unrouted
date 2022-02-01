@@ -23,7 +23,6 @@ Status: <b>Public Beta 🎉</b><br>
 </table>
 </p>
 
-
 ## Features
 
 - 🤝 **Portable** Run on any HTTP server - connect, express, Koa, etc. Powered by [h3](https://github.com/unjs/h3)
