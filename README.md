@@ -16,7 +16,7 @@
 <td align="center">
 <img width="2000" height="0" /><br>
 Status: <b>Public Beta 🎉</b><br>
-<sub>Made possible by my <a href="https://github.com/sponsors/harlan-zw">Sponsor Program 💖</a></sub><br>
+<sub>Made possible by my <a href="https://github.com/sponsors/harlan-zw">Sponsor Program 💖</a><br> Follow me <a href="https://twitter.com/harlan_zw">@harlan_zw</a> 🐦</sub><br>
 <img width="2000" height="0" />
 </td>
 </tbody>
@@ -54,59 +54,46 @@ pnpm add unrouted
 import { createUnrouted } from 'unrouted'
 // ...
 async function createApi() {
-  // ctx is the unrouted context
-  const ctx = await createUnrouted({
+  const { setup, handle } = await createUnrouted({
     // options
   })
 }
 ```
 
-Creating unrouted will return the [Unrouted Context](#context).
-To get your API setup, you need to make use of two functions: [setup](#context) and [handle](#handle).
+Creating unrouted will return the [Unrouted Context](#unrouted-context).
+To get your API setup, you need to make use of two functions: setup and handle.
 
-3. Create your routes using `setup` and composable functions.
-
-```ts
-import { createUnrouted, get, post, useBody } from 'unrouted'
-// ...
-async function createApi() {
-  // ctx is the unrouted context  
-  const { setup } = await createUnrouted({
-    // options
-  })
-  
-  await setup(() => {
-    // example api routes
-    get('/ping', 'ok')
-    
-    post('/contact', () => {
-      const { email } = useBody<{ email: string }>()
-      
-      return {
-        success: true,
-        email,
-      }
-    })
-  })
-}
-```
-
-The `setup` function ensures the unrouted context is used by the utility functions and lets us perform 
-hooks on the final routes provided by your API, such as generating types.
-
-4. Tell your server to handle the request using `handle`.
+3. Create your routes using composable functions, within setup (setup optional).
 
 ```ts
-import { createUnrouted} from 'unrouted'
+import { createUnrouted, get } from 'unrouted'
 // ...
 async function createApi() {
-  // ctx is the unrouted context  
   const { setup, handle } = await createUnrouted({
     // options
   })
   
   await setup(() => {
-    // your api routes
+    get('/', 'hello world')
+  })
+}
+```
+
+Note: The `setup` function ensures the unrouted context is used by the utility functions and lets us perform 
+hooks on the final routes provided by your API, such as generating types.
+
+4. Tell your server to handle the request using `handle`.
+
+```ts
+import { createUnrouted, get } from 'unrouted'
+// ...
+async function createApi() {
+  const { setup, handle } = await createUnrouted({
+    // options
+  })
+  
+  await setup(() => {
+    get('/', 'hello world')
   })
   
   // app could be h3, koa, connect, express servers 
@@ -120,7 +107,7 @@ async function createApi() {
  <summary>Using <a href="https://github.com/unjs/listhen">listhen and h3</a>.</summary>
 
 ```ts
-import { createUnrouted, get, post } from 'unrouted'
+import { createUnrouted, get } from 'unrouted'
 import { createApp } from 'h3'
 import { listen } from 'listhen'
 
@@ -131,16 +118,7 @@ async function createApi() {
   })
 
   await setup(() => {
-    get('/hello-world', 'api is working')
-
-    post('/contact', () => {
-      const { email } = useBody<{ email: string }>()
-
-      return {
-        success: true,
-        email,
-      }
-    })
+    get('/', 'hello world')
   })
 
   return handle
@@ -161,7 +139,7 @@ boot().then(() => {
  <summary>Using <a href="https://github.com/senchalabs/connect">connect</a>.</summary>
 
 ```ts
-import { createUnrouted, get, post } from 'unrouted'
+import { createUnrouted, get } from 'unrouted'
 import createConnectApp from 'connect'
 
 async function createApi() {
@@ -171,16 +149,7 @@ async function createApi() {
   })
 
   await setup(() => {
-    get('/hello-world', 'api is working')
-
-    post('/contact', () => {
-      const { email } = useBody<{ email: string }>()
-
-      return {
-        success: true,
-        email,
-      }
-    })
+    get('/', 'hello world')
   })
 
   return handle
@@ -200,7 +169,7 @@ boot().then(() => {
  <summary>Using <a href="https://github.com/expressjs/express">express</a>.</summary>
 
 ```ts
-import { createUnrouted, get, post } from 'unrouted'
+import { createUnrouted, get } from 'unrouted'
 import createExpressApp from 'express'
 
 async function createApi() {
@@ -239,7 +208,7 @@ boot().then(() => {
  <summary>Using <a href="https://github.com/koajs/koa">koa</a>.</summary>
 
 ```ts
-import { createUnrouted, get, post } from 'unrouted'
+import { createUnrouted, get } from 'unrouted'
 import Koa from 'koa'
 
 async function createApi() {
@@ -249,16 +218,7 @@ async function createApi() {
   })
 
   await setup(() => {
-    get('/hello-world', 'api is working')
-
-    post('/contact', () => {
-      const { email } = useBody<{ email: string }>()
-
-      return {
-        success: true,
-        email,
-      }
-    })
+    get('/', 'hello world')
   })
 
   return handle
@@ -295,11 +255,27 @@ boot().then(() => {
 - `redirect(path: string, toPath: string, statusCode: number = 302)` - Performs a temproary redirect by default, you can change the status code
 - `serve(path: string, dirname: string, sirvOptions: Options = {})` - Serve static content using [sirv](https://github.com/lukeed/sirv)
 
-For each function which uses res, you can return the following as a primitive or as an async / sync function which returns a primitive:
+`res` is a function similar to standard middleware.
+
+```ts
+get('/', (request: IncomingMessage, res: ServerResponse) => {
+  return 'hello world'
+})
+```
+
+Since Unrouted is composable, you may not need to use these arguments.
+
+```ts
+get('/', 'hello world')
+```
+
+
+You can return the following as a primitive or as an async / sync function which returns a primitive:
 
 - `string|boolean` - Will be assumed an HTML response and set the content-type to text/html
 - `number` - Will be assumed a status code
 - `object` - Will be assumed a JSON response and set the content-type to application/json
+- `void` - You can modify the `ServerResponse` directly and return nothing
 
 ```ts
 // text/html -> 'api is working' - 200
@@ -313,13 +289,23 @@ post('/time', () => {
   }
 })
 
-get('/secret-zone', async () => {
+get('/secret-zone', async (req, res) => {
   const authenticated = await authenticate()
-  
+
+  // Example where we use the response directly
   if (!authenticated) {
-      return 401
+      res.statusCode = 401
+      res.end()
+      // we can return void here
+      return
   }
-  
+
+  // using the request directly 
+  if (!authenticated && req.headers['x-secret-token'] !== 'secret') {
+      // can simply return an integer as the status code response
+    return 401
+  }
+
   return {
     success: true,
     message: 'Welcome to the secret zone!',
@@ -387,6 +373,7 @@ See the [h3 docs](https://www.jsdocs.io/package/h3#package-functions) for more d
 
 **Request Utils**
 
+- `useRequest()` - Returns the request object
 - `useRawBody(encoding?: string)` - Reads the raw body of the request
 - `useQuery<T>()` - Reads the query string of the request, has generics support
 - `useMethod(defaultMethod?: string)` - Reads the HTTP method of the request
@@ -397,6 +384,7 @@ See the [h3 docs](https://www.jsdocs.io/package/h3#package-functions) for more d
 
 **Response Utils**
 
+- `useResponse()` - Returns the response object
 - `setCookie(name: string, value: string, serializeOptions?: any)` - Sets cookie on the response
 - `sendRedirect(path: string, statusCode?: number)` - Performs a redirect
 - `setStatusCode(statusCode: number)` - Sets the status code of the response
