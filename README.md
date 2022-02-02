@@ -40,7 +40,7 @@
 
 ```bash
 # NPM
-npm add unrouted
+npm install unrouted
 # or Yarn
 yarn add unrouted
 # or PNPM
