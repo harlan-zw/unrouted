@@ -1,12 +1,17 @@
 import {get, useQuery, post, useBody, group, del, useParams} from 'unrouted'
 import { $fetch } from 'ohmyfetch'
 
+interface NuxtModule {
+  name: string
+  description: string
+}
+
 export default async () => {
-  const modules : any[] = await $fetch('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
+  const modules = await $fetch<NuxtModule[]>('https://cdn.jsdelivr.net/npm/@nuxt/modules@latest/modules.json')
 
   group('/modules', () => {
     post('/', () => {
-      const module = useBody<{ name: string }>()
+      const module = useBody<NuxtModule>()
       modules.unshift(module)
       return module
     })
