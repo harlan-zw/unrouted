@@ -148,6 +148,8 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     // avoid any processing if the prefix does not match the url
     if (!req.url.startsWith(resolvedConfig.prefix)) {
       logger.debug(`Skipping \`${req.url}\` does not start with prefix \`${resolvedConfig.prefix}\`.`)
+      if (next)
+        next()
       return
     }
     // transform koa
