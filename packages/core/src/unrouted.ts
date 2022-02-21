@@ -123,7 +123,7 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
 
       logger.debug(`Matched path has returned type \`${type}\`: ${method} \`${r.path}\``)
       await hooks.callHook('request:payload', { req, route: r, payload: val })
-      if (type === 'number') {
+      if (type === 'number' && val >= 100 && val <= 599) {
         res.statusCode = val
         return await send(res, '')
       }
