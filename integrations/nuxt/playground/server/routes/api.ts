@@ -26,7 +26,6 @@ export default async () => {
     })
     get('/', () => {
       const { search } = useQuery<{ search: string }>()
-      console.log(search)
       let res = modules
       if (search) {
         res = modules

@@ -34,7 +34,7 @@ export default defineNuxtModule<ModuleOptions>({
         const globalFiles = await globby(pattern, { cwd: routesDir, dot: true })
         for (const file of globalFiles) {
           clearRequireCache(resolve(routesDir, file))
-          const module = await importModule(resolve(routesDir, file), {clearCache: true, interopDefault: true})
+          const module = await importModule(resolve(routesDir, file), { clearCache: true, interopDefault: true })
           await module()
         }
       })
