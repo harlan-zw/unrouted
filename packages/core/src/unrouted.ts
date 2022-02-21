@@ -98,7 +98,7 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
 
       const hasBody = ['PATCH', 'POST', 'PUT', 'DELETE'].includes(method)
 
-      paramCtx.set(r.params, true)
+      paramCtx.set(r.params || {}, true)
       if (hasBody)
         bodyCtx.set(await useBodyH3(req), true)
 
