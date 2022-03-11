@@ -104,7 +104,16 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
       if (hasBody)
         bodyCtx.set(await useBodyH3(req), true)
 
-      const val = await r.handle(req, res)
+      let val
+      if (typeof r.handle !== 'string')
+        val = await r.handle(req, res, () => {})
+
+      // @todo resolve val util func
+      // support nested handles - lazy imports, etc
+      if (typeof val === 'function')
+        val = await val(req, res, () => {})
+      if (val?.default)
+        val = await val.default(req, res, () => {})
 
       if (!val)
         continue
@@ -185,7 +194,9 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     ctx.methodStack = {}
     ctx.routes = []
     await ctx.hooks.callHook('setup:before', ctx)
-    await unroutedCtx.call(ctx, fn)
+    if (fn)
+      await unroutedCtx.call(ctx, fn)
+
     await ctx.hooks.callHook('setup:routes', ctx.routes)
     logger.debug(`Setting up ${ctx.routes.length} routes.`)
     ctx.routes.forEach((route) => {
