@@ -6,6 +6,7 @@ import type { Handle } from 'h3'
 import { name, version } from '../package.json'
 import laravelNamedParams from './plugins/laravelNamedParams'
 import generateTypes from './plugins/generateTypes'
+import watchExports from './plugins/watchExports'
 
 export interface PresetUnroutedOptions extends ConfigPartial {
   generateTypes: boolean
@@ -26,8 +27,11 @@ const presetUnrouted = defineUnroutedPreset<PresetUnroutedOptions>({
     corsOptions: {},
   },
   setup(ctx, options) {
-    if (options.generateTypes && ctx.config.dev)
+    // must be done before generateTypes
+    if (options.generateTypes && ctx.config.dev) {
+      ctx.config.plugins.push(watchExports())
       ctx.config.plugins.push(generateTypes())
+    }
     if (options.laravelNamedParams)
       ctx.config.plugins.push(laravelNamedParams())
 
