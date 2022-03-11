@@ -40,7 +40,9 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
 
   const resolvedConfig = await resolveConfig(config)
 
-  const logger = await createLogger(resolvedConfig.name, resolvedConfig.debug)
+  const logger = createLogger(resolvedConfig.name, resolvedConfig.debug)
+
+  logger.debug(`Creating new Unrouted ctx: \`${resolvedConfig.name}\``, resolvedConfig)
 
   // setup hooks
   const hooks = createHooks<UnroutedHooks>()
