@@ -1,24 +1,22 @@
 {
   "name": "@unrouted/preset-unrouted",
+  "type": "module",
   "version": "0.3.4",
   "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "bugs": {
     "url": "https://github.com/harlan-zw/unrouted/issues"
   },
   "license": "MIT",
+  "author": "Harlan Wilton <harlan@harlanzw.com>",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/harlan-zw/unlighthouse.git",
-    "directory": "packages/plugin-redirects"
+    "url": "git+https://github.com/harlan-zw/unrouted.git",
+    "directory": "packages/preset-unrouted"
   },
   "funding": "https://github.com/sponsors/harlan-zw",
-  "author": "Harlan Wilton <harlan@harlanzw.com>",
-  "sideEffects": false,
-  "type": "module",
-  "files": [
-    "dist",
-    "*.d.ts"
-  ],
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
@@ -26,9 +24,11 @@
     },
     "./*": "./*"
   },
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
