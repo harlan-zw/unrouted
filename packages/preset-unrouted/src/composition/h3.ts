@@ -1,6 +1,5 @@
 import type {
   H3Error,
-  HTTPMethod,
 } from 'h3'
 import {
   appendHeader as h3AppendHeader,
@@ -15,6 +14,7 @@ import {
   useQuery as h3UseQuery,
   useRawBody as h3UseRawBody,
 } from 'h3'
+import type { HTTPMethod } from '@unrouted/core'
 import { useRequest, useResponse, useUnrouted } from '@unrouted/core'
 import type { QueryObject } from 'ufo'
 
