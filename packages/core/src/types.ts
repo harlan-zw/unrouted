@@ -1,12 +1,14 @@
 import type { IncomingMessage, ServerResponse } from 'http'
-import type { HTTPMethod, Handle, Middleware } from 'h3'
+import type { Handle, Middleware, PHandle } from 'h3'
 import type { Hookable } from 'hookable'
 import type { RadixRouter } from 'radix3'
 import type { Consola } from 'consola'
 
 export type Nullable<T> = { [K in keyof T]: T[K] | null }
-
 export type HookResult<T = void> = Promise<T> | T
+
+export type HTTPMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE'
+export type HttpMethodOrWildcard = HTTPMethod | '*'
 
 export interface UnroutedHooks {
   'setup:after': (ctx: UnroutedContext) => HookResult
@@ -41,6 +43,7 @@ export interface ResolvedConfig {
   dev: boolean
 
   root: string
+  resolveFrom: string
   configFile: string
 
   presets: ResolvedPlugin<SimpleOptions>[]
@@ -52,12 +55,13 @@ export interface ResolvedConfig {
 export type DeepPartial<T> = T extends Function ? T : (T extends object ? { [P in keyof T]?: DeepPartial<T[P]>; } : T)
 
 export type HandleFn = ((req: AbstractIncomingMessage|any, res: ServerResponse|any, next: never|(() => void)) => Promise<unknown>)
-export type NormaliseRouteFn = (method: HttpMethodInput, urlPattern: string, handle: Handle | Middleware, options?: Record<string, any>) => Route
-export type RegisterRouteFn = (method: HttpMethodInput, urlPattern: string, handle: Handle | Middleware, options?: Record<string, any>) => void
+export type UnroutedHandle = PHandle | Handle | Middleware | string
+export type NormaliseRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, options?: Record<string, any>) => Route
+export type RegisterRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, options?: Record<string, any>) => void
 
 export type ConfigPartial = DeepPartial<ResolvedConfig>
 
-export type MethodStack = PartialRecord<HttpMethod, RadixRouter<Route>|null>
+export type MethodStack = PartialRecord<HttpMethodOrWildcard, RadixRouter<Route>|null>
 
 export interface UnroutedContext {
   /**
@@ -93,11 +97,10 @@ export interface UnroutedContext {
    * Composable setup function for declaring routes.
    * @param fn
    */
-  setup: (fn: () => void) => Promise<void>
+  setup: (fn?: () => void) => Promise<void>
 }
 
-export type HttpMethod = HTTPMethod | '*'
-export type HttpMethodInput = HttpMethod | HttpMethod[]
+export type HttpMethodInput = HttpMethodOrWildcard | HttpMethodOrWildcard[]
 
 export type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
@@ -108,10 +111,20 @@ export interface AbstractIncomingMessage extends IncomingMessage {
   originalUrl?: string
 }
 
+export interface RouteMeta {
+  resolve?: {
+    file?: string
+    fn: string
+  }
+  runtimeTypes?: string
+}
+
 export interface Route {
+  id: string
   path: string
-  handle: Handle
-  method: HttpMethod[]
+  handle: UnroutedHandle
+  method: HttpMethodOrWildcard[]
   match?: (req: IncomingMessage) => boolean
   options?: Record<string, any>
+  meta: RouteMeta
 }

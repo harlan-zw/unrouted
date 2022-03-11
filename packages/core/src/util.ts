@@ -1,7 +1,8 @@
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
-import type { Handle } from 'h3'
 import { promisifyHandle } from 'h3'
-import type { NormaliseRouteFn, RegisterRouteFn } from './types'
+import { relative } from 'pathe'
+import hasha from 'hasha'
+import type { NormaliseRouteFn, RegisterRouteFn, RouteMeta } from './types'
 import { useUnrouted } from './unrouted'
 
 /**
@@ -13,18 +14,35 @@ const fixSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
  * Create a normalised route from numerous inputs.
  */
 const normaliseRoute: NormaliseRouteFn = (method, path, handle, options?) => {
-  const { prefix } = useUnrouted()
+  const { prefix, config } = useUnrouted()
   // ensure consistency, apply prefix, this could be from a group or something
   path = withBase(fixSlashes(path), prefix)
-  if (handle.length > 2)
+  if (typeof handle === 'function' && handle.length > 2)
     handle = promisifyHandle(handle)
   if (!Array.isArray(method))
     method = [method]
+  const meta: RouteMeta = {}
+  if (typeof handle === 'function' && handle.name) {
+    meta.resolve = {
+      // @todo resolve file
+      fn: handle.name,
+    }
+  }
+  if (typeof handle === 'string' && handle.startsWith('#')) {
+    const file = (handle as string).replace('#', '').split('@')
+    meta.resolve = {
+      file: relative(file[0], config.resolveFrom),
+      fn: file[1] ?? 'default',
+    }
+  }
+
   return {
+    id: `_${hasha(`${method.join(',')} ${path}`).slice(0, 6)}`,
     path,
-    handle: handle as Handle,
+    handle,
     options,
     method,
+    meta,
   }
 }
 
@@ -41,6 +59,7 @@ export const registerRoute: RegisterRouteFn = (method, path, handle, options?) =
     logger.debug('Skipping duplicate route registration')
     return
   }
+  // figure out what code registered this for better error handling and type support
   logger.debug(`Registering route \`${method}\` \`${route.path}\`.`)
   routes.push(route)
 }
