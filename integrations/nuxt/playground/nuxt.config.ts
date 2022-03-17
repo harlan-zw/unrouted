@@ -5,8 +5,8 @@ export default defineNuxtConfig({
   modules: [
     MyModule,
   ],
+  // experimentNitropack: true,
   unrouted: {
-    prefix: '/__api',
     debug: true,
   },
 })

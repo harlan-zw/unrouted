@@ -1,5 +1,6 @@
 {
   "name": "@unrouted/nuxt",
+  "type": "module",
   "version": "0.3.4",
   "description": "Nuxt module for unrouted",
   "keywords": [
@@ -13,25 +14,24 @@
     "url": "https://github.com/harlan-zw/unrouted/issues"
   },
   "license": "MIT",
+  "author": "Harlan Wilton <harlan@harlanzw.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/harlan-zw/unrouted.git",
     "directory": "integrations/nuxt"
   },
   "funding": "https://github.com/sponsors/harlan-zw",
-  "author": "Harlan Wilton <harlan@harlanzw.com>",
-  "type": "module",
-  "files": [
-    "dist"
-  ],
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
   "exports": {
     ".": {
       "import": "./dist/module.mjs",
       "require": "./dist/module.cjs"
     }
   },
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "nuxi prepare playground && nuxt-module-build",
     "prepack": "nuxt-module-build",
@@ -42,11 +42,22 @@
   "dependencies": {
     "@harlanzw/nuxt-kit-extras": "^0.3.1",
     "@nuxt/kit": "npm:@nuxt/kit-edge@latest",
+    "@unrouted/core": "workspace:*",
+    "@unrouted/fetch": "workspace:*",
+    "@unrouted/plugins": "workspace:*",
+    "@unrouted/preset-api": "workspace:*",
+    "@unrouted/preset-node": "workspace:*",
+    "chokidar": "^3.5.3",
+    "globby": "^13.1.1",
+    "knitwork": "^0.1.1",
+    "magic-string": "^0.26.1",
+    "pathe": "^0.2.0",
+    "rollup": "^2.70.1",
     "unrouted": "workspace:*"
   },
   "devDependencies": {
     "@nuxt/module-builder": "latest",
     "@nuxt/schema": "npm:@nuxt/schema-edge@latest",
-    "nuxt3": "^3.0.0-27420403.16e2a54"
+    "nuxt3": "^3.0.0-27458584.91fd16a"
   }
 }
