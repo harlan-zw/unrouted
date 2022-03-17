@@ -1,4 +1,4 @@
-import { useUnrouted } from '@unrouted/core'
+import { useUnrouted } from '../unrouted'
 
 const group = (prefix: string, cb: (() => void)) => {
   const ctx = useUnrouted()!

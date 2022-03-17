@@ -1,8 +1,7 @@
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
 import { promisifyHandle } from 'h3'
-import { relative } from 'pathe'
-import hasha from 'hasha'
-import type { NormaliseRouteFn, RegisterRouteFn, RouteMeta } from './types'
+import { murmurHash } from 'ohash'
+import type { NormaliseRouteFn, RegisterRouteFn } from './types'
 import { useUnrouted } from './unrouted'
 
 /**
@@ -14,35 +13,20 @@ const fixSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
  * Create a normalised route from numerous inputs.
  */
 const normaliseRoute: NormaliseRouteFn = (method, path, handle, options?) => {
-  const { prefix, config } = useUnrouted()
+  const { prefix } = useUnrouted()
   // ensure consistency, apply prefix, this could be from a group or something
   path = withBase(fixSlashes(path), prefix)
   if (typeof handle === 'function' && handle.length > 2)
     handle = promisifyHandle(handle)
   if (!Array.isArray(method))
     method = [method]
-  const meta: RouteMeta = {}
-  if (typeof handle === 'function' && handle.name) {
-    meta.resolve = {
-      // @todo resolve file
-      fn: handle.name,
-    }
-  }
-  if (typeof handle === 'string' && handle.startsWith('#')) {
-    const file = (handle as string).replace('#', '').split('@')
-    meta.resolve = {
-      file: relative(file[0], config.resolveFrom),
-      fn: file[1] ?? 'default',
-    }
-  }
-
   return {
-    id: `_${hasha(`${method.join(',')} ${path}`).slice(0, 6)}`,
+    id: `_${murmurHash(`${method.join(',')} ${path}`)}`,
     path,
     handle,
     options,
     method,
-    meta,
+    meta: {},
   }
 }
 

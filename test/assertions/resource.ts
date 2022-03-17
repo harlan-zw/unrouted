@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 import type { RequestTester } from '@unrouted/test-kit'
-import type { RequestPathSchema } from '../fixtures/api/__routes__/api-routes'
+import type { RouteSchema } from '../fixtures/api/__routes__/myApiRoutes'
 
 const base = '/blog/articles'
 
@@ -15,7 +15,7 @@ const createArticles = [
   },
 ]
 
-export function resource(request: RequestTester<RequestPathSchema>) {
+export function resource(request: RequestTester<RouteSchema>) {
   it('can create 2 articles', async() => {
     let article = createArticles[0]
     let res = await request.post(base).send(article)

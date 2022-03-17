@@ -1,7 +1,7 @@
-import type { HttpMethodOrWildcard, UnroutedHandle } from '@unrouted/core'
-import { registerRoute } from '@unrouted/core'
+import type { HTTPMethodOrWildcard, UnroutedHandle } from '../types'
+import { registerRoute } from '../util'
 
-type HttpMethodInput = HttpMethodOrWildcard | HttpMethodOrWildcard[]
+type HttpMethodInput = HTTPMethodOrWildcard | HTTPMethodOrWildcard[]
 type MatchFn = (methods: HttpMethodInput, route: string, handle: UnroutedHandle) => void
 type RouteMethod = (route: string, handle: UnroutedHandle) => void
 

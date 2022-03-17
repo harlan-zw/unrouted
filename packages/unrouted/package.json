@@ -34,7 +34,6 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@unrouted/core": "workspace:*",
-    "@unrouted/preset-unrouted": "workspace:*"
+    "@unrouted/core": "workspace:*"
   }
 }

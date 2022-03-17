@@ -9,6 +9,7 @@ import { withoutTrailingSlash } from 'ufo'
 import type {
   AbstractIncomingMessage,
   ConfigPartial,
+  HTTPMethodOrWildcard,
   HandleFn,
   Nullable,
   Route,
@@ -68,22 +69,17 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
 
     await hooks.callHook('request:lookup:before', requestPath)
     const handlingRoutes: MatchedRoute<Route>[] = []
-    const wildcardStack = methodStack['*']
-    if (wildcardStack) {
-      const match = wildcardStack.lookup(requestPath)
-      if (match) {
-        handlingRoutes.push(match)
-        logger.debug(`Matched: * \`${match.path}\``)
-      }
-    }
-    // match explicit methods first
-    const useStack = methodStack[method]
-    // no handlers
-    if (useStack) {
-      const match = useStack.lookup(requestPath)
-      if (match) {
-        logger.debug(`Matched: ${method} \`${match.path}\``)
-        handlingRoutes.push(match)
+    const routesToMatch = ['*', method]
+    for (const m of routesToMatch) {
+      // match explicit methods first
+      const useStack = methodStack[m as HTTPMethodOrWildcard]
+      // no handlers
+      if (useStack) {
+        const match = useStack.lookup(requestPath)
+        if (match) {
+          logger.debug(`Matched: ${m} \`${match.path}\``)
+          handlingRoutes.push(match)
+        }
       }
     }
 
@@ -100,9 +96,13 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
 
       const hasBody = ['PATCH', 'POST', 'PUT', 'DELETE'].includes(method)
 
-      paramCtx.set(r.params || {}, true)
+      let body = null
       if (hasBody)
-        bodyCtx.set(await useBodyH3(req), true)
+        body = await useBodyH3(req)
+      await hooks.callHook('request:handle:before', { route: r, req, body, res })
+
+      paramCtx.set(r.params || {}, true)
+      bodyCtx.set(body || {}, true)
 
       let val
       if (typeof r.handle !== 'string')
@@ -133,7 +133,7 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
       let mime
 
       logger.debug(`Matched path has returned type \`${type}\`: ${method} \`${r.path}\``)
-      await hooks.callHook('request:payload', { req, route: r, payload: val })
+      await hooks.callHook('response:before', { req, route: r, payload: val })
       if (type === 'number' && val >= 100 && val <= 599) {
         res.statusCode = val
         return await send(res, '')
@@ -196,7 +196,6 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     await ctx.hooks.callHook('setup:before', ctx)
     if (fn)
       await unroutedCtx.call(ctx, fn)
-
     await ctx.hooks.callHook('setup:routes', ctx.routes)
     logger.debug(`Setting up ${ctx.routes.length} routes.`)
     ctx.routes.forEach((route) => {
@@ -211,11 +210,11 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     await ctx.hooks.callHook('setup:after', ctx)
   }
 
-  for (const preset of resolvedConfig.presets) {
+  for (const preset of ctx.config.presets) {
     await preset.setup(ctx)
     logger.debug(`Using preset: \`${preset.meta.name}\`@\`${preset.meta.version}\``)
   }
-  for (const plugin of resolvedConfig.plugins) {
+  for (const plugin of ctx.config.plugins) {
     await plugin.setup(ctx)
     logger.debug(`Using plugin: \`${plugin.meta.name}\`${plugin.meta?.version ? `@\`${plugin.meta.version}\`` : ''}`)
   }

@@ -1,8 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { createApp as createH3App } from 'h3'
-import type { SuperTest, Test } from 'supertest'
-import supertest from 'supertest'
 import { useUnrouted } from '@unrouted/core'
+import testKit from '@unrouted/test-kit'
 import laravelApi from '../fixtures/api/laravelApi'
 
 describe('laravel named routes test', async() => {
@@ -10,7 +9,7 @@ describe('laravel named routes test', async() => {
 
   const app = createH3App()
 
-  const request: SuperTest<Test> = supertest(app)
+  const request = testKit(app)
   app.use(handle)
 
   it('named params are substituted', async() => {

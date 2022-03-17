@@ -1,8 +1,8 @@
 import { expect, it } from 'vitest'
 import type { RequestTester } from '@unrouted/test-kit'
-import type { RequestPathSchema } from '../fixtures/api/__routes__/api-routes'
+import type { RouteSchema } from '../fixtures/api/__routes__/myApiRoutes'
 
-export async function redirects(request: RequestTester<RequestPathSchema>) {
+export async function redirects(request: RequestTester<RouteSchema>) {
   it('temporary redirect works', async() => {
     const redirect = await request.get('/old-link')
     expect(redirect.redirect).toBeTruthy()

@@ -9,4 +9,6 @@ export default defineBuildConfig({
   entries: [
     { input: 'src/index' },
   ],
+  externals: [
+  ],
 })

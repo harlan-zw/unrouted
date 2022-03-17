@@ -1,20 +1,18 @@
-import { createUnrouted } from 'unrouted'
-import {ConfigPartial, useParams} from "@unrouted/core";
-import {get} from "unrouted";
-import {join} from "path";
+import { createUnrouted, get, useParams } from '@unrouted/core'
+import type { ConfigPartial } from '@unrouted/core'
+import { laravelNamedParams } from '@unrouted/plugins'
 
-export default async (options : ConfigPartial = {}) => {
+export default async(options: ConfigPartial = {}) => {
   const { setup, handle } = await createUnrouted({
     name: 'laravelApi',
     prefix: options.prefix ?? undefined,
-    debug: true,
-    dev: true,
-    generateTypes: true,
-    root: join(__dirname, '__routes__')
+    plugins: [
+      laravelNamedParams(),
+    ],
   })
 
   await setup(() => {
-    get('/user/{id}', () => 'Hi ' + useParams<{ id: string }>().id)
+    get('/user/{id}', () => `Hi ${useParams<{ id: string }>().id}`)
   })
 
   return handle

@@ -1,6 +1,5 @@
 export * from './redirects'
 export * from './verbs'
 export * from './group'
-export * from './serve'
 export * from './h3'
 export * from './response'

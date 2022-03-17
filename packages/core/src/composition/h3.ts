@@ -4,6 +4,7 @@ import type {
 import {
   appendHeader as h3AppendHeader,
   assertMethod as h3AssertMethod,
+  deleteCookie as h3DeleteCookie,
   isMethod as h3IsMethod,
   sendError as h3SendError,
   sendRedirect as h3SendRedirect,
@@ -14,9 +15,9 @@ import {
   useQuery as h3UseQuery,
   useRawBody as h3UseRawBody,
 } from 'h3'
-import type { HTTPMethod } from '@unrouted/core'
-import { useRequest, useResponse, useUnrouted } from '@unrouted/core'
 import type { QueryObject } from 'ufo'
+import type { HTTPMethod } from '../types'
+import { useRequest, useResponse, useUnrouted } from '../unrouted'
 
 type Nullable<T> = { [K in keyof T]: T[K] | undefined }
 
@@ -63,4 +64,9 @@ export function assertMethod(expected: HTTPMethod | HTTPMethod[], allowHead?: bo
 
 export function isMethod(expected: HTTPMethod | HTTPMethod[], allowHead?: boolean) {
   return h3IsMethod(useRequest(), expected, allowHead)
+}
+
+// @todo import serializeOptions type from h3
+export function deleteCookie(name: string, serializeOptions?: any) {
+  return h3DeleteCookie(useResponse(), name, serializeOptions)
 }

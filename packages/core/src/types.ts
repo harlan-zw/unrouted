@@ -3,19 +3,21 @@ import type { Handle, Middleware, PHandle } from 'h3'
 import type { Hookable } from 'hookable'
 import type { RadixRouter } from 'radix3'
 import type { Consola } from 'consola'
+import type { Import } from 'unimport'
 
 export type Nullable<T> = { [K in keyof T]: T[K] | null }
 export type HookResult<T = void> = Promise<T> | T
 
 export type HTTPMethod = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE'
-export type HttpMethodOrWildcard = HTTPMethod | '*'
+export type HTTPMethodOrWildcard = HTTPMethod | '*'
 
 export interface UnroutedHooks {
   'setup:after': (ctx: UnroutedContext) => HookResult
   'setup:before': (ctx: UnroutedContext) => HookResult
   'setup:routes': (routes: Route[]) => HookResult
-  'request:payload': (ctx: { route: Route; payload: any; req: IncomingMessage }) => HookResult
+  'response:before': (ctx: { route: Route; payload: any; req: IncomingMessage }) => HookResult
   'request:lookup:before': (requestPath: string) => HookResult
+  'request:handle:before': (ctx: { body: unknown; route: Route; res: ServerResponse; req: IncomingMessage }) => HookResult
   'request:error:404': (requestPath: string, req: IncomingMessage) => HookResult
 }
 
@@ -24,15 +26,15 @@ export type UnroutedHookable = Hookable<UnroutedHooks>
 export type SimpleOptions = Record<string, any>
 
 export interface UnroutedPlugin<T> {
-  defaults?: T
+  defaults?: T extends any ? (Partial<T> | ((ctx: UnroutedContext) => Partial<T>)) : never
   meta: { name: string; version?: string }
   setup: (ctx: UnroutedContext, resolvedOptions: T) => Promise<void>|void
 }
 export interface UnroutedPreset<T> extends UnroutedPlugin<T> {
 }
 
-export interface ResolvedPlugin<T> extends UnroutedPlugin<T> {
-  resolvedOptions: T
+export interface ResolvedPlugin {
+  meta: { name: string; version?: string }
   setup: (ctx: UnroutedContext) => Promise<void>|void
 }
 
@@ -40,14 +42,9 @@ export interface ResolvedConfig {
   prefix: string
   name: string
   debug: boolean
-  dev: boolean
 
-  root: string
-  resolveFrom: string
-  configFile: string
-
-  presets: ResolvedPlugin<SimpleOptions>[]
-  plugins: ResolvedPlugin<SimpleOptions>[]
+  presets: ResolvedPlugin[]
+  plugins: ResolvedPlugin[]
   middleware: Middleware[]|Handle[]
   hooks: Partial<UnroutedHooks>
 }
@@ -61,7 +58,7 @@ export type RegisterRouteFn = (method: HttpMethodInput, urlPattern: string, hand
 
 export type ConfigPartial = DeepPartial<ResolvedConfig>
 
-export type MethodStack = PartialRecord<HttpMethodOrWildcard, RadixRouter<Route>|null>
+export type MethodStack = PartialRecord<HTTPMethodOrWildcard, RadixRouter<Route>|null>
 
 export interface UnroutedContext {
   /**
@@ -100,7 +97,7 @@ export interface UnroutedContext {
   setup: (fn?: () => void) => Promise<void>
 }
 
-export type HttpMethodInput = HttpMethodOrWildcard | HttpMethodOrWildcard[]
+export type HttpMethodInput = HTTPMethodOrWildcard | HTTPMethodOrWildcard[]
 
 export type PartialRecord<K extends keyof any, T> = {
   [P in K]?: T;
@@ -114,6 +111,7 @@ export interface AbstractIncomingMessage extends IncomingMessage {
 export interface RouteMeta {
   resolve?: {
     file?: string
+    import?: Import
     fn: string
   }
   runtimeTypes?: string
@@ -123,8 +121,22 @@ export interface Route {
   id: string
   path: string
   handle: UnroutedHandle
-  method: HttpMethodOrWildcard[]
+  method: HTTPMethodOrWildcard[]
   match?: (req: IncomingMessage) => boolean
   options?: Record<string, any>
   meta: RouteMeta
+}
+
+export interface GetRoutes {}
+export interface PostRoutes {}
+export interface PutRoutes {}
+export interface PatchRoutes {}
+export interface DeleteRoutes {}
+
+export interface RouteSchema {
+  get: GetRoutes
+  post: PostRoutes
+  put: PutRoutes
+  patch: PatchRoutes
+  delete: DeleteRoutes
 }

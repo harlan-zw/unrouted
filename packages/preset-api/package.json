@@ -1,0 +1,43 @@
+{
+  "name": "@unrouted/preset-api",
+  "type": "module",
+  "version": "0.3.4",
+  "homepage": "https://github.com/harlan-zw/unrouted#readme",
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
+  "license": "MIT",
+  "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harlan-zw/unrouted.git",
+    "directory": "packages/preset-api"
+  },
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    },
+    "./*": "./*"
+  },
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "@unrouted/core": "workspace:*",
+    "cors": "^2.8.5"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.12"
+  }
+}
