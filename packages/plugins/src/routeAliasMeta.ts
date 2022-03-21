@@ -19,7 +19,6 @@ export default defineUnroutedPlugin<PluginConfig>({
             // @todo resolve file
             fn: route.handle.name,
           }
-          console.log(route.handle.name, route.handle.prototype)
         }
         // support routes like #home@greeting
         if (typeof route.handle === 'string' && route.handle.startsWith('#')) {

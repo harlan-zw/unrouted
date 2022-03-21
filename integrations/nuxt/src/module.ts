@@ -32,7 +32,7 @@ export default defineNuxtModule<ModuleOptions>({
       bridge: true,
     },
   },
-  defaults(nuxt) {
+  defaults() {
     return {
       prefix: '/api',
       cors: true,
@@ -40,6 +40,9 @@ export default defineNuxtModule<ModuleOptions>({
     }
   },
   async setup(config, nuxt) {
+    const generateTypesPath = join(nuxt.options.buildDir, 'types', 'unrouted.d.ts')
+    const routesPath = join(nuxt.options.rootDir, 'server', 'controllers')
+    const setupRoutesPath = resolve(nuxt.options.rootDir, 'server', 'routes')
     const { setup } = useUnrouted() || await createUnrouted({
       ...config,
       presets: [
@@ -49,33 +52,32 @@ export default defineNuxtModule<ModuleOptions>({
         }),
         // allow type generation
         presetNode({
-          setupRoutesPath: resolve(nuxt.options.rootDir, 'server', 'routes'),
+          setupRoutesPath,
           generateTypes: true,
-          generateTypesPath: join(nuxt.options.buildDir, 'types', 'unrouted.d.ts'),
-          watchRouteExportsPath: join(nuxt.options.rootDir, 'server', 'controllers'),
+          generateTypesPath,
+          watchRouteExportsPath: routesPath,
         }),
       ],
       plugins: [
         routeAliasMeta({
-          generateTypesPath: join(nuxt.options.buildDir, 'types', 'unrouted.d.ts'),
-          routesPath: join(nuxt.options.rootDir, 'server', 'controllers'),
+          generateTypesPath,
+          routesPath,
         }),
       ],
       name: `${config.name}:parent`,
     })
 
     const pattern = '**/*.{ts,mjs,js,cjs}'
-    const routesDir = resolve(nuxt.options.rootDir, 'server', 'routes')
-    let routeFiles = await globby(pattern, { cwd: routesDir, dot: true })
-    const rollupWatcher = null
+    let routeFiles = await globby(pattern, { cwd: setupRoutesPath, dot: true })
+    // @todo enable const rollupWatcher = null
 
     const initRoutes = async() => {
       await setup(async() => {
         // import route files and run them
-        routeFiles = await globby(pattern, { cwd: routesDir, dot: true })
+        routeFiles = await globby(pattern, { cwd: setupRoutesPath, dot: true })
         for (const file of routeFiles) {
-          clearRequireCache(resolve(routesDir, file))
-          const routeModule = await importModule(resolve(routesDir, file), { clearCache: true, interopDefault: true })
+          clearRequireCache(resolve(setupRoutesPath, file))
+          const routeModule = await importModule(resolve(setupRoutesPath, file), { clearCache: true, interopDefault: true })
           await routeModule()
         }
       })
@@ -89,10 +91,10 @@ export default defineNuxtModule<ModuleOptions>({
           return
 
         // @todo
-      //   rollupWatcher = startRollupWatcher(ni)
+        //   rollupWatcher = startRollupWatcher(ni)
         ni.rollupConfig.plugins.unshift(
           alias({
-            routesDir,
+            routesDir: setupRoutesPath,
           }),
         )
         ni.rollupConfig.plugins.unshift(
@@ -100,7 +102,7 @@ export default defineNuxtModule<ModuleOptions>({
             '#unrouted': {
               load: () => {
                 const routeCode = routeFiles.map((file) => {
-                  const path = resolve(routesDir, file)
+                  const path = resolve(setupRoutesPath, file)
                   const importId = getImportId(path)
                   return {
                     import: genImport(path, { name: importId }),
@@ -153,7 +155,7 @@ export default async () => {
     }
 
     const watcher = watch([
-      join(routesDir, pattern),
+      join(setupRoutesPath, pattern),
     ], { ignoreInitial: true })
     watcher.on('all', async() => {
       await initRoutes()
