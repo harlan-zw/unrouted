@@ -1,13 +1,13 @@
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
 import { promisifyHandle } from 'h3'
 import { murmurHash } from 'ohash'
-import type { NormaliseRouteFn, RegisterRouteFn } from './types'
+import type { NormaliseRouteFn, RegisterRouteFn, RouteMeta } from './types'
 import { useUnrouted } from './unrouted'
 
 /**
  * All route paths have a leading slash and no trailing slash.
  */
-const fixSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
+const normaliseSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
 
 /**
  * Create a normalised route from numerous inputs.
@@ -15,18 +15,29 @@ const fixSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
 const normaliseRoute: NormaliseRouteFn = (method, path, handle, options?) => {
   const { prefix } = useUnrouted()
   // ensure consistency, apply prefix, this could be from a group or something
-  path = withBase(fixSlashes(path), prefix)
+  path = withBase(normaliseSlashes(path), prefix)
   if (typeof handle === 'function' && handle.length > 2)
     handle = promisifyHandle(handle)
   if (!Array.isArray(method))
     method = [method]
+  const meta: RouteMeta = {}
   return {
     id: `_${murmurHash(`${method.join(',')} ${path}`)}`,
     path,
     handle,
     options,
     method,
-    meta: {},
+    meta,
+    // add functions for chanining @todo
+    // where (matches: Record<string, RegExp>) {
+    //   meta.parameterMatchRegExps = {
+    //     ...meta.parameterMatchRegExps,
+    //     ...matches,
+    //   }
+    // },
+    // name(name: string) {
+    //   meta.name = name
+    // }
   }
 }
 
@@ -41,9 +52,10 @@ export const registerRoute: RegisterRouteFn = (method, path, handle, options?) =
   const { routes, logger } = useUnrouted()
   if (routes.map(r => r.path).includes(path)) {
     logger.debug('Skipping duplicate route registration')
-    return
+    return route
   }
   // figure out what code registered this for better error handling and type support
   logger.debug(`Registering route \`${method}\` \`${route.path}\`.`)
   routes.push(route)
+  return route
 }

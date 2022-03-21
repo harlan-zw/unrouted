@@ -1,9 +1,9 @@
-import type { HTTPMethodOrWildcard, UnroutedHandle } from '../types'
+import type { HTTPMethodOrWildcard, Route, UnroutedHandle } from '../types'
 import { registerRoute } from '../util'
 
 type HttpMethodInput = HTTPMethodOrWildcard | HTTPMethodOrWildcard[]
 type MatchFn = (methods: HttpMethodInput, route: string, handle: UnroutedHandle) => void
-type RouteMethod = (route: string, handle: UnroutedHandle) => void
+type RouteMethod = (route: string, handle: UnroutedHandle) => Route
 
 export const match: MatchFn = (methods, route, handle) => {
   registerRoute(methods, route, handle)

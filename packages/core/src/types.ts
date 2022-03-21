@@ -54,7 +54,7 @@ export type DeepPartial<T> = T extends Function ? T : (T extends object ? { [P i
 export type HandleFn = ((req: AbstractIncomingMessage|any, res: ServerResponse|any, next: never|(() => void)) => Promise<unknown>)
 export type UnroutedHandle = PHandle | Handle | Middleware | string
 export type NormaliseRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, options?: Record<string, any>) => Route
-export type RegisterRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, options?: Record<string, any>) => void
+export type RegisterRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, options?: Record<string, any>) => Route
 
 export type ConfigPartial = DeepPartial<ResolvedConfig>
 
@@ -114,6 +114,7 @@ export interface RouteMeta {
     import?: Import
     fn: string
   }
+  parameterMatchRegExps?: Record<string, RegExp>
   runtimeTypes?: string
 }
 
@@ -125,6 +126,13 @@ export interface Route {
   match?: (req: IncomingMessage) => boolean
   options?: Record<string, any>
   meta: RouteMeta
+  // fns @todo
+  // where: (arg) => Route
+  // whereNumber: (arg) => Route
+  // whereAlpha: (arg) => Route
+  // whereAlphaNumeric: (arg) => Route
+  // whereUuid: (arg) => Route
+  // name: (name: string) => Route
 }
 
 export interface GetRoutes {}

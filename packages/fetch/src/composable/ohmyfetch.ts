@@ -27,3 +27,6 @@ export function $put<R extends string, Default = unknown>(url: R, opts?: FetchOp
 export function $delete<R extends string, Default = unknown>(url: R, opts?: FetchOptions): Promise<TypedInternalGetResponse<R, Default>> {
   return $_fetchGlobal<R, Default>(url, 'delete', opts)
 }
+export function $options<R extends string, Default = unknown>(url: R, opts?: FetchOptions): Promise<TypedInternalGetResponse<R, Default>> {
+  return $_fetchGlobal<R, Default>(url, 'delete', opts)
+}
