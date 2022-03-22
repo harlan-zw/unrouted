@@ -51,6 +51,7 @@
     "globby": "^13.1.1",
     "knitwork": "^0.1.1",
     "magic-string": "^0.26.1",
+    "ohash": "^0.1.0",
     "pathe": "^0.2.0",
     "rollup": "^2.70.1",
     "unrouted": "workspace:*"
@@ -58,6 +59,6 @@
   "devDependencies": {
     "@nuxt/module-builder": "latest",
     "@nuxt/schema": "npm:@nuxt/schema-edge@latest",
-    "nuxt3": "^3.0.0-27460489.53fbca7"
+    "nuxt3": "^3.0.0-27465767.70f067a"
   }
 }
