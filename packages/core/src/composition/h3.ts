@@ -58,6 +58,10 @@ export function appendHeader(name: string, value: string) {
   return h3AppendHeader(useResponse(), name, value)
 }
 
+export function getHeader(name: string) {
+  return useResponse().getHeader(name)
+}
+
 export function assertMethod(expected: HTTPMethod | HTTPMethod[], allowHead?: boolean) {
   return h3AssertMethod(useRequest(), expected, allowHead)
 }

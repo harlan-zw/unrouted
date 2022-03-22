@@ -1,18 +1,28 @@
+import { defu } from 'defu'
 import { useUnrouted } from '../unrouted'
+import type { GroupAttributes, UnroutedHandle } from '../types'
 
-const group = (prefix: string, cb: (() => void)) => {
+const group = (attributes: GroupAttributes, cb: (() => void)) => {
   const ctx = useUnrouted()!
-
-  const currentPrefix = ctx.prefix
-  // avoid duplicate slashes
-  if (currentPrefix.endsWith('/') && prefix.startsWith('/'))
-    prefix = prefix.substring(1)
-
-  // append prefix
-  ctx.prefix = currentPrefix + prefix
+  // handle controllers
+  if (attributes.controller)
+    attributes.routeMeta = defu({ resolve: { module: attributes.controller } }, attributes?.routeMeta || {})
+  // add group stack
+  ctx.groupStack.push(attributes)
+  // call group function
   cb()
-  // reset prefix
-  ctx.prefix = currentPrefix
+  // reset group stack
+  ctx.groupStack.pop()
 }
 
-export { group }
+const middleware = (middleware: UnroutedHandle|UnroutedHandle[], cb: (() => void)) => {
+  if (!Array.isArray(middleware))
+    middleware = [middleware]
+  return group({ routeMeta: { middleware } }, cb)
+}
+
+const prefix = (prefix: string, cb: (() => void)) => {
+  return group({ prefix }, cb)
+}
+
+export { group, middleware, prefix }

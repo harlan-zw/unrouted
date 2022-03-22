@@ -1,4 +1,4 @@
-import defu from 'defu'
+import { defu } from 'defu'
 import type { ConfigPartial, ResolvedConfig } from './types'
 
 /**

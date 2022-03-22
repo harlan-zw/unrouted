@@ -1,55 +1,70 @@
-import { setStatusCode, useBody, useParams } from '@unrouted/core'
+import { defineController, errorNotFound, errorUnprocessableEntity, useBody, useParams } from 'unrouted'
+import { createStorage } from 'unstorage'
+import fsDriver from 'unstorage/drivers/fs'
 
 interface Article {
   id: number
   title: string
 }
-let articles: Article[] = []
 
-export function getArticles() {
-  return articles
-}
+const storage = createStorage()
 
-export function getArticle() {
-  const { id } = useParams<{ id: number }>()
-  const article = articles.filter(article => article.id === id)
-  return article[0]
-}
+storage.mount('/output', fsDriver({ base: './output' }))
 
-export function createArticle() {
-  const article = useBody<Article>()
-  if (!article) {
-    setStatusCode(422)
-    return {
-      success: false,
-      error: 'missing article',
-    }
-  }
-  articles.push(article as Article)
-  return article
-}
-
-export function updateArticle() {
-  const { id } = useParams<{ id: number }>()
-  const updateData = useBody<Article>()
-  let newArticle: null | Article = null
-  articles = articles.map((article) => {
-    if (article.id !== id)
-      return article
-
-    newArticle = {
-      ...article,
-      ...updateData as Article,
-    }
-    return newArticle
-  })
-  return newArticle
-}
-
-export function deleteArticle() {
-  const { id } = useParams<{ id: number }>()
-  articles = articles.filter(article => article.id !== id)
+export default defineController(() => {
   return {
-    id,
+    async getArticles() {
+      const keys = await storage.getKeys()
+      const items = []
+      for (const k of keys)
+        items.push(await storage.getItem(k))
+      return items
+    },
+    async getArticle() {
+      const { id } = useParams<{ id: number }>()
+      const article = await storage.getItem(id)
+      if (!article) {
+        return errorNotFound({
+          message: `Failed to find article with id: ${id}`,
+        })
+      }
+      return article
+    },
+    async createArticle() {
+      const article = useBody<Article>()
+      if (!article) {
+        return errorUnprocessableEntity({
+          success: false,
+          error: 'missing article',
+        })
+      }
+      await storage.setItem(((await storage.getKeys()).length + 1).toString(), article)
+      return article
+    },
+    async updateArticle() {
+      const { id } = useParams<{ id: number }>()
+      const updateData = useBody<Article>()
+      let newArticle: null | Article = null
+      const existingArticle = await storage.getItem(id) as Article
+
+      newArticle = {
+        ...existingArticle,
+        ...updateData as Article,
+      }
+      await storage.setItem(id, newArticle)
+      return newArticle
+    },
+    async deleteArticle() {
+      const { id } = useParams<{ id: number }>()
+      if (!await storage.hasItem(id)) {
+        return errorNotFound({
+          message: `Failed to find article with id: ${id}`,
+        })
+      }
+      await storage.removeItem(id)
+      return {
+        id: Number.parseInt(id),
+      }
+    },
   }
-}
+})

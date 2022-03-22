@@ -4,8 +4,8 @@ import sirv from 'sirv'
 import { promisifyHandle } from 'h3'
 import { withBase, withLeadingSlash, withTrailingSlash, withoutTrailingSlash } from 'ufo'
 import type { AbstractIncomingMessage } from '@unrouted/core'
-import { registerRoute, useUnrouted } from '@unrouted/core'
-import defu from 'defu'
+import { registerRoute, resolveStackPrefix, useUnrouted } from '@unrouted/core'
+import { defu } from 'defu'
 
 /*
 @todo fix, this is causing build issues
@@ -49,7 +49,7 @@ const serve = (path: string, dirname: string, sirvOptions: SirvOptions = {}) => 
     dev: ctx.config.debug,
   })
 
-  path = withBase(path, ctx.prefix)
+  path = withBase(path, resolveStackPrefix())
   path = withTrailingSlash(withLeadingSlash(path))
 
   const serveArguments: ServeArguments = {

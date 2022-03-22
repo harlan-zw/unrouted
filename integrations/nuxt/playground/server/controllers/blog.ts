@@ -1,5 +1,4 @@
-import {useBody, useParams} from "unrouted";
-import {setStatusCode} from "unrouted";
+import {defineController, errorNotFound, errorUnprocessableEntity, useBody, useParams} from "unrouted";
 
 type Article = {
   id: number
@@ -9,50 +8,54 @@ let articles : Article[] = [
   { id: 1, title: 'hi' }
 ]
 
-export function getArticles () {
-  return articles
-}
-
-export function getArticle() {
-  const {slug: id} = useParams<{ slug: number }>()
-  console.log(articles.find(article => article.id == id), id, articles)
-  return articles.find(article => article.id == id)
-}
-
-export function createArticle() {
-  const article = useBody<Article>()
-  if (!article) {
-    setStatusCode(422)
-    return {
-      success: false,
-      error: 'missing article'
-    }
-  }
-  articles.push(article as Article)
-  return article
-}
-
-export function updateArticle() {
-  const {id} = useParams<{ id: number }>()
-  const updateData = useBody<Article>()
-  let newArticle: null | Article = null
-  articles = articles.map((article) => {
-    if (article.id !== id) {
-      return article
-    }
-    newArticle = {
-      ...article,
-      ...updateData as Article,
-    }
-    return newArticle
-  })
-  return newArticle
-}
-
-export function deleteArticle () {
-  const {id} = useParams<{ id: number }>()
-  articles = articles.filter(article => article.id !== id)
+export default defineController(() => {
   return {
-    id
+    getArticles () {
+      return articles
+    },
+    getArticle() {
+      const { id } = useParams<{ id: number }>()
+      const article = articles.find(article => article.id == id)
+      if (!article) {
+        return errorNotFound({
+          message: 'Failed to find article with id: ' + id
+        })
+      }
+      return article
+    },
+    createArticle() {
+      const article = useBody<Article>()
+      if (!article) {
+        return errorUnprocessableEntity({
+          success: false,
+          error: 'missing article'
+        })
+      }
+      articles.push(article as Article)
+      return article
+    },
+    updateArticle() {
+      const {id} = useParams<{ id: number }>()
+      const updateData = useBody<Article>()
+      let newArticle: null | Article = null
+      articles = articles.map((article) => {
+        if (article.id !== id) {
+          return article
+        }
+        newArticle = {
+          ...article,
+          ...updateData as Article,
+        }
+        return newArticle
+      })
+      return newArticle
+    },
+    deleteArticle () {
+      const {id} = useParams<{ id: number }>()
+      articles = articles.filter(article => article.id !== id)
+      return {
+        id
+      }
+    }
   }
-}
+})

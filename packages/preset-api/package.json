@@ -35,7 +35,8 @@
   },
   "dependencies": {
     "@unrouted/core": "workspace:*",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "express-rate-limit": "^6.3.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12"

@@ -1,7 +1,8 @@
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
 import { promisifyHandle } from 'h3'
 import { murmurHash } from 'ohash'
-import type { NormaliseRouteFn, RegisterRouteFn, RouteMeta } from './types'
+import { defu } from 'defu'
+import type { NormaliseRouteFn, RegisterRouteFn } from './types'
 import { useUnrouted } from './unrouted'
 
 /**
@@ -9,23 +10,48 @@ import { useUnrouted } from './unrouted'
  */
 const normaliseSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
 
+export const resolveStackPrefix = () => {
+  const { groupStack } = useUnrouted()
+  let path = ''
+  // apply all prefixes from the stack
+  for (const prefix of groupStack
+    .filter(g => !!g.prefix)
+    .map(g => g.prefix)) {
+    // ensure consistency, apply prefix, this could be from a group or something
+    path = withBase(normaliseSlashes(path), prefix!)
+  }
+  return path
+}
+
+export const resolveStackRouteMeta = () => {
+  const { groupStack } = useUnrouted()
+  let meta = {}
+  // apply all prefixes from the stack
+  for (const m of groupStack
+    .filter(g => !!g.routeMeta)
+    .map(g => g.routeMeta)
+    .reverse()) {
+    // ensure consistency, apply prefix, this could be from a group or something
+    meta = defu(meta, m!)
+  }
+  return meta
+}
+
 /**
  * Create a normalised route from numerous inputs.
  */
-const normaliseRoute: NormaliseRouteFn = (method, path, handle, options?) => {
-  const { prefix } = useUnrouted()
+export const normaliseRoute: NormaliseRouteFn = (method, path, handle, meta?) => {
   // ensure consistency, apply prefix, this could be from a group or something
-  path = withBase(normaliseSlashes(path), prefix)
+  path = withBase(normaliseSlashes(path), resolveStackPrefix())
   if (typeof handle === 'function' && handle.length > 2)
     handle = promisifyHandle(handle)
   if (!Array.isArray(method))
     method = [method]
-  const meta: RouteMeta = {}
+  meta = defu(meta || {}, resolveStackRouteMeta())
   return {
     id: `_${murmurHash(`${method.join(',')} ${path}`)}`,
     path,
     handle,
-    options,
     method,
     meta,
     // add functions for chanining @todo

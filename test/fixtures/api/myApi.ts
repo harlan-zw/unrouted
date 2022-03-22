@@ -9,6 +9,7 @@ import {
   match,
   permanentRedirect,
   post,
+  prefix,
   redirect,
   useBody,
   useParams,
@@ -16,13 +17,7 @@ import {
 } from '@unrouted/core'
 import { presetNode, serve } from '@unrouted/preset-node'
 import { presetApi } from '@unrouted/preset-api'
-import {
-  createArticle,
-  deleteArticle,
-  getArticle,
-  getArticles,
-  updateArticle,
-} from './controllers/blog'
+import blog from './controllers/blog'
 
 export default async(options: ConfigPartial = {}) => {
   const { setup, handle } = await createUnrouted({
@@ -33,7 +28,7 @@ export default async(options: ConfigPartial = {}) => {
       presetNode({
         overrideUnroutedModule: false,
         generateTypes: true,
-        generateTypesPath: join(__dirname, '__routes__', 'myApiRoutes.ts'),
+        generateTypesPath: join(__dirname, '__routes__', 'myApi.d.ts'),
       }),
     ],
   })
@@ -68,7 +63,7 @@ export default async(options: ConfigPartial = {}) => {
     serve('/static', resolve(join(__dirname, '..', 'demo')), { dev: true })
 
     // groups
-    group('names', () => {
+    prefix('/names', () => {
       const names: string[] = []
 
       get('/', () => names)
@@ -99,17 +94,20 @@ export default async(options: ConfigPartial = {}) => {
     get('new-permalink', () => 'You were redirected permanently :)')
 
     // resource group
-    group('blog', () => {
+    group({
+      prefix: '/blog',
+      controller: blog,
+    }, () => {
       // list
-      get('articles', getArticles)
+      get('articles', 'getArticles')
       // create
-      post('articles', createArticle)
+      post('articles', 'createArticle')
       // update
-      match(['POST', 'PUT'], 'articles/:id', updateArticle)
+      match(['POST', 'PUT'], 'articles/:id', 'updateArticle')
       // delete
-      del('articles/:id', deleteArticle)
+      del('articles/:id', 'deleteArticle')
       // read
-      get('articles/:id', getArticle)
+      get('articles/:id', 'getArticle')
     })
 
     any('/any-route', req => req.method)

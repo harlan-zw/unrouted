@@ -23,3 +23,5 @@ export const presetApi = defineUnroutedPreset<PresetConfig>({
     }
   },
 })
+
+export * from './middleware'

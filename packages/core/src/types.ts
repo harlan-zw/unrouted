@@ -1,7 +1,7 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 import type { Handle, Middleware, PHandle } from 'h3'
 import type { Hookable } from 'hookable'
-import type { RadixRouter } from 'radix3'
+import type { MatchedRoute, RadixRouter } from 'radix3'
 import type { Consola } from 'consola'
 import type { Import } from 'unimport'
 
@@ -17,6 +17,7 @@ export interface UnroutedHooks {
   'setup:routes': (routes: Route[]) => HookResult
   'response:before': (ctx: { route: Route; payload: any; req: IncomingMessage }) => HookResult
   'request:lookup:before': (requestPath: string) => HookResult
+  'request:lookup:after': (matchedRoutes: MatchedRoute<Route>[]) => HookResult
   'request:handle:before': (ctx: { body: unknown; route: Route; res: ServerResponse; req: IncomingMessage }) => HookResult
   'request:error:404': (requestPath: string, req: IncomingMessage) => HookResult
 }
@@ -28,14 +29,21 @@ export type SimpleOptions = Record<string, any>
 export interface UnroutedPlugin<T> {
   defaults?: T extends any ? (Partial<T> | ((ctx: UnroutedContext) => Partial<T>)) : never
   meta: { name: string; version?: string }
-  setup: (ctx: UnroutedContext, resolvedOptions: T) => Promise<void>|void
+  setup: (ctx: UnroutedContext, resolvedOptions: T) => Promise<any>|any
 }
 export interface UnroutedPreset<T> extends UnroutedPlugin<T> {
+}
+export interface UnroutedMiddleware<T> extends UnroutedPlugin<T> {
+}
+
+export interface ResolvedMiddleware {
+  meta: { name: string; version?: string }
+  setup: (ctx: UnroutedContext) => Promise<UnroutedHandle>|UnroutedHandle
 }
 
 export interface ResolvedPlugin {
   meta: { name: string; version?: string }
-  setup: (ctx: UnroutedContext) => Promise<void>|void
+  setup: (ctx: UnroutedContext) => Promise<any>|any
 }
 
 export interface ResolvedConfig {
@@ -53,18 +61,25 @@ export type DeepPartial<T> = T extends Function ? T : (T extends object ? { [P i
 
 export type HandleFn = ((req: AbstractIncomingMessage|any, res: ServerResponse|any, next: never|(() => void)) => Promise<unknown>)
 export type UnroutedHandle = PHandle | Handle | Middleware | string
-export type NormaliseRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, options?: Record<string, any>) => Route
-export type RegisterRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, options?: Record<string, any>) => Route
+export type NormaliseRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, meta?: RouteMeta) => Route
+export type RegisterRouteFn = (method: HttpMethodInput, urlPattern: string, handle: UnroutedHandle, meta?: RouteMeta) => Route
 
 export type ConfigPartial = DeepPartial<ResolvedConfig>
 
 export type MethodStack = PartialRecord<HTTPMethodOrWildcard, RadixRouter<Route>|null>
 
+export interface GroupAttributes {
+  middleware?: UnroutedHandle[]
+  prefix?: string
+  controller?: any
+  routeMeta?: RouteMeta
+}
+
 export interface UnroutedContext {
   /**
    * Runtime configuration for the current prefix path.
    */
-  prefix: string
+  groupStack: GroupAttributes[]
   /**
    * Resolved configuration.
    */
@@ -110,10 +125,12 @@ export interface AbstractIncomingMessage extends IncomingMessage {
 
 export interface RouteMeta {
   resolve?: {
+    module?: unknown
     file?: string
     import?: Import
-    fn: string
+    fn?: string
   }
+  middleware?: UnroutedHandle[]
   parameterMatchRegExps?: Record<string, RegExp>
   runtimeTypes?: string
 }
@@ -124,7 +141,6 @@ export interface Route {
   handle: UnroutedHandle
   method: HTTPMethodOrWildcard[]
   match?: (req: IncomingMessage) => boolean
-  options?: Record<string, any>
   meta: RouteMeta
   // fns @todo
   // where: (arg) => Route

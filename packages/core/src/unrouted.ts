@@ -1,7 +1,8 @@
 import type { ServerResponse } from 'http'
 import { URL } from 'url'
 import { createContext } from 'unctx'
-import { MIMES, promisifyHandle, send, useBody as useBodyH3, useMethod } from 'h3'
+import type { Middleware } from 'h3'
+import { MIMES, callHandle, promisifyHandle, send, useBody as useBodyH3, useMethod } from 'h3'
 import { createHooks } from 'hookable'
 import type { MatchedRoute } from 'radix3'
 import { createRouter } from 'radix3'
@@ -69,19 +70,17 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
 
     await hooks.callHook('request:lookup:before', requestPath)
     const handlingRoutes: MatchedRoute<Route>[] = []
-    const routesToMatch = ['*', method]
-    for (const m of routesToMatch) {
-      // match explicit methods first
-      const useStack = methodStack[m as HTTPMethodOrWildcard]
-      // no handlers
-      if (useStack) {
-        const match = useStack.lookup(requestPath)
-        if (match) {
-          logger.debug(`Matched: ${m} \`${match.path}\``)
-          handlingRoutes.push(match)
-        }
+    const methodsToMatch: HTTPMethodOrWildcard[] = ['*', method]
+    methodsToMatch.forEach((m: HTTPMethodOrWildcard) => {
+      if (!methodStack[m])
+        return
+      const match = methodStack[m]?.lookup(requestPath)
+      if (match) {
+        logger.debug(`Matched: ${m} \`${match.path}\``)
+        handlingRoutes.push(match)
       }
-    }
+    })
+    await hooks.callHook('request:lookup:after', handlingRoutes)
 
     // no routes to run
     if (!handlingRoutes.length) {
@@ -93,6 +92,16 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     for (const r of handlingRoutes) {
       if (res.writableEnded)
         return false
+
+      // call routes middleware
+      if (r.meta?.middleware) {
+        for (const middleware of r.meta.middleware) {
+          const fn = (await middleware)
+          await callHandle(fn as Middleware, req, res)
+          if (res.writableEnded)
+            return false
+        }
+      }
 
       const hasBody = ['PATCH', 'POST', 'PUT', 'DELETE'].includes(method)
 
@@ -178,6 +187,10 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
       next()
   }
 
+  const groupStack = []
+  if (resolvedConfig.prefix)
+    groupStack.push({ prefix: resolvedConfig.prefix })
+
   // @ts-expect-error Ctx is not available for extra functions
   const ctx: UnroutedContext = {
     handle,
@@ -186,7 +199,7 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     methodStack: {},
     config: resolvedConfig,
     routes: [],
-    prefix: resolvedConfig.prefix,
+    groupStack,
   }
 
   ctx.setup = async(fn) => {
