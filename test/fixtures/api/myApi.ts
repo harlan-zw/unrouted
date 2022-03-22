@@ -17,7 +17,6 @@ import {
 } from '@unrouted/core'
 import { presetNode, serve } from '@unrouted/preset-node'
 import { presetApi } from '@unrouted/preset-api'
-import blog from './controllers/blog'
 
 export default async(options: ConfigPartial = {}) => {
   const { setup, handle } = await createUnrouted({
@@ -96,7 +95,7 @@ export default async(options: ConfigPartial = {}) => {
     // resource group
     group({
       prefix: '/blog',
-      controller: blog,
+      controller: import('./controllers/blog'),
     }, () => {
       // list
       get('articles', 'getArticles')

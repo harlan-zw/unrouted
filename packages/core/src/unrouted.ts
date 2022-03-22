@@ -2,7 +2,7 @@ import type { ServerResponse } from 'http'
 import { URL } from 'url'
 import { createContext } from 'unctx'
 import type { Middleware } from 'h3'
-import { MIMES, callHandle, promisifyHandle, send, useBody as useBodyH3, useMethod } from 'h3'
+import { callHandle, promisifyHandle, useBody as useBodyH3, useMethod } from 'h3'
 import { createHooks } from 'hookable'
 import type { MatchedRoute } from 'radix3'
 import { createRouter } from 'radix3'
@@ -19,6 +19,7 @@ import type {
 } from './types'
 import { createLogger } from './logger'
 import { resolveConfig } from './config'
+import { maybeSendInferredResponse } from './util'
 
 const requestCtx = createContext<AbstractIncomingMessage>()
 const responseCtx = createContext<ServerResponse>()
@@ -52,6 +53,8 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     hooks?.addHooks(config.hooks)
 
   const innerHandle = async(req: AbstractIncomingMessage, res: ServerResponse) => {
+    const now = new Date().getTime()
+
     req.originalUrl = req.originalUrl || req.url || '/'
     const requestPath = withoutTrailingSlash(new URL(req.url || '/', `${req.protocol || 'http'}://${req.headers.host}`).pathname)
 
@@ -98,8 +101,10 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
         for (const middleware of r.meta.middleware) {
           const fn = (await middleware)
           await callHandle(fn as Middleware, req, res)
-          if (res.writableEnded)
+          if (res.writableEnded) {
+            logger.warn('Request ended by middleware')
             return false
+          }
         }
       }
 
@@ -109,13 +114,15 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
       if (hasBody)
         body = await useBodyH3(req)
       await hooks.callHook('request:handle:before', { route: r, req, body, res })
-
       paramCtx.set(r.params || {}, true)
       bodyCtx.set(body || {}, true)
 
       let val
-      if (typeof r.handle !== 'string')
-        val = await r.handle(req, res, () => {})
+      if (typeof r.handle === 'string') {
+        logger.warn(`Route ${r.path} has invalid handle: ${r.handle}`)
+        continue
+      }
+      val = await callHandle(r.handle, req, res)
 
       // @todo resolve val util func
       // support nested handles - lazy imports, etc
@@ -123,6 +130,7 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
         val = await val(req, res, () => {})
       if (val?.default)
         val = await val.default(req, res, () => {})
+      const timeTaken = new Date().getTime() - now
 
       if (!val)
         continue
@@ -137,30 +145,11 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
       }
 
       const type = typeof val
+      logger.debug(`\`${method} ${r.path}\` ${req.statusCode || 200} ${type} - ${timeTaken}ms`)
 
-      let payload = val
-      let mime
-
-      logger.debug(`Matched path has returned type \`${type}\`: ${method} \`${r.path}\``)
-      await hooks.callHook('response:before', { req, route: r, payload: val })
-      if (type === 'number' && val >= 100 && val <= 599) {
-        res.statusCode = val
-        return await send(res, '')
-      }
-      else if (type === 'boolean') {
-        payload = val.toString()
-        mime = MIMES.html
-      }
-      else if (type === 'string') {
-        mime = MIMES.html
-      }
-      else if (type === 'object' && !val?.buffer) {
-        // Return 'false' and 'null' values as JSON strings
-        mime = MIMES.json
-        payload = JSON.stringify(val, null, 2)
-      }
-      if (payload)
-        return await send(res, payload, mime)
+      const payload = val
+      await hooks.callHook('response:before', { req, route: r, payload })
+      await maybeSendInferredResponse(res, payload, { jsonSpacing: 2 })
     }
   }
 
@@ -180,7 +169,7 @@ export async function createUnrouted(config = {} as ConfigPartial): Promise<Unro
     }
     responseCtx.set(res, true)
     requestCtx.set(req, true)
-    await promisifyHandle(innerHandle)(req, res)
+    await callHandle(innerHandle, req, res)
     responseCtx.unset()
     requestCtx.unset()
     if (next)

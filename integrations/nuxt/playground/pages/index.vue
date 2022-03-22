@@ -3,7 +3,7 @@ let modules = await $get('/api/modules')
 
 let post = await $post('/api/contact')
 
-const hi = await $fetch('/api/greeting')
+const hi = await $fetch('/api/hello')
 
 const search = ref('')
 const name = ref('')
@@ -15,7 +15,7 @@ watchEffect(async () => {
 )
 
 const addModule = async () => {
-  const res = await $fetch('/api/modules', {
+  const res = await $post('/api/modules', {
     method: 'POST',
     body: {
       description: 'test',

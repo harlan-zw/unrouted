@@ -35,7 +35,3 @@ export function defineUnroutedMiddleware<T extends SimpleOptions = SimpleOptions
     return m.setup(useUnrouted())
   }
 }
-
-export function defineController(fn: () => Record<string, () => Promise<any>|any>) {
-  return fn()
-}

@@ -1,5 +1,6 @@
 import { defu } from 'defu'
 import type { ConfigPartial, ResolvedConfig } from './types'
+import lazyRouteHandles from './plugins/lazyRouteHandles'
 
 /**
  * A simple define wrapper to provide typings to config definitions.
@@ -19,7 +20,9 @@ export const resolveConfig: (config: ConfigPartial) => Promise<ResolvedConfig> =
     prefix: '/',
     middleware: [],
     hooks: {},
-    plugins: [],
+    plugins: [
+      lazyRouteHandles(),
+    ],
     presets: [],
     name: 'unrouted',
   })

@@ -1,6 +1,6 @@
 import { expect, it } from 'vitest'
 import type { RequestTester } from '@unrouted/test-kit'
-import type { RouteSchema } from '../fixtures/api/__routes__/myApiRoutes'
+import type { RouteSchema } from '../fixtures/api/__routes__/myApi'
 
 const base = '/blog/articles'
 

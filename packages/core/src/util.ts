@@ -1,9 +1,43 @@
+import type { ServerResponse } from 'http'
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
-import { promisifyHandle } from 'h3'
+import { MIMES, createError, isStream, promisifyHandle, send, sendStream } from 'h3'
 import { murmurHash } from 'ohash'
 import { defu } from 'defu'
 import type { NormaliseRouteFn, RegisterRouteFn } from './types'
 import { useUnrouted } from './unrouted'
+
+export function guessMimeType(val: any) {
+  const type = typeof val
+  if (type === 'string')
+    return MIMES.html
+  else if (type === 'object' || type === 'boolean' || type === 'number' /* IS_JSON */)
+    return MIMES.json
+}
+
+export function maybeSendInferredResponse(res: ServerResponse, val: any, options: { jsonSpacing?: number }) {
+  if (typeof val === 'undefined')
+    return
+
+  // handle errors
+  if (val instanceof Error)
+    throw createError(val)
+
+  if (isStream(val))
+    return sendStream(res, val)
+
+  if (val?.buffer)
+    return send(res, val)
+
+  // read from the content-type by default, otherwise we can guess the mime to send
+  const mime = (res.getHeader('Content-Type') as string | undefined) || guessMimeType(val)
+  if (mime) {
+    // ensure we're dealing with a string
+    if (typeof val !== 'string')
+      val = mime === MIMES.json ? JSON.stringify(val, null, options?.jsonSpacing) : val.toString()
+
+    return send(res, val, mime)
+  }
+}
 
 /**
  * All route paths have a leading slash and no trailing slash.
@@ -16,7 +50,8 @@ export const resolveStackPrefix = () => {
   // apply all prefixes from the stack
   for (const prefix of groupStack
     .filter(g => !!g.prefix)
-    .map(g => g.prefix)) {
+    .map(g => g.prefix)
+    .reverse()) {
     // ensure consistency, apply prefix, this could be from a group or something
     path = withBase(normaliseSlashes(path), prefix!)
   }

@@ -156,6 +156,7 @@ export interface PostRoutes {}
 export interface PutRoutes {}
 export interface PatchRoutes {}
 export interface DeleteRoutes {}
+export interface OptionsRoutes {}
 
 export interface RouteSchema {
   get: GetRoutes
@@ -163,4 +164,5 @@ export interface RouteSchema {
   put: PutRoutes
   patch: PatchRoutes
   delete: DeleteRoutes
+  options: OptionsRoutes
 }

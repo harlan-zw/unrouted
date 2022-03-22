@@ -28,10 +28,15 @@
 - 🤝 **Portable** Run on any HTTP server - connect, express, Koa, etc. Powered by [h3](https://github.com/unjs/h3)
 - 🌳 **Fast Param Routing** blazing speed of [radix3](https://github.com/unjs/radix3), supporting named params (`/user/:id`, `/user/{id}` and `/user/**`)
 - 🧩 **Composable Design** Utility functions for defining your api, handling requests and serving responses
-- 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled by default, easy debugging with [consola](https://github.com/unjs/consola) and composable utility for [sirv](https://github.com/lukeed/sirv/tree/master/packages/sirv)
-- 🇹 **Generates Types** Automatic types for route paths _(payloads coming soon)_
 - ✅ **Built to Test** Testing utility package provided: `@unrouted/test-kit` using [supertest](https://github.com/visionmedia/supertest)
-- 🐱 **Built to Hack** [hookable hooks](/), preset and plugin system.
+- 🐱 **Pluggable** [hookable hooks](/), preset and plugin system.
+- 🎮 **Controller Support** Create complex API architectures using controller pattern
+
+### Node Preset
+- 🇹 **Fetch Payload Types** Automatic type definitions for your routes 
+
+### API Preset
+- 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled by default, easy debugging with [consola](https://github.com/unjs/consola) and composable utility for [sirv](https://github.com/lukeed/sirv/tree/master/packages/sirv)
 
 
 ## Getting Started
@@ -237,10 +242,15 @@ boot().then(() => {
 
 ## Guides
 
+### Using Presets
+
+### Using Controllers
+
 ### Writing your API
 
 #### Composables
 
+**Verbs**
 - `get(path: string, res)` - GET route
 - `post(path: string, res)` - POST route
 - `put(path: string, res)` - PUT route
@@ -248,10 +258,18 @@ boot().then(() => {
 - `head(path: string, res)` - HEAD route
 - `options(path: string, res)` - OPTIONS route
 - `any(path: string, res)` - Matches any HTTP method
-- `group(prefix: string, () => void)` - Allows you to group composables under a specific prefix
 - `match(method: string, path: string, res)` - Matches a specific HTTP method, useful for dynamic method matching
+
+**Response Utils**
 - `permanentRedirect(path: string, toPath: string)` - Performs a permanent redirect
 - `redirect(path: string, toPath: string, statusCode: number = 302)` - Performs a temproary redirect by default, you can change the status code
+
+**Grouping utils**
+- `group(prefix: string, () => void)` - Allows you to group composables under a specific prefix
+- `middleware(prefix: string, () => void)` - Allows you to group composables under a specific prefix
+- `prefix(prefix: string, () => void)` - Allows you to group composables under a specific prefix
+
+**Node only**
 - `serve(path: string, dirname: string, sirvOptions: Options = {})` - Serve static content using [sirv](https://github.com/lukeed/sirv)
 
 `res` is a function similar to standard middleware.

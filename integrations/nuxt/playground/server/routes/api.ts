@@ -1,7 +1,6 @@
-import {get, middleware, post, prefix, redirect, version} from 'unrouted'
-import { listModules, getModule } from "../controllers/modules";
-import { greeting as test } from "../controllers/site";
-import def from "../controllers/default";
+import {del, get, group, middleware, post, prefix, redirect} from 'unrouted'
+import {greeting as test, submitContactForm} from "../controllers/site";
+import lazy from "../controllers/lazy";
 import { throttleRequests } from '@unrouted/preset-api'
 
 export default () => {
@@ -19,26 +18,38 @@ export default () => {
   /** Simple non-lazy API creation **/
   get('/greeting', test)
   get('/greeting-2', () =>'welcome 2 :)')
-  get('/default2', def)
 
   // redirects
   redirect('/old-url', '/new-url')
   // grouped routes
-  prefix('/modules', () => {
-    get('/', listModules)
-    get('/:name', getModule)
+  group({
+    prefix: '/modules',
+    controller: import('../controllers/modules')
+  }, () => {
+    get('/', 'listModules')
+    get('/:name', 'getModule')
   })
   /** Lazy API creation **/
   // alternative grouped routes async
-  prefix('/blog', () => {
-    get('/', '#blog@getArticles')
-    get('/:slug', '#blog@getArticle')
+  group({
+    prefix: '/blog',
+    controller: import('../controllers/blog')
+  }, () => {
+    get('/', 'getArticles')
+    get('/:slug', 'getArticle')
+    post('/', 'createArticle')
+    post('/:slug', 'updateArticle')
+    del('/:slug', 'deleteArticle')
   })
   // manual async routes
-  get('/lazy', '#lazy')
+  group({
+    prefix: '/lazy',
+  }, () => {
+    get('/', lazy)
+  })
   // forms
   prefix('/contact', () => {
     // inline post
-    post('/', '#site@submitContactForm')
+    post('/', submitContactForm)
   })
 }

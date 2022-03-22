@@ -60,8 +60,14 @@ async function exportFetchTypes(ctx: UnroutedContext, pluginConfig: PluginConfig
       else {
         path = `'${path}'`
       }
-      let imp = 'Awaited<ReturnType<any>>'
-      if (route.meta.resolve?.import) {
+      let imp = 'Awaited<ReturnType<unknown>>'
+      if (route.meta.resolve?.file) {
+        const relativePath = relative(dirname(pluginConfig.outputPath), route.meta.resolve?.file)
+          // stripe extension
+          .replace(/\.[^/.]+$/, '')
+        imp = `Awaited<ReturnType<typeof import('${relativePath}').${route.meta.resolve?.fn}>>`
+      }
+      else if (route.meta.resolve?.import) {
         const relativePath = relative(dirname(pluginConfig.outputPath), route.meta.resolve?.import.from)
           // stripe extension
           .replace(/\.[^/.]+$/, '')

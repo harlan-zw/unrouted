@@ -5,7 +5,7 @@ import {
   defineNuxtModule,
   importModule, resolveModule,
 } from '@nuxt/kit'
-import type { ConfigPartial } from '@unrouted/core'
+import type { ConfigPartial, HookResult } from '@unrouted/core'
 import { createUnrouted, useUnrouted } from '@unrouted/core'
 import { dirname, join, resolve } from 'pathe'
 import { globby } from 'globby'
@@ -14,15 +14,18 @@ import { genImport } from 'knitwork'
 import type { NitroContext } from '@nuxt/nitro'
 import { presetNode } from '@unrouted/preset-node'
 import { presetApi } from '@unrouted/preset-api'
-import { routeAliasMeta } from '@unrouted/plugins'
 import type { CorsOptions } from 'cors'
 import { murmurHash } from 'ohash'
 import fse from 'fs-extra'
 import virtual from './rollup/plugins/virtual'
-import alias from './rollup/plugins/alias'
+import meta from './rollup/plugins/meta'
 
 export interface ModuleOptions extends ConfigPartial {
   cors: boolean | CorsOptions
+}
+
+export interface ModuleHooks {
+  'unrouted:routes': (paths: string[]) => HookResult
 }
 
 export default defineNuxtModule<ModuleOptions>({
@@ -58,12 +61,6 @@ export default defineNuxtModule<ModuleOptions>({
           watchRouteExportsPath: routesPath,
         }),
       ],
-      plugins: [
-        routeAliasMeta({
-          generateTypesPath,
-          routesPath,
-        }),
-      ],
       name: `${config.name}:parent`,
     })
 
@@ -75,6 +72,8 @@ export default defineNuxtModule<ModuleOptions>({
       await setup(async() => {
         // import route files and run them
         routeFiles = await globby(pattern, { cwd: setupRoutesPath, dot: true })
+        // allow third party routing
+        await nuxt.callHook('unrouted:routes', routeFiles)
         for (const file of routeFiles) {
           clearRequireCache(resolve(setupRoutesPath, file))
           const routeModule = await importModule(resolve(setupRoutesPath, file), { clearCache: true, interopDefault: true })
@@ -93,7 +92,7 @@ export default defineNuxtModule<ModuleOptions>({
         // @todo
         //   rollupWatcher = startRollupWatcher(ni)
         ni.rollupConfig.plugins.unshift(
-          alias({
+          meta({
             routesDir: setupRoutesPath,
           }),
         )
@@ -110,7 +109,7 @@ export default defineNuxtModule<ModuleOptions>({
                   }
                 })
 
-                return `import { createUnrouted, useUnrouted } from 'unrouted'
+                return `import { createUnrouted, useUnrouted } from '@unrouted/core'
 ${routeCode.map(r => r.import).join('\n')}
 
 export default async () => {
@@ -120,7 +119,6 @@ export default async () => {
  }
  const { handle, setup } = await createUnrouted({
   ...(${JSON.stringify(config)}),
-  presets: [],
   debug: true,
   name: '${config.name}:nitro',
  })
@@ -146,7 +144,7 @@ export default async () => {
     const resolver = createResolver(import.meta.url)
     addPlugin(resolver.resolve('runtime/plugin/fetch'))
 
-    for (const method of ['get', 'patch', 'put', 'post', 'delete']) {
+    for (const method of ['get', 'patch', 'put', 'post', 'delete', 'options']) {
       addAutoImport({
         name: `$${method}`,
         as: `$${method}`,
