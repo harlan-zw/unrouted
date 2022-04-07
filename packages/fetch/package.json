@@ -33,8 +33,10 @@
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
+  "devDependencies": {
+    "@unrouted/core": "workspace:*"
+  },
   "dependencies": {
-    "@unrouted/core": "workspace:*",
     "ohmyfetch": "^0.4.15"
   }
 }

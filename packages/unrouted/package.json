@@ -31,6 +31,6 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@unrouted/core": "workspace:*"
+    "@unrouted/core": "link:../core"
   }
 }

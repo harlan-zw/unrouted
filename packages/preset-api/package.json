@@ -31,7 +31,7 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@unrouted/core": "workspace:*",
+    "@unrouted/core": "link:../core",
     "cors": "^2.8.5"
   },
   "devDependencies": {
