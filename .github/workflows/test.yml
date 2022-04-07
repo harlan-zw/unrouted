@@ -38,7 +38,7 @@ jobs:
       - run: pnpm install && pnpm add puppeteer
 
       - name: Build
-        run: pnpm run build
+        run: pnpm run build:packages
 
       - name: Test
         run: pnpm run test
