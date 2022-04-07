@@ -10,5 +10,6 @@ export default defineBuildConfig({
     { input: 'src/index' },
   ],
   externals: [
+    '@unrouted/core',
   ],
 })

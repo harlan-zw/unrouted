@@ -2,8 +2,8 @@
   "name": "@unrouted/nuxt",
   "type": "module",
   "version": "0.3.4",
-  "description": "Nuxt module for unrouted",
   "private": true,
+  "description": "Nuxt module for unrouted",
   "keywords": [
     "unrouted",
     "nuxt-module",
@@ -56,9 +56,9 @@
     "unrouted": "workspace:*"
   },
   "devDependencies": {
-    "rollup": "^2.70.1",
     "@nuxt/module-builder": "latest",
     "@nuxt/schema": "npm:@nuxt/schema-edge@latest",
-    "nuxt3": "^3.0.0-27488206.1ffcc74"
+    "nuxt3": "^3.0.0-27488206.1ffcc74",
+    "rollup": "^2.70.1"
   }
 }

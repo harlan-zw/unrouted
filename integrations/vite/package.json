@@ -29,10 +29,10 @@
       "import": "./dist/index.mjs"
     }
   },
-  "sideEffects": false,
   "files": [
     "dist"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "play": "vite dev playground",

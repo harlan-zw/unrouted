@@ -76,7 +76,7 @@ export default function VitePlugin(pluginOptions: ConfigPartial = {}): Plugin {
       //   watcher.close()
       // })
     },
-    async handleHotUpdate(hmr) {
+    async handleHotUpdate() {
       //
     },
   }
