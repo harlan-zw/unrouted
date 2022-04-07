@@ -1,7 +1,7 @@
 {
   "name": "@unrouted/test-kit",
   "type": "module",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "bugs": {
     "url": "https://github.com/harlan-zw/unrouted/issues"
