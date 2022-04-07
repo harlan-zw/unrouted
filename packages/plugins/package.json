@@ -1,7 +1,7 @@
 {
   "name": "@unrouted/plugins",
   "type": "module",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "bugs": {
     "url": "https://github.com/harlan-zw/unrouted/issues"
