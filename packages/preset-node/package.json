@@ -1,0 +1,49 @@
+{
+  "name": "@unrouted/preset-node",
+  "type": "module",
+  "version": "0.3.4",
+  "homepage": "https://github.com/harlan-zw/unrouted#readme",
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
+  "license": "MIT",
+  "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harlan-zw/unrouted.git",
+    "directory": "packages/preset-node"
+  },
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    },
+    "./*": "./*"
+  },
+  "files": [
+    "dist",
+    "*.d.ts"
+  ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "unbuild",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "@unrouted/core": "workspace:*",
+    "@unrouted/plugins": "workspace:*",
+    "compression": "^1.7.4",
+    "defu": "^6.0.0",
+    "h3": "^0.5.5",
+    "pathe": "^0.2.0",
+    "sirv": "^2.0.2",
+    "ufo": "^0.8.3"
+  },
+  "devDependencies": {
+    "@types/compression": "^1.7.2"
+  }
+}

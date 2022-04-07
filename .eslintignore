@@ -1,4 +1,5 @@
 dist
 node_modules
-test/fixtures
 playground
+integrations/nuxt/framework
+**/__routes__

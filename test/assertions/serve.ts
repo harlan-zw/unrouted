@@ -1,8 +1,8 @@
 import { expect, it } from 'vitest'
 import type { RequestTester } from '@unrouted/test-kit'
-import type { RequestPathSchema } from '../fixtures/api/__routes__/api-routes'
+import type { RouteSchema } from '../fixtures/api/__routes__/myApiRoutes'
 
-export async function serve(request: RequestTester<RequestPathSchema>) {
+export async function serve(request: RequestTester<RouteSchema>) {
   const path = '/static'
   it('serving static works', async() => {
     const indexHtml = await request.get(path)

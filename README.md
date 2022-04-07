@@ -15,7 +15,7 @@
 <tbody>
 <td align="center">
 <img width="2000" height="0" /><br>
-<i>Status:</i> <b>Public Beta 🎉</b><br>
+<i>Status:</i> <b>Public Preview - In Development 🔨</b><br>
 <sub>Made possible by my <a href="https://github.com/sponsors/harlan-zw">Sponsor Program 💖</a><br> Follow me <a href="https://twitter.com/harlan_zw">@harlan_zw</a> 🐦</sub><br>
 <img width="2000" height="0" />
 </td>
@@ -25,13 +25,18 @@
 
 ## Features
 
-- 🤝 **Portable** Run on any HTTP server - connect, express, Koa, etc. Powered by [h3](https://github.com/unjs/h3)
-- 🌳 **Fast Param Routing** blazing speed of [radix3](https://github.com/unjs/radix3), supporting named params (`/user/:id`, `/user/{id}` and `/user/**`)
+- 🤝 **Portable** Powered by [h3](https://github.com/unjs/h3), supporting Serverless, Workers, and Node.js workers.
+- 🌳 **Fast Param Routing** [radix3](https://github.com/unjs/radix3) named params (`/user/:id`, `/user/{id}` and `/user/**`)
 - 🧩 **Composable Design** Utility functions for defining your api, handling requests and serving responses
-- 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled by default, easy debugging with [consola](https://github.com/unjs/consola) and composable utility for [sirv](https://github.com/lukeed/sirv/tree/master/packages/sirv)
-- 🇹 **Generates Types** Automatic types for route paths _(payloads coming soon)_
 - ✅ **Built to Test** Testing utility package provided: `@unrouted/test-kit` using [supertest](https://github.com/visionmedia/supertest)
-- 🐱 **Built to Hack** [hookable hooks](/), preset and plugin system.
+- 🐱 **Pluggable** [hookable hooks](/), preset and plugin system.
+- 🎮 **Controller Support** Create complex API architectures using controller pattern
+
+### Node Preset
+- 🇹 **Fetch Payload Types** Automatic type definitions for your routes 
+
+### API Preset
+- 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled by default, easy debugging with [consola](https://github.com/unjs/consola) and composable utility for [sirv](https://github.com/lukeed/sirv/tree/master/packages/sirv)
 
 
 ## Getting Started
@@ -68,7 +73,7 @@ To get your API setup, you need to make use of two functions: setup and handle.
 import { createUnrouted, get } from 'unrouted'
 // ...
 async function createApi() {
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
   
@@ -87,7 +92,7 @@ hooks on the final routes provided by your API, such as generating types.
 import { createUnrouted, get } from 'unrouted'
 // ...
 async function createApi() {
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
   
@@ -96,7 +101,7 @@ async function createApi() {
   })
   
   // app could be h3, koa, connect, express servers 
-  app.use(handle)
+  app.use(app.nodeHandler)
 }
 ```
 
@@ -112,7 +117,7 @@ import { listen } from 'listhen'
 
 async function createApi() {
   // ctx is the unrouted context  
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
 
@@ -120,7 +125,7 @@ async function createApi() {
     get('/', 'hello world')
   })
 
-  return handle
+  return app
 }
 
 async function boot() {
@@ -143,7 +148,7 @@ import createConnectApp from 'connect'
 
 async function createApi() {
   // ctx is the unrouted context  
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
 
@@ -151,7 +156,7 @@ async function createApi() {
     get('/', 'hello world')
   })
 
-  return handle
+  return app.nodeHandler
 }
 
 async function boot() {
@@ -173,7 +178,7 @@ import createExpressApp from 'express'
 
 async function createApi() {
   // ctx is the unrouted context  
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
 
@@ -190,7 +195,7 @@ async function createApi() {
     })
   })
 
-  return handle
+  return app.nodeHandler
 }
 
 async function boot() {
@@ -203,44 +208,18 @@ boot().then(() => {
 })
 ```
 </details>
-<details>
- <summary>Using <a href="https://github.com/koajs/koa">koa</a>.</summary>
-
-```ts
-import { createUnrouted, get } from 'unrouted'
-import Koa from 'koa'
-
-async function createApi() {
-  // ctx is the unrouted context  
-  const { setup, handle } = await createUnrouted({
-    // options
-  })
-
-  await setup(() => {
-    get('/', 'hello world')
-  })
-
-  return handle
-}
-
-async function boot() {
-  const koa = new Koa()
-  const server = koa.listen()
-  koa.use(await createApi())
-}
-
-boot().then(() => {
-  console.log('Ready!')
-})
-```
-</details>
 
 ## Guides
+
+### Using Presets
+
+### Using Controllers
 
 ### Writing your API
 
 #### Composables
 
+**Verbs**
 - `get(path: string, res)` - GET route
 - `post(path: string, res)` - POST route
 - `put(path: string, res)` - PUT route
@@ -248,10 +227,18 @@ boot().then(() => {
 - `head(path: string, res)` - HEAD route
 - `options(path: string, res)` - OPTIONS route
 - `any(path: string, res)` - Matches any HTTP method
-- `group(prefix: string, () => void)` - Allows you to group composables under a specific prefix
 - `match(method: string, path: string, res)` - Matches a specific HTTP method, useful for dynamic method matching
+
+**Response Utils**
 - `permanentRedirect(path: string, toPath: string)` - Performs a permanent redirect
 - `redirect(path: string, toPath: string, statusCode: number = 302)` - Performs a temproary redirect by default, you can change the status code
+
+**Grouping utils**
+- `group(prefix: string, () => void)` - Allows you to group composables under a specific prefix
+- `middleware(prefix: string, () => void)` - Allows you to group composables under a specific prefix
+- `prefix(prefix: string, () => void)` - Allows you to group composables under a specific prefix
+
+**Node only**
 - `serve(path: string, dirname: string, sirvOptions: Options = {})` - Serve static content using [sirv](https://github.com/lukeed/sirv)
 
 `res` is a function similar to standard middleware.
