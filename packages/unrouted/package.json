@@ -1,6 +1,5 @@
 {
   "name": "unrouted",
-  "type": "module",
   "version": "0.4.6",
   "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "bugs": {
@@ -21,14 +20,12 @@
     ".": {
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs"
-    },
-    "./*": "./*"
+    }
   },
   "files": [
     "dist",
     "*.d.ts"
   ],
-  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"

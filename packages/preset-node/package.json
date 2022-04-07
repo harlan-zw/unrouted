@@ -1,6 +1,5 @@
 {
   "name": "@unrouted/preset-node",
-  "type": "module",
   "version": "0.4.6",
   "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "bugs": {
@@ -14,15 +13,14 @@
     "directory": "packages/preset-node"
   },
   "funding": "https://github.com/sponsors/harlan-zw",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
       "import": "./dist/index.mjs"
-    },
-    "./*": "./*"
+    }
   },
   "files": [
     "dist",

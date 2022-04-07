@@ -9,7 +9,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build:packages": "pnpm -r --filter ./packages run build",
+    "build:packages": "pnpm --filter ./packages run build",
     "build:integrations": "pnpm -r --parallel --filter ./integrations run build",
     "build": "pnpm -r build:packages && pnpm -r --filter ./integrations run stub",
     "stub": "pnpm -r --parallel --filter ./packages run stub && pnpm -r --parallel --filter ./integrations run stub",
