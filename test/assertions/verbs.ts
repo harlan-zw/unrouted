@@ -1,8 +1,8 @@
 import { expect, it } from 'vitest'
 import type { RequestTester } from '@unrouted/test-kit'
-import type { RequestPathSchema } from '../fixtures/api/__routes__/api-routes'
+import type { RouteSchema } from '../fixtures/api/__routes__/myApiRoutes'
 
-export async function groups(request: RequestTester<RequestPathSchema>) {
+export async function groups(request: RequestTester<RouteSchema>) {
   it('', async() => {
     const res = await request.post('/names')
       .set('Accept', 'application/json')

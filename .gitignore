@@ -5,3 +5,5 @@ dist
 coverage
 .profile
 .idea
+/integrations/nuxt/playground/.nuxt/
+.unrouted

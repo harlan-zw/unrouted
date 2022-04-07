@@ -1,19 +1,9 @@
 import type { CallbackHandler, Test } from 'supertest'
 import supertest from 'supertest'
 
-export interface RouteSchema {
-  get: string
-  post: string
-  put: string
-  patch: string
-  delete: string
-  head: string
-  options: string
-  connect: string
-  trace: string
-}
+export type RouteSchema = Record<'get'|'post'|'put'|'patch'|'delete'|'head'|'options'|'connect'|'trace', string>
 
-export interface RequestTester<T extends Partial<RouteSchema>, Req = Test> {
+export interface RequestTester<T extends Partial<RouteSchema> = {}, Req = Test> {
   get(url: T['get'], callback?: CallbackHandler): Req
   put(url: T['put'], callback?: CallbackHandler): Req
   post(url: T['post'], callback?: CallbackHandler): Req

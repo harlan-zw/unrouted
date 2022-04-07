@@ -1,21 +1,21 @@
 import { expect, it } from 'vitest'
 import type { RequestTester } from '@unrouted/test-kit'
-import type { RequestPathSchema } from '../fixtures/api/__routes__/api-routes'
+import type { RouteSchema } from '../fixtures/api/__routes__/myApi'
 
 const base = '/blog/articles'
 
 const createArticles = [
   {
-    id: '12345',
+    id: 1,
     title: 'Test 1',
   },
   {
-    id: '12346',
+    id: 2,
     title: 'Test 2',
   },
 ]
 
-export function resource(request: RequestTester<RequestPathSchema>) {
+export function resource(request: RequestTester<RouteSchema>) {
   it('can create 2 articles', async() => {
     let article = createArticles[0]
     let res = await request.post(base).send(article)
@@ -33,24 +33,42 @@ export function resource(request: RequestTester<RequestPathSchema>) {
 
   it('can read first', async() => {
     const res = await request.get(`${base}/${createArticles[0].id}`)
-    expect(res.body).toEqual(createArticles[0])
+    expect(res.body).toMatchInlineSnapshot(`
+      {
+        "id": 1,
+        "title": "Test 1",
+      }
+    `)
+  })
+  it('can read second', async() => {
+    const res = await request.get(`${base}/${createArticles[1].id}`)
+    expect(res.body).toMatchInlineSnapshot(`
+      {
+        "id": 2,
+        "title": "Test 2",
+      }
+    `)
   })
 
   it('can update first', async() => {
     const res = await request.post(`${base}/${createArticles[0].id}`).send({
       title: 'New title',
     })
-    expect(res.body).toEqual({
-      id: createArticles[0].id,
-      title: 'New title',
-    })
+    expect(res.body).toMatchInlineSnapshot(`
+      {
+        "id": 1,
+        "title": "New title",
+      }
+    `)
   })
 
   it('can delete first', async() => {
     const res = await request.del(`${base}/${createArticles[0].id}`)
-    expect(res.body).toEqual({
-      id: createArticles[0].id,
-    })
+    expect(res.body).toMatchInlineSnapshot(`
+      {
+        "id": 1,
+      }
+    `)
   })
 
   it('can support GET', async() => {

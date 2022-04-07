@@ -1,22 +1,24 @@
-import { join, resolve } from "path";
-import { createUnrouted } from 'unrouted'
-import {get, serve} from "unrouted";
+import { join, resolve } from 'path'
+import { createUnrouted, get } from '@unrouted/core'
+import { presetNode, serve } from '@unrouted/preset-node'
 
-const simpleServeApi = async () => {
-  const { handle, setup } = await createUnrouted({
+const simpleServeApi = async() => {
+  const unrouted = await createUnrouted({
     name: 'simpleServeApi',
-    dev: true,
-    generateTypes: true,
-    root: join(__dirname, '__routes__')
+    presets: [
+      presetNode({
+        generateTypes: true,
+      }),
+    ],
   })
 
-  await setup(() => {
-    get('/static/my-sub-api', 'hello')
+  await unrouted.setup(() => {
+    get('/static/my-sub-api', () => 'hello')
     // serve static files
-    serve('/static', resolve(join(__dirname, '..', 'demo')))
+    serve('/static', resolve(join(__dirname, '..', 'demo')), { dev: true })
   })
 
-  return handle
+  return unrouted
 }
 
 export default simpleServeApi
