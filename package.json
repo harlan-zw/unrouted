@@ -1,7 +1,7 @@
 {
   "name": "unrouted-monorepo",
   "private": true,
-  "version": "0.4.5",
+  "version": "0.4.6",
   "description": "Minimal, composable Expressive Universal Router",
   "repository": "harlan-zw/unrouted",
   "license": "MIT",
