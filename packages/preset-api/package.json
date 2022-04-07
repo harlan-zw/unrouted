@@ -28,15 +28,13 @@
     "dist",
     "*.d.ts"
   ],
-  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
   "dependencies": {
     "@unrouted/core": "workspace:*",
-    "cors": "^2.8.5",
-    "express-rate-limit": "^6.3.0"
+    "cors": "^2.8.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12"

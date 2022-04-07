@@ -1,6 +1,6 @@
 import { createContext } from 'unctx'
-import type { CompatibilityEvent, CompatibilityEventHandler, Router } from 'h3'
-import {createApp, createRouter, sendError, useBody as useBodyH3} from 'h3'
+import type { CompatibilityEvent, CompatibilityEventHandler } from 'h3'
+import { createApp, createRouter, sendError, useBody as useBodyH3 } from 'h3'
 import { createHooks } from 'hookable'
 import type {
   ConfigPartial,

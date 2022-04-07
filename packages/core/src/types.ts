@@ -9,7 +9,6 @@ import type {
 import type { Hookable } from 'hookable'
 import type { Consola } from 'consola'
 import type { Import } from 'unimport'
-import {Handler, Middleware} from "h3";
 
 export type Nullable<T> = { [K in keyof T]: T[K] | null }
 export type HookResult<T = void> = Promise<T> | T
