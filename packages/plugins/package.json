@@ -1,6 +1,5 @@
 {
   "name": "@unrouted/plugins",
-  "type": "module",
   "version": "0.4.8",
   "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "bugs": {
@@ -28,13 +27,12 @@
     "dist",
     "*.d.ts"
   ],
-  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@unrouted/core": "workspace:*",
+    "@unrouted/core": "link:../core",
     "fs-extra": "^10.0.1",
     "globby": "^13.1.1",
     "mlly": "^0.5.1",
