@@ -3,6 +3,7 @@
   "type": "module",
   "version": "0.3.4",
   "description": "Nuxt module for unrouted",
+  "private": true,
   "keywords": [
     "unrouted",
     "nuxt-module",
