@@ -34,7 +34,7 @@
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@types/supertest": "latest",
+    "@types/supertest": "^2.0.12",
     "supertest": "^6.2.2"
   }
 }

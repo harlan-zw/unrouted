@@ -1,7 +1,7 @@
-import { useResponse } from '../unrouted'
+import { useEvent } from '../unrouted'
 
 export function setStatusCode(code: number) {
-  const res = useResponse()
+  const { res } = useEvent()
   res.statusCode = code
 }
 

@@ -1,43 +1,10 @@
-import type { ServerResponse } from 'http'
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
-import { MIMES, createError, isStream, promisifyHandle, send, sendStream } from 'h3'
+import type { CompatibilityEvent, EventHandler, H3Response } from 'h3'
 import { murmurHash } from 'ohash'
 import { defu } from 'defu'
 import type { NormaliseRouteFn, RegisterRouteFn } from './types'
 import { useUnrouted } from './unrouted'
-
-export function guessMimeType(val: any) {
-  const type = typeof val
-  if (type === 'string')
-    return MIMES.html
-  else if (type === 'object' || type === 'boolean' || type === 'number' /* IS_JSON */)
-    return MIMES.json
-}
-
-export function maybeSendInferredResponse(res: ServerResponse, val: any, options: { jsonSpacing?: number }) {
-  if (typeof val === 'undefined')
-    return
-
-  // handle errors
-  if (val instanceof Error)
-    throw createError(val)
-
-  if (isStream(val))
-    return sendStream(res, val)
-
-  if (val?.buffer)
-    return send(res, val)
-
-  // read from the content-type by default, otherwise we can guess the mime to send
-  const mime = (res.getHeader('Content-Type') as string | undefined) || guessMimeType(val)
-  if (mime) {
-    // ensure we're dealing with a string
-    if (typeof val !== 'string')
-      val = mime === MIMES.json ? JSON.stringify(val, null, options?.jsonSpacing) : val.toString()
-
-    return send(res, val, mime)
-  }
-}
+import { useMethod } from './composition'
 
 /**
  * All route paths have a leading slash and no trailing slash.
@@ -72,33 +39,40 @@ export const resolveStackRouteMeta = () => {
   return meta
 }
 
+export function unroutedEventHandler(handle: any): EventHandler {
+  return async(e: CompatibilityEvent) => {
+    const now = new Date().getTime()
+    const { hooks, logger } = useUnrouted()
+    await hooks.callHook('request:handle:before', e)
+    const res = await handle(e)
+    const timeTaken = new Date().getTime() - now
+    logger.debug(`\`${useMethod()} ${e.req.url}\` ${e.req.statusCode || 200} ${typeof res} - ${timeTaken}ms`)
+    await hooks.callHook('response:before', handle, res)
+    return res as H3Response
+  }
+}
+
 /**
  * Create a normalised route from numerous inputs.
  */
 export const normaliseRoute: NormaliseRouteFn = (method, path, handle, meta?) => {
   // ensure consistency, apply prefix, this could be from a group or something
   path = withBase(normaliseSlashes(path), resolveStackPrefix())
-  if (typeof handle === 'function' && handle.length > 2)
-    handle = promisifyHandle(handle)
+  meta = defu(meta || {}, resolveStackRouteMeta())
   if (!Array.isArray(method))
     method = [method]
-  meta = defu(meta || {}, resolveStackRouteMeta())
+  const id = `_${murmurHash(`${method.join(',')} ${path}`)}`
+  meta.id = id
+  if (typeof handle === 'function') {
+    handle = unroutedEventHandler(handle)
+    handle.__meta__ = meta
+  }
   return {
-    id: `_${murmurHash(`${method.join(',')} ${path}`)}`,
+    id,
     path,
     handle,
     method,
     meta,
-    // add functions for chanining @todo
-    // where (matches: Record<string, RegExp>) {
-    //   meta.parameterMatchRegExps = {
-    //     ...meta.parameterMatchRegExps,
-    //     ...matches,
-    //   }
-    // },
-    // name(name: string) {
-    //   meta.name = name
-    // }
   }
 }
 

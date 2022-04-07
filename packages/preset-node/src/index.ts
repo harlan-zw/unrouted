@@ -1,9 +1,9 @@
 import { defineUnroutedPreset } from '@unrouted/core'
 import type { CompressionOptions } from 'compression'
-import type { Handle } from 'h3'
 import { generateTypes, untypedPayloads, watchExports } from '@unrouted/plugins'
 import { join } from 'pathe'
 import compression from 'compression'
+import type { CompatibilityEventHandler } from 'h3'
 import { name, version } from '../package.json'
 
 export interface PresetConfig {
@@ -30,7 +30,7 @@ export const presetNode = defineUnroutedPreset<PresetConfig>({
     }
   },
   async setup(ctx, options) {
-    ctx.config.middleware.push(compression(options.compression) as Handle)
+    ctx.config.middleware.push(compression(options.compression) as CompatibilityEventHandler)
     if (options.watchRouteExportsPath) {
       ctx.config.plugins.push(watchExports({
         setupRoutesPath: options.setupRoutesPath,

@@ -1,11 +1,11 @@
 import type { IncomingMessage, ServerResponse } from 'http'
 import type { Stats } from 'fs'
 import sirv from 'sirv'
-import { promisifyHandle } from 'h3'
 import { withBase, withLeadingSlash, withTrailingSlash, withoutTrailingSlash } from 'ufo'
-import type { AbstractIncomingMessage } from '@unrouted/core'
 import { registerRoute, resolveStackPrefix, useUnrouted } from '@unrouted/core'
 import { defu } from 'defu'
+import type { CompatibilityEvent } from 'h3'
+import { dynamicEventHandler } from 'h3'
 
 /*
 @todo fix, this is causing build issues
@@ -61,17 +61,20 @@ const serve = (path: string, dirname: string, sirvOptions: SirvOptions = {}) => 
   // allow user to configure serve with a hook
   // @ts-expect-error hook type removed temporarily
   ctx.hooks.callHook('serve:register', serveArguments).then(() => {
-    const handle = promisifyHandle((req: AbstractIncomingMessage, res: ServerResponse) => {
+    const handle = dynamicEventHandler(async(e: CompatibilityEvent) => {
+      const req = e.req
+      const res = e.res
       // we need to strip the path from the req.url for sirv to work
       req.url = withTrailingSlash(req.url?.replace(serveArguments.path, '') || '/')
       // @ts-expect-error hook type removed temporarily
-      ctx.hooks.callHook('serve:before-route', req).then(() => {
-        sirv(serveArguments.dirname, serveArguments.sirvOptions)(req, res)
+      await ctx.hooks.callHook('serve:before-route', req)
+      return new Promise((resolve) => {
+        sirv(serveArguments.dirname, serveArguments.sirvOptions)(req, res, resolve)
       })
     })
 
-    registerRoute('GET', `${serveArguments.path}**`, handle)
-    registerRoute('GET', withoutTrailingSlash(serveArguments.path), handle)
+    registerRoute('get', `${serveArguments.path}**`, handle)
+    registerRoute('get', withoutTrailingSlash(serveArguments.path), handle)
   })
 }
 

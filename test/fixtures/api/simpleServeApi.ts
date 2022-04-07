@@ -3,7 +3,7 @@ import { createUnrouted, get } from '@unrouted/core'
 import { presetNode, serve } from '@unrouted/preset-node'
 
 const simpleServeApi = async() => {
-  const { setup, handle } = await createUnrouted({
+  const unrouted = await createUnrouted({
     name: 'simpleServeApi',
     presets: [
       presetNode({
@@ -12,13 +12,13 @@ const simpleServeApi = async() => {
     ],
   })
 
-  await setup(() => {
+  await unrouted.setup(() => {
     get('/static/my-sub-api', () => 'hello')
     // serve static files
     serve('/static', resolve(join(__dirname, '..', 'demo')), { dev: true })
   })
 
-  return handle
+  return unrouted
 }
 
 export default simpleServeApi

@@ -1,18 +1,19 @@
 <script setup lang="ts">
-let modules = await $get('/api/modules')
-
-let post = await $post('/api/contact')
-
-const hi = await $fetch('/api/hello')
+let modules = []
+// let modules = await $get('/api/modules')
+//
+// let post = await $post('/api/contact')
+//
+// const hi = await $fetch('/api/hello')
 
 const search = ref('')
 const name = ref('')
 
-watchEffect(async () => {
-    const value = search.value.toLowerCase()
-    modules = await $fetch('/api/modules', { params: { search: value}})
-  }
-)
+// watchEffect(async () => {
+//     const value = search.value.toLowerCase()
+//     modules = await $fetch('/api/modules', { params: { search: value}})
+//   }
+// )
 
 const addModule = async () => {
   const res = await $post('/api/modules', {

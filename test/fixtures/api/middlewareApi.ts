@@ -2,7 +2,7 @@ import { createUnrouted, get, middleware } from '@unrouted/core'
 import { throttleRequests } from '../../../packages/preset-api'
 
 export default async() => {
-  const { setup, handle } = await createUnrouted({
+  const { setup, handler } = await createUnrouted({
     name: 'middlewareApi',
   })
 
@@ -18,5 +18,5 @@ export default async() => {
     get('/unthrottled', () => 'Hi')
   })
 
-  return handle
+  return handler
 }

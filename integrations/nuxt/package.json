@@ -40,7 +40,6 @@
     "stub": "nuxt-module-build --stub && nuxi prepare playground"
   },
   "dependencies": {
-    "@harlanzw/nuxt-kit-extras": "^0.3.1",
     "@nuxt/kit": "npm:@nuxt/kit-edge@latest",
     "@unrouted/core": "workspace:*",
     "@unrouted/fetch": "workspace:*",
@@ -53,12 +52,12 @@
     "magic-string": "^0.26.1",
     "ohash": "^0.1.0",
     "pathe": "^0.2.0",
-    "rollup": "^2.70.1",
     "unrouted": "workspace:*"
   },
   "devDependencies": {
+    "rollup": "^2.70.1",
     "@nuxt/module-builder": "latest",
     "@nuxt/schema": "npm:@nuxt/schema-edge@latest",
-    "nuxt3": "^3.0.0-27465767.70f067a"
+    "nuxt3": "^3.0.0-27488206.1ffcc74"
   }
 }

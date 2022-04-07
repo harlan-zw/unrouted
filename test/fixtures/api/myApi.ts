@@ -10,7 +10,7 @@ import {
   permanentRedirect,
   post,
   prefix,
-  redirect,
+  redirect, setStatusCode,
   useBody,
   useParams,
   useQuery,
@@ -19,7 +19,7 @@ import { presetNode, serve } from '@unrouted/preset-node'
 import { presetApi } from '@unrouted/preset-api'
 
 export default async(options: ConfigPartial = {}) => {
-  const { setup, handle } = await createUnrouted({
+  const api = await createUnrouted({
     name: 'api',
     prefix: options.prefix ?? undefined,
     presets: [
@@ -32,7 +32,7 @@ export default async(options: ConfigPartial = {}) => {
     ],
   })
 
-  await setup(() => {
+  await api.setup(() => {
     post('post-test', () => {
       const { name } = useBody<{ name: string }>()
       return {
@@ -66,10 +66,10 @@ export default async(options: ConfigPartial = {}) => {
       const names: string[] = []
 
       get('/', () => names)
-      post('/', async(req, res) => {
+      post('/', async() => {
         const { name } = useBody<{ name: string }>()
         if (!name) {
-          res.statusCode = 422
+          setStatusCode(422)
           return {
             success: false,
             error: 'missing name',
@@ -102,7 +102,7 @@ export default async(options: ConfigPartial = {}) => {
       // create
       post('articles', 'createArticle')
       // update
-      match(['POST', 'PUT'], 'articles/:id', 'updateArticle')
+      match(['post', 'put'], 'articles/:id', 'updateArticle')
       // delete
       del('articles/:id', 'deleteArticle')
       // read
@@ -112,5 +112,5 @@ export default async(options: ConfigPartial = {}) => {
     any('/any-route', req => req.method)
   })
 
-  return handle
+  return api
 }

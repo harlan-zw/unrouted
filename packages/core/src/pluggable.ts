@@ -1,9 +1,9 @@
 import { defu } from 'defu'
+import type { CompatibilityEventHandler } from 'h3'
 import type {
   ResolvedPlugin,
   SimpleOptions,
   UnroutedContext,
-  UnroutedHandle,
   UnroutedMiddleware,
   UnroutedPlugin,
   UnroutedPreset,
@@ -29,7 +29,7 @@ export function defineUnroutedPreset<T extends SimpleOptions = SimpleOptions>(pr
   return defineUnroutedPlugin(preset)
 }
 
-export function defineUnroutedMiddleware<T extends SimpleOptions = SimpleOptions>(middleware: UnroutedMiddleware<T>): (options?: Partial<T>) => UnroutedHandle {
+export function defineUnroutedMiddleware<T extends SimpleOptions = SimpleOptions>(middleware: UnroutedMiddleware<T>): (options?: Partial<T>) => CompatibilityEventHandler {
   return (options = {}) => {
     const m = defineUnroutedPlugin(middleware)(options)
     return m.setup(useUnrouted())

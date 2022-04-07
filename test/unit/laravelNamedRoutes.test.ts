@@ -1,16 +1,12 @@
 import { describe, expect, it } from 'vitest'
-import { createApp as createH3App } from 'h3'
 import { useUnrouted } from '@unrouted/core'
 import testKit from '@unrouted/test-kit'
 import laravelApi from '../fixtures/api/laravelApi'
 
 describe('laravel named routes test', async() => {
-  const handle = await laravelApi()
+  const api = await laravelApi()
 
-  const app = createH3App()
-
-  const request = testKit(app)
-  app.use(handle)
+  const request = testKit(api.app)
 
   it('named params are substituted', async() => {
     const ctx = useUnrouted()

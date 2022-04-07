@@ -46,6 +46,7 @@ export default defineNuxtModule<ModuleOptions>({
     const generateTypesPath = join(nuxt.options.buildDir, 'types', 'unrouted.d.ts')
     const routesPath = join(nuxt.options.rootDir, 'server', 'controllers')
     const setupRoutesPath = resolve(nuxt.options.rootDir, 'server', 'routes')
+
     const { setup } = useUnrouted() || await createUnrouted({
       ...config,
       presets: [
@@ -115,17 +116,19 @@ ${routeCode.map(r => r.import).join('\n')}
 export default async () => {
  const existingCtx = useUnrouted()
  if (existingCtx) {
-    return existingCtx.handle
+    return existingCtx.router.handler
  }
- const { handle, setup } = await createUnrouted({
+ const { router, setup } = await createUnrouted({
   ...(${JSON.stringify(config)}),
   debug: true,
+  app: true,
   name: '${config.name}:nitro',
  })
  await setup(async () => {
    await ${routeCode.map(r => `${r.importId}()`).join('\n')}
  })
- return handle
+ console.log(router)
+ return router.handler
 }`
               },
             },
@@ -133,12 +136,12 @@ export default async () => {
         )
       })
 
-      n.middleware.push({
-        route: '/',
-        handle: '#unrouted',
-        // @todo look at making this lazy possibly?
-        lazy: false,
-      })
+      // n.middleware.push({
+      //   route: '/',
+      //   handle: '#unrouted',
+      //   // @todo look at making this lazy possibly?
+      //   lazy: false,
+      // })
     })
 
     const resolver = createResolver(import.meta.url)

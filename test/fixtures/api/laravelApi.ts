@@ -3,7 +3,7 @@ import type { ConfigPartial } from '@unrouted/core'
 import { laravelNamedParams } from '@unrouted/plugins'
 
 export default async(options: ConfigPartial = {}) => {
-  const { setup, handle } = await createUnrouted({
+  const api = await createUnrouted({
     name: 'laravelApi',
     prefix: options.prefix ?? undefined,
     plugins: [
@@ -11,9 +11,9 @@ export default async(options: ConfigPartial = {}) => {
     ],
   })
 
-  await setup(() => {
+  await api.setup(() => {
     get('/user/{id}', () => `Hi ${useParams<{ id: string }>().id}`)
   })
 
-  return handle
+  return api
 }

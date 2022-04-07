@@ -7,12 +7,13 @@ export default defineUnroutedPlugin({
   },
   async setup({ hooks }) {
     // Payload types
-    hooks.hook('response:before', async({ route, payload }) => {
-    // if the route already has a file to resolve to then, we don't need to manage types hackily
-      if (route.meta.resolve?.file || route.meta.runtimeTypes)
+    hooks.hook('response:before', async(event, payload) => {
+      const meta = event.__meta__
+      // if the route already has a file to resolve to then, we don't need to manage types hackily
+      if (!meta || meta.resolve?.file || meta.runtimeTypes)
         return
-      route.meta.runtimeTypes = untypePayload(payload, {
-        interfaceName: route.id,
+      meta.runtimeTypes = untypePayload(payload, {
+        interfaceName: meta.id,
         indentation: 2,
         addDefaults: false,
         addExport: false,

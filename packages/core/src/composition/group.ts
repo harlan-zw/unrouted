@@ -1,6 +1,7 @@
 import { defu } from 'defu'
+import type { EventHandler } from 'h3'
 import { useUnrouted } from '../unrouted'
-import type { GroupAttributes, UnroutedHandle } from '../types'
+import type { GroupAttributes } from '../types'
 
 const group = (attributes: GroupAttributes, cb: (() => void)) => {
   const ctx = useUnrouted()!
@@ -15,7 +16,7 @@ const group = (attributes: GroupAttributes, cb: (() => void)) => {
   ctx.groupStack.pop()
 }
 
-const middleware = (middleware: UnroutedHandle|UnroutedHandle[], cb: (() => void)) => {
+const middleware = (middleware: EventHandler[], cb: (() => void)) => {
   if (!Array.isArray(middleware))
     middleware = [middleware]
   return group({ routeMeta: { middleware } }, cb)

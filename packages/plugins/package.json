@@ -37,10 +37,10 @@
     "@unrouted/core": "workspace:*",
     "fs-extra": "^10.0.1",
     "globby": "^13.1.1",
-    "mlly": "^0.4.3",
+    "mlly": "^0.5.1",
     "pathe": "^0.2.0",
-    "unimport": "^0.1.1",
-    "untyped": "^0.4.3"
+    "unimport": "^0.1.4",
+    "untyped": "^0.4.4"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13"

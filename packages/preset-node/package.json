@@ -38,10 +38,10 @@
     "@unrouted/plugins": "workspace:*",
     "compression": "^1.7.4",
     "defu": "^6.0.0",
-    "h3": "^0.4.2",
+    "h3": "^0.5.5",
     "pathe": "^0.2.0",
     "sirv": "^2.0.2",
-    "ufo": "^0.8.1"
+    "ufo": "^0.8.3"
   },
   "devDependencies": {
     "@types/compression": "^1.7.2"
