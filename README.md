@@ -73,7 +73,7 @@ To get your API setup, you need to make use of two functions: setup and handle.
 import { createUnrouted, get } from 'unrouted'
 // ...
 async function createApi() {
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
   
@@ -92,7 +92,7 @@ hooks on the final routes provided by your API, such as generating types.
 import { createUnrouted, get } from 'unrouted'
 // ...
 async function createApi() {
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
   
@@ -101,7 +101,7 @@ async function createApi() {
   })
   
   // app could be h3, koa, connect, express servers 
-  app.use(handle)
+  app.use(app.nodeHandler)
 }
 ```
 
@@ -117,7 +117,7 @@ import { listen } from 'listhen'
 
 async function createApi() {
   // ctx is the unrouted context  
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
 
@@ -125,7 +125,7 @@ async function createApi() {
     get('/', 'hello world')
   })
 
-  return handle
+  return app
 }
 
 async function boot() {
@@ -148,7 +148,7 @@ import createConnectApp from 'connect'
 
 async function createApi() {
   // ctx is the unrouted context  
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
 
@@ -156,7 +156,7 @@ async function createApi() {
     get('/', 'hello world')
   })
 
-  return handle
+  return app.nodeHandler
 }
 
 async function boot() {
@@ -178,7 +178,7 @@ import createExpressApp from 'express'
 
 async function createApi() {
   // ctx is the unrouted context  
-  const { setup, handle } = await createUnrouted({
+  const { setup, app } = await createUnrouted({
     // options
   })
 
@@ -195,43 +195,12 @@ async function createApi() {
     })
   })
 
-  return handle
+  return app.nodeHandler
 }
 
 async function boot() {
   const app = createExpressApp()
   app.use(await createApi())
-}
-
-boot().then(() => {
-  console.log('Ready!')
-})
-```
-</details>
-<details>
- <summary>Using <a href="https://github.com/koajs/koa">koa</a>.</summary>
-
-```ts
-import { createUnrouted, get } from 'unrouted'
-import Koa from 'koa'
-
-async function createApi() {
-  // ctx is the unrouted context  
-  const { setup, handle } = await createUnrouted({
-    // options
-  })
-
-  await setup(() => {
-    get('/', 'hello world')
-  })
-
-  return handle
-}
-
-async function boot() {
-  const koa = new Koa()
-  const server = koa.listen()
-  koa.use(await createApi())
 }
 
 boot().then(() => {
