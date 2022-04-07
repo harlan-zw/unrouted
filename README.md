@@ -15,7 +15,7 @@
 <tbody>
 <td align="center">
 <img width="2000" height="0" /><br>
-<i>Status:</i> <b>Public Beta 🎉</b><br>
+<i>Status:</i> <b>Public Preview - In Development 🔨</b><br>
 <sub>Made possible by my <a href="https://github.com/sponsors/harlan-zw">Sponsor Program 💖</a><br> Follow me <a href="https://twitter.com/harlan_zw">@harlan_zw</a> 🐦</sub><br>
 <img width="2000" height="0" />
 </td>
@@ -25,8 +25,8 @@
 
 ## Features
 
-- 🤝 **Portable** Run on any HTTP server - connect, express, Koa, etc. Powered by [h3](https://github.com/unjs/h3)
-- 🌳 **Fast Param Routing** blazing speed of [radix3](https://github.com/unjs/radix3), supporting named params (`/user/:id`, `/user/{id}` and `/user/**`)
+- 🤝 **Portable** Powered by [h3](https://github.com/unjs/h3), supporting Serverless, Workers, and Node.js workers.
+- 🌳 **Fast Param Routing** [radix3](https://github.com/unjs/radix3) named params (`/user/:id`, `/user/{id}` and `/user/**`)
 - 🧩 **Composable Design** Utility functions for defining your api, handling requests and serving responses
 - ✅ **Built to Test** Testing utility package provided: `@unrouted/test-kit` using [supertest](https://github.com/visionmedia/supertest)
 - 🐱 **Pluggable** [hookable hooks](/), preset and plugin system.
