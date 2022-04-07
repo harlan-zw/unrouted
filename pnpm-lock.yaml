@@ -78,7 +78,7 @@ importers:
   packages/plugins:
     specifiers:
       '@types/fs-extra': ^9.0.13
-      '@unrouted/core': workspace:*
+      '@unrouted/core': link:../core
       fs-extra: ^10.0.1
       globby: ^13.1.1
       mlly: ^0.5.1
