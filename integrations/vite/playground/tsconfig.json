@@ -1,0 +1,6 @@
+{
+  "extends": "../../../tsconfig.json",
+  "include": [
+    "node_modules/.vite/unrouted.d.ts"
+  ]
+}

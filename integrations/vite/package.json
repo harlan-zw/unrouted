@@ -1,0 +1,59 @@
+{
+  "name": "@unrouted/vite",
+  "type": "module",
+  "version": "0.3.4",
+  "description": "Vite plugin module for Unrouted",
+  "keywords": [
+    "unrouted",
+    "vite"
+  ],
+  "homepage": "https://github.com/harlan-zw/unrouted/integrations/vite#readme",
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
+  "license": "MIT",
+  "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harlan-zw/unrouted.git",
+    "directory": "integrations/vite"
+  },
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "unbuild",
+    "play": "vite dev playground",
+    "stub": "unbuild --stub"
+  },
+  "dependencies": {
+    "@nuxt/kit": "npm:@nuxt/kit-edge@latest",
+    "@unrouted/core": "workspace:*",
+    "@unrouted/fetch": "workspace:*",
+    "@unrouted/plugins": "workspace:*",
+    "@unrouted/preset-api": "workspace:*",
+    "@unrouted/preset-node": "workspace:*",
+    "chokidar": "^3.5.3",
+    "globby": "^13.1.1",
+    "knitwork": "^0.1.1",
+    "magic-string": "^0.26.1",
+    "ohash": "^0.1.0",
+    "pathe": "^0.2.0",
+    "unrouted": "workspace:*"
+  },
+  "devDependencies": {
+    "rollup": "^2.70.1",
+    "vite": "^2.9.1"
+  }
+}
