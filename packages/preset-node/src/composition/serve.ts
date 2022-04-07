@@ -65,7 +65,8 @@ const serve = (path: string, dirname: string, sirvOptions: SirvOptions = {}) => 
       const req = e.req
       const res = e.res
       // we need to strip the path from the req.url for sirv to work
-      req.url = withTrailingSlash(req.url?.replace(serveArguments.path, '') || '/')
+      if (serveArguments.path && serveArguments.path !== '/')
+        req.url = withTrailingSlash(req.url?.replace(serveArguments.path, '') || '/')
       // @ts-expect-error hook type removed temporarily
       await ctx.hooks.callHook('serve:before-route', req)
       return new Promise((resolve) => {
