@@ -1,7 +1,7 @@
 {
   "name": "@unrouted/preset-api",
   "type": "module",
-  "version": "0.3.4",
+  "version": "0.4.2",
   "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "bugs": {
     "url": "https://github.com/harlan-zw/unrouted/issues"
