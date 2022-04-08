@@ -1,6 +1,5 @@
 {
   "name": "@unrouted/test-kit",
-  "type": "module",
   "version": "0.4.11",
   "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "bugs": {
@@ -20,9 +19,9 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
-    },
-    "./*": "./*"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
+    }
   },
   "files": [
     "dist",

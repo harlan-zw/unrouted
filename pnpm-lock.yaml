@@ -68,7 +68,7 @@ importers:
 
   packages/fetch:
     specifiers:
-      '@unrouted/core': workspace:*
+      '@unrouted/core': workspace:../core
       ohmyfetch: ^0.4.15
     dependencies:
       ohmyfetch: 0.4.15
@@ -78,7 +78,7 @@ importers:
   packages/plugins:
     specifiers:
       '@types/fs-extra': ^9.0.13
-      '@unrouted/core': link:../core
+      '@unrouted/core': workspace:../core
       fs-extra: ^10.0.1
       globby: ^13.1.1
       mlly: ^0.5.1
@@ -99,7 +99,7 @@ importers:
   packages/preset-api:
     specifiers:
       '@types/cors': ^2.8.12
-      '@unrouted/core': link:../core
+      '@unrouted/core': workspace:../core
       cors: ^2.8.5
     dependencies:
       '@unrouted/core': link:../core
@@ -110,8 +110,8 @@ importers:
   packages/preset-node:
     specifiers:
       '@types/compression': ^1.7.2
-      '@unrouted/core': link:../core
-      '@unrouted/plugins': link:../plugins
+      '@unrouted/core': workspace:../core
+      '@unrouted/plugins': workspace:../plugins
       compression: ^1.7.4
       defu: ^6.0.0
       h3: ^0.5.5
@@ -140,7 +140,7 @@ importers:
 
   packages/unrouted:
     specifiers:
-      '@unrouted/core': link:../core
+      '@unrouted/core': workspace:../core
     dependencies:
       '@unrouted/core': link:../core
 

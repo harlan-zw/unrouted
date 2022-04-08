@@ -19,19 +19,21 @@
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
     "dist",
     "*.d.ts"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@unrouted/core": "link:../core",
+    "@unrouted/core": "workspace:../core",
     "cors": "^2.8.5"
   },
   "devDependencies": {

@@ -13,26 +13,28 @@
     "directory": "packages/preset-node"
   },
   "funding": "https://github.com/sponsors/harlan-zw",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
+  "main": "dist/index.cjs",
+  "module": "dist/index.mjs",
+  "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.ts"
     }
   },
   "files": [
     "dist",
     "*.d.ts"
   ],
+  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
   "dependencies": {
-    "@unrouted/core": "link:../core",
-    "@unrouted/plugins": "link:../plugins",
+    "@unrouted/core": "workspace:../core",
+    "@unrouted/plugins": "workspace:../plugins",
     "compression": "^1.7.4",
     "defu": "^6.0.0",
     "h3": "^0.5.5",
