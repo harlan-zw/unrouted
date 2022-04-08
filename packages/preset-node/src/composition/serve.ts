@@ -46,7 +46,7 @@ const serve = (path: string, dirname: string, sirvOptions: SirvOptions = {}) => 
 
   sirvOptions = defu(sirvOptions, {
     single: true,
-    dev: ctx.config.debug,
+    dev: true,
   })
 
   path = withBase(path, resolveStackPrefix())
