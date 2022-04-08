@@ -1,7 +1,7 @@
 {
   "name": "@unrouted/vite",
   "type": "module",
-  "version": "0.3.4",
+  "version": "0.4.13",
   "private": true,
   "description": "Vite plugin module for Unrouted",
   "keywords": [
