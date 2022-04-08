@@ -49,7 +49,7 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
     if (hasBody)
       body = await useBodyH3(e)
     bodyCtx.set(body || {}, true)
-    paramCtx.set(e.event.context.params || {}, true)
+    paramCtx.set(e.context?.params || {}, true)
   })
 
   const app = config.app || createApp({
