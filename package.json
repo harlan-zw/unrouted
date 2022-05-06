@@ -2,7 +2,7 @@
   "name": "@unrouted/monorepo",
   "private": true,
   "version": "0.4.15",
-  "packageManager": "pnpm@6.32.4",
+  "packageManager": "pnpm@7.0.0",
   "scripts": {
     "build:packages": "pnpm --filter ./packages run build",
     "build:integrations": "pnpm -r --parallel --filter ./integrations run build",
@@ -15,23 +15,23 @@
     "test:update": "vitest -u"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.20.2",
+    "@antfu/eslint-config": "^0.23.0",
     "@types/express": "latest",
     "@types/koa": "^2.13.4",
-    "@types/node": "17.0.23",
+    "@types/node": "17.0.31",
     "@unrouted/test-kit": "workspace:*",
-    "@vitest/ui": "^0.9.2",
+    "@vitest/ui": "^0.10.5",
     "bumpp": "^7.1.1",
     "connect": "latest",
-    "eslint": "^8.12.0",
-    "express": "^4.17.3",
-    "h3": "^0.7.1",
+    "eslint": "^8.14.0",
+    "express": "^4.18.1",
+    "h3": "^0.7.8",
     "koa": "^2.13.4",
-    "listhen": "0.2.8",
-    "supertest": "^6.2.2",
-    "typescript": "^4.6.3",
-    "unbuild": "^0.7.2",
-    "unstorage": "^0.3.3",
-    "vitest": "^0.9.2"
+    "listhen": "0.2.11",
+    "supertest": "^6.2.3",
+    "typescript": "^4.6.4",
+    "unbuild": "^0.7.4",
+    "unstorage": "^0.4.1",
+    "vitest": "^0.10.5"
   }
 }

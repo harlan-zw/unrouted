@@ -1,7 +1,7 @@
 import type { CallbackHandler, Test } from 'supertest'
 import supertest from 'supertest'
 
-export type RouteSchema = Record<'get'|'post'|'put'|'patch'|'delete'|'head'|'options'|'connect'|'trace', string>
+export type RouteSchema = Record<'get' | 'post' | 'put' | 'patch' | 'delete' | 'head' | 'options' | 'connect' | 'trace', string>
 
 export interface RequestTester<T extends Partial<RouteSchema> = {}, Req = Test> {
   get(url: T['get'], callback?: CallbackHandler): Req

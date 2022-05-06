@@ -69,8 +69,8 @@ export default defineNuxtModule<ModuleOptions>({
     let routeFiles = await globby(pattern, { cwd: setupRoutesPath, dot: true })
     // @todo enable const rollupWatcher = null
 
-    const initRoutes = async() => {
-      await setup(async() => {
+    const initRoutes = async () => {
+      await setup(async () => {
         // import route files and run them
         routeFiles = await globby(pattern, { cwd: setupRoutesPath, dot: true })
         // allow third party routing
@@ -158,7 +158,7 @@ export default async () => {
     const watcher = watch([
       join(setupRoutesPath, pattern),
     ], { ignoreInitial: true })
-    watcher.on('all', async() => {
+    watcher.on('all', async () => {
       await initRoutes()
     })
 
@@ -170,7 +170,7 @@ export default async () => {
       opts.references.push({ path: resolve(nuxt.options.buildDir, 'types/unrouted.d.ts') })
     })
 
-    nuxt.hook('build:done', async() => {
+    nuxt.hook('build:done', async () => {
       await initRoutes()
       // we sub out unroutes get routes into Nitro's fetch InternalApi
       const nitroTypesPath = resolve(nuxt.options.buildDir, 'types/nitro.d.ts')

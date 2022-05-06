@@ -2,7 +2,7 @@ import { join, resolve } from 'path'
 import { createUnrouted, get } from '@unrouted/core'
 import { presetNode, serve } from '@unrouted/preset-node'
 
-const simpleServeApi = async() => {
+const simpleServeApi = async () => {
   const unrouted = await createUnrouted({
     name: 'simpleServeApi',
     presets: [

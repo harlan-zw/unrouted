@@ -18,7 +18,7 @@ import {
 import { presetNode, serve } from '@unrouted/preset-node'
 import { presetApi } from '@unrouted/preset-api'
 
-export default async(options: ConfigPartial = {}) => {
+export default async (options: ConfigPartial = {}) => {
   const api = await createUnrouted({
     name: 'api',
     prefix: options.prefix ?? undefined,
@@ -66,7 +66,7 @@ export default async(options: ConfigPartial = {}) => {
       const names: string[] = []
 
       get('/', () => names)
-      post('/', async() => {
+      post('/', async () => {
         const { name } = useBody<{ name: string }>()
         if (!name) {
           setStatusCode(422)

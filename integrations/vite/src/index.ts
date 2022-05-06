@@ -51,8 +51,8 @@ export default function VitePlugin(pluginOptions: ConfigPartial = {}): Plugin {
       const pattern = '**/*.{ts,mjs,js,cjs}'
       let routeFiles = await globby(pattern, { cwd: setupRoutesPath, dot: true })
 
-      const initRoutes = async() => {
-        await setup(async() => {
+      const initRoutes = async () => {
+        await setup(async () => {
           // import route files and run them
           routeFiles = await globby(pattern, { cwd: setupRoutesPath, dot: true })
           // allow third party routing
@@ -66,7 +66,7 @@ export default function VitePlugin(pluginOptions: ConfigPartial = {}): Plugin {
       const watcher = watch([
         join(setupRoutesPath, pattern),
       ], { ignoreInitial: true })
-      watcher.on('all', async() => {
+      watcher.on('all', async () => {
         await initRoutes()
       })
 

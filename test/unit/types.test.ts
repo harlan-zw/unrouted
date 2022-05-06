@@ -14,7 +14,7 @@ const dynamicPayload = {
   description: 'this is a test',
 }
 
-describe('type generation works', async() => {
+describe('type generation works', async () => {
   const typesFile = join(dirname(__dirname), 'fixtures', 'api', '__routes__', 'types-test.d.ts')
   const config = {
     name: 'types-test',
@@ -27,7 +27,7 @@ describe('type generation works', async() => {
       }),
     ],
     hooks: {
-      'setup:routes': function(routes) {
+      'setup:routes': function (routes) {
         for (const route of routes) {
           // need to manually add runtimeTypes so it's available
           if (route.path === '/__api/dynamic-type-return') {
@@ -44,7 +44,7 @@ describe('type generation works', async() => {
   }
   const { setup } = await createUnrouted(config)
 
-  test('basic anonymous route types', async() => {
+  test('basic anonymous route types', async () => {
     await setup(() => {
       post('post-test', () => {})
       get('/greeting', () => 'Hello :)')
@@ -75,7 +75,7 @@ describe('type generation works', async() => {
       `)
   })
 
-  test('named route types', async() => {
+  test('named route types', async () => {
     const { setup } = await createUnrouted(config)
     await setup(() => {
       get('/greeting', greeting)
@@ -99,7 +99,7 @@ describe('type generation works', async() => {
     `)
   })
 
-  test('route runtime types', async() => {
+  test('route runtime types', async () => {
     const { setup } = await createUnrouted()
     await setup(() => {
       get('/dynamic-type-return', () => {

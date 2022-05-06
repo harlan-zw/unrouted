@@ -18,13 +18,13 @@ export default defineUnroutedPlugin<PluginConfig>({
   async setup({ hooks }, options) {
     const mappedRouteExports: Record<string, Import> = {}
 
-    hooks.hook('setup:before', async() => {
+    hooks.hook('setup:before', async () => {
       // find exports from controller files
       const files = await resolveFiles(options.routesPath, options.pattern)
       const imports: Import[] = []
 
       await Promise.all(
-        files.map(async(path) => {
+        files.map(async (path) => {
           imports.push(...await scanExports(path))
         }),
       )
@@ -34,7 +34,7 @@ export default defineUnroutedPlugin<PluginConfig>({
       })
     })
 
-    hooks.hook('setup:after', async({ routes }) => {
+    hooks.hook('setup:after', async ({ routes }) => {
       for (const r of routes) {
         // handle is likely anonymous
         if (!r.meta.resolve?.fn)

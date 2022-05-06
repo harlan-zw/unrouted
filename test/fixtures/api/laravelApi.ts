@@ -2,7 +2,7 @@ import { createUnrouted, get, useParams } from '@unrouted/core'
 import type { ConfigPartial } from '@unrouted/core'
 import { laravelNamedParams } from '@unrouted/plugins'
 
-export default async(options: ConfigPartial = {}) => {
+export default async (options: ConfigPartial = {}) => {
   const api = await createUnrouted({
     name: 'laravelApi',
     prefix: options.prefix ?? undefined,

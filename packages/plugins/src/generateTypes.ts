@@ -131,14 +131,14 @@ export default defineUnroutedPlugin<PluginConfig>({
     declareModule: true,
   },
   setup({ hooks }, config) {
-    hooks.hook('setup:after', async(ctx) => {
+    hooks.hook('setup:after', async (ctx) => {
       if (config.declareModule)
         await exportFetchTypes(ctx, config)
       else
         await exportSimpleTypes(ctx, config)
     })
 
-    hooks.hook('response:before', async(handle) => {
+    hooks.hook('response:before', async (handle) => {
       if (handle.__meta__?.runtimeTypes) {
         const ctx = useUnrouted()
         if (config.declareModule)

@@ -4,7 +4,7 @@ import type { RouteSchema } from '../fixtures/api/__routes__/myApiRoutes'
 
 export async function serve(request: RequestTester<RouteSchema>) {
   const path = '/static'
-  it('serving static works', async() => {
+  it('serving static works', async () => {
     const indexHtml = await request.get(path)
     expect(indexHtml.ok).toBeTruthy()
     expect(indexHtml.statusCode).toEqual(200)

@@ -14,7 +14,7 @@ export function defineConfig(config: ConfigPartial) {
  * A provided configuration from the user may require runtime transformations to avoid breaking app functionality.
  * @param config
  */
-export const resolveConfig: (config: ConfigPartial) => Promise<ResolvedConfig> = async(config) => {
+export const resolveConfig: (config: ConfigPartial) => Promise<ResolvedConfig> = async (config) => {
   config = defu(config, {
     debug: false,
     prefix: '/',

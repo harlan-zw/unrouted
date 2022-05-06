@@ -1,7 +1,7 @@
 import { createUnrouted, get, middleware } from '@unrouted/core'
 import { throttleRequests } from '../../../packages/preset-api'
 
-export default async() => {
+export default async () => {
   const { setup, handler } = await createUnrouted({
     name: 'middlewareApi',
   })

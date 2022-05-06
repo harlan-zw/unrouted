@@ -7,7 +7,7 @@ export default defineUnroutedPlugin({
     name: 'lazyRouteHandles',
   },
   setup({ hooks, logger }) {
-    hooks.hook('setup:routes', async(routes) => {
+    hooks.hook('setup:routes', async (routes) => {
       for (const route of routes) {
         if (typeof route.handle === 'function' && route.handle.name) {
           route.meta.resolve = {

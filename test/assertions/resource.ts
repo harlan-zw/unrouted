@@ -16,7 +16,7 @@ const createArticles = [
 ]
 
 export function resource(request: RequestTester<RouteSchema>) {
-  it('can create 2 articles', async() => {
+  it('can create 2 articles', async () => {
     let article = createArticles[0]
     let res = await request.post(base).send(article)
     expect(res.body).toEqual(article)
@@ -26,12 +26,12 @@ export function resource(request: RequestTester<RouteSchema>) {
     expect(res.body).toEqual(article)
   })
 
-  it('can list', async() => {
+  it('can list', async () => {
     const res = await request.get(base)
     expect(res.body).toEqual(createArticles)
   })
 
-  it('can read first', async() => {
+  it('can read first', async () => {
     const res = await request.get(`${base}/${createArticles[0].id}`)
     expect(res.body).toMatchInlineSnapshot(`
       {
@@ -40,7 +40,7 @@ export function resource(request: RequestTester<RouteSchema>) {
       }
     `)
   })
-  it('can read second', async() => {
+  it('can read second', async () => {
     const res = await request.get(`${base}/${createArticles[1].id}`)
     expect(res.body).toMatchInlineSnapshot(`
       {
@@ -50,7 +50,7 @@ export function resource(request: RequestTester<RouteSchema>) {
     `)
   })
 
-  it('can update first', async() => {
+  it('can update first', async () => {
     const res = await request.post(`${base}/${createArticles[0].id}`).send({
       title: 'New title',
     })
@@ -62,7 +62,7 @@ export function resource(request: RequestTester<RouteSchema>) {
     `)
   })
 
-  it('can delete first', async() => {
+  it('can delete first', async () => {
     const res = await request.del(`${base}/${createArticles[0].id}`)
     expect(res.body).toMatchInlineSnapshot(`
       {
@@ -71,7 +71,7 @@ export function resource(request: RequestTester<RouteSchema>) {
     `)
   })
 
-  it('can support GET', async() => {
+  it('can support GET', async () => {
     const res = await request.get('/any-route')
     expect(res.text).toEqual('GET')
   })

@@ -41,7 +41,7 @@
     "stub": "nuxt-module-build --stub && nuxi prepare playground"
   },
   "dependencies": {
-    "@nuxt/kit": "npm:@nuxt/kit-edge@latest",
+    "@nuxt/kit": "3.0.0-rc.2",
     "@unrouted/core": "workspace:*",
     "@unrouted/fetch": "workspace:*",
     "@unrouted/plugins": "workspace:*",
@@ -58,7 +58,7 @@
   "devDependencies": {
     "@nuxt/module-builder": "latest",
     "@nuxt/schema": "npm:@nuxt/schema-edge@latest",
-    "nuxt3": "^3.0.0-27488206.1ffcc74",
+    "nuxt": "^3.0.0-rc.2",
     "rollup": "^2.70.1"
   }
 }

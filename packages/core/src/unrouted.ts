@@ -42,7 +42,7 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
     hooks?.addHooks(config.hooks)
 
   // add params to global context
-  hooks.hook('request:handle:before', async(e) => {
+  hooks.hook('request:handle:before', async (e) => {
     eventCtx.set(e, true)
     const hasBody = ['PATCH', 'POST', 'PUT', 'DELETE'].includes(useMethod())
     let body = null
@@ -77,7 +77,7 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
     groupStack,
   }
 
-  ctx.setup = async(fn) => {
+  ctx.setup = async (fn) => {
     // clear old routes
     ctx.routes = []
     await ctx.hooks.callHook('setup:before', ctx)

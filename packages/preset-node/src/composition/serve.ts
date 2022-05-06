@@ -61,7 +61,7 @@ const serve = (path: string, dirname: string, sirvOptions: SirvOptions = {}) => 
   // allow user to configure serve with a hook
   // @ts-expect-error hook type removed temporarily
   ctx.hooks.callHook('serve:register', serveArguments).then(() => {
-    const handle = dynamicEventHandler(async(e: CompatibilityEvent) => {
+    const handle = dynamicEventHandler(async (e: CompatibilityEvent) => {
       const req = e.req
       const res = e.res
       // we need to strip the path from the req.url for sirv to work

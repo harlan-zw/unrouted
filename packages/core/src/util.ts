@@ -40,7 +40,7 @@ export const resolveStackRouteMeta = () => {
 }
 
 export function unroutedEventHandler(handle: any): EventHandler {
-  return async(e: CompatibilityEvent) => {
+  return async (e: CompatibilityEvent) => {
     const now = new Date().getTime()
     const { hooks, logger } = useUnrouted()
     await hooks.callHook('request:handle:before', e)

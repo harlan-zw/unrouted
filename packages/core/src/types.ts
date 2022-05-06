@@ -22,7 +22,7 @@ export interface UnroutedHooks {
   'request:error:404': (e: CompatibilityEvent) => HookResult
 }
 
-export type UnroutedEventHandler = CompatibilityEventHandler|string
+export type UnroutedEventHandler = CompatibilityEventHandler | string
 
 export type UnroutedHookable = Hookable<UnroutedHooks>
 
@@ -31,7 +31,7 @@ export type SimpleOptions = Record<string, any>
 export interface UnroutedPlugin<T> {
   defaults?: T extends any ? (Partial<T> | ((ctx: UnroutedContext) => Partial<T>)) : never
   meta: { name: string; version?: string }
-  setup: (ctx: UnroutedContext, resolvedOptions: T) => Promise<any>|any
+  setup: (ctx: UnroutedContext, resolvedOptions: T) => Promise<any> | any
 }
 export interface UnroutedPreset<T> extends UnroutedPlugin<T> {
 }
@@ -40,7 +40,7 @@ export interface UnroutedMiddleware<T> extends UnroutedPlugin<T> {
 
 export interface ResolvedPlugin {
   meta: { name: string; version?: string }
-  setup: (ctx: UnroutedContext) => Promise<any>|any
+  setup: (ctx: UnroutedContext) => Promise<any> | any
 }
 
 export interface ResolvedConfig {
