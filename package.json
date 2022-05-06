@@ -1,7 +1,7 @@
 {
   "name": "@unrouted/monorepo",
   "private": true,
-  "version": "0.4.15",
+  "version": "0.4.16",
   "packageManager": "pnpm@7.0.0",
   "scripts": {
     "build:packages": "pnpm --filter ./packages run build",
