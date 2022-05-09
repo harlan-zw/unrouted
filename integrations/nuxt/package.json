@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@nuxt/module-builder": "latest",
-    "@nuxt/schema": "npm:@nuxt/schema-edge@latest",
+    "@nuxt/schema": "^3.0.0-rc.2",
     "nuxt": "^3.0.0-rc.2",
     "rollup": "^2.70.1"
   }

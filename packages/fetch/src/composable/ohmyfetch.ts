@@ -7,7 +7,7 @@ import type { TypedInternalResponse } from '../types'
 async function $_fetchGlobal<R extends string, Default = unknown>(url: R, method: string, opts?: FetchOptions) {
   // @todo do something with Default
   // re-use global fetch instance if available
-  // @ts-expect-error @ts-expect-error sometimes has error
+  // @ts-expect-error sometimes has error
   return ((globalThis.$fetch || $fetch) as typeof $fetch)(url, {
     method,
     ...opts,

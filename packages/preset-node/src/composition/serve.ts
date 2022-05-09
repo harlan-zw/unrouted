@@ -70,6 +70,7 @@ const serve = (path: string, dirname: string, sirvOptions: SirvOptions = {}) => 
       // @ts-expect-error hook type removed temporarily
       await ctx.hooks.callHook('serve:before-route', req)
       return new Promise((resolve) => {
+        // @ts-expect-error untyped
         sirv(serveArguments.dirname, serveArguments.sirvOptions)(req, res, resolve)
       })
     })

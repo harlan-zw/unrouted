@@ -34,6 +34,6 @@
   },
   "dependencies": {
     "@types/supertest": "^2.0.12",
-    "supertest": "^6.2.2"
+    "supertest": "^6.2.3"
   }
 }

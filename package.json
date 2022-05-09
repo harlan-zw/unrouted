@@ -4,10 +4,10 @@
   "version": "0.4.16",
   "packageManager": "pnpm@7.0.0",
   "scripts": {
-    "build:packages": "pnpm --filter ./packages run build",
-    "build:integrations": "pnpm -r --parallel --filter ./integrations run build",
-    "build": "pnpm -r build:packages && pnpm -r --filter ./integrations run stub",
-    "stub": "pnpm -r --parallel --filter ./packages run stub && pnpm -r --parallel --filter ./integrations run stub",
+    "build:packages": "pnpm --filter=./packages/** run build",
+    "build:integrations": "pnpm --filter=./integrations/** run build",
+    "build": "pnpm build:packages && pnpm -r --filter=./integrations/** run stub",
+    "stub": "pnpm -r --parallel --filter=./packages/** run stub && pnpm -r --parallel --filter=./integrations/** run stub",
     "lint": "eslint \"{packages,test,integrations}/**/*.{ts,vue,json,yml}\"",
     "lint:fix": "npm run lint -- --fix",
     "release": "bumpp package.json packages/*/package.json --commit --push --tag",
@@ -20,10 +20,10 @@
     "@types/koa": "^2.13.4",
     "@types/node": "17.0.31",
     "@unrouted/test-kit": "workspace:*",
-    "@vitest/ui": "^0.10.5",
+    "@vitest/ui": "^0.12.0",
     "bumpp": "^7.1.1",
     "connect": "latest",
-    "eslint": "^8.14.0",
+    "eslint": "^8.15.0",
     "express": "^4.18.1",
     "h3": "^0.7.8",
     "koa": "^2.13.4",
@@ -32,6 +32,6 @@
     "typescript": "^4.6.4",
     "unbuild": "^0.7.4",
     "unstorage": "^0.4.1",
-    "vitest": "^0.10.5"
+    "vitest": "^0.12.0"
   }
 }
