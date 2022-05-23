@@ -36,9 +36,9 @@
     "@unrouted/core": "workspace:../core",
     "fs-extra": "^10.1.0",
     "globby": "^13.1.1",
-    "mlly": "^0.5.1",
+    "mlly": "^0.5.2",
     "pathe": "^0.3.0",
-    "unimport": "^0.1.9",
+    "unimport": "^0.2.1",
     "untyped": "^0.4.4"
   },
   "devDependencies": {
