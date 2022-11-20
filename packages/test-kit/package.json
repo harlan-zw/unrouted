@@ -1,39 +1,39 @@
 {
   "name": "@unrouted/test-kit",
   "version": "0.4.18",
-  "homepage": "https://github.com/harlan-zw/unrouted#readme",
-  "bugs": {
-    "url": "https://github.com/harlan-zw/unrouted/issues"
-  },
-  "license": "MIT",
   "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/harlan-zw/unrouted.git",
     "directory": "packages/test-kit"
   },
-  "funding": "https://github.com/sponsors/harlan-zw",
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "files": [
     "dist",
     "*.d.ts"
   ],
-  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
   "dependencies": {
     "@types/supertest": "^2.0.12",
-    "supertest": "^6.2.3"
+    "supertest": "^6.3.1"
   }
 }

@@ -9,18 +9,17 @@ import {
   sendError as h3SendError,
   sendRedirect as h3SendRedirect,
   setCookie as h3SetCookie,
-  useCookie as h3UseCookie,
-  useCookies as h3UseCookies,
-  useMethod as h3UseMethod,
-  useQuery as h3UseQuery,
-  useRawBody as h3UseRawBody,
+  parseCookies as h3UseCookie,
+  getMethod as h3UseMethod,
+  getQuery as h3UseQuery,
+  readRawBody as h3UseRawBody,
 } from 'h3'
 import type { QueryObject } from 'ufo'
 import { useEvent, useUnrouted } from '../unrouted'
 
 type Nullable<T> = { [K in keyof T]: T[K] | undefined }
 
-export function useRawBody(encoding?: false | 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'latin1' | 'binary' | 'hex') {
+export function readRawBody(encoding?: false | 'ascii' | 'utf8' | 'utf-8' | 'utf16le' | 'ucs2' | 'ucs-2' | 'base64' | 'latin1' | 'binary' | 'hex') {
   return h3UseRawBody(useEvent(), encoding)
 }
 
@@ -33,11 +32,7 @@ export function useMethod(defaultMethod?: HTTPMethod) {
 }
 
 export function useCookies() {
-  return h3UseCookies(useEvent())
-}
-
-export function useCookie(name: string) {
-  return h3UseCookie(useEvent(), name)
+  return h3UseCookie(useEvent())
 }
 
 export function setCookie(name: string, value: string, serializeOptions?: any) {

@@ -1,7 +1,8 @@
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
-import type { CompatibilityEvent, EventHandler, H3Response } from 'h3'
+import type { EventHandler, H3Event, H3Response } from 'h3'
 import { murmurHash } from 'ohash'
 import { defu } from 'defu'
+import { eventHandler } from 'h3'
 import type { NormaliseRouteFn, RegisterRouteFn } from './types'
 import { useUnrouted } from './unrouted'
 import { useMethod } from './composition'
@@ -40,16 +41,16 @@ export const resolveStackRouteMeta = () => {
 }
 
 export function unroutedEventHandler(handle: any): EventHandler {
-  return async (e: CompatibilityEvent) => {
+  return eventHandler(async (e: H3Event) => {
     const now = new Date().getTime()
     const { hooks, logger } = useUnrouted()
     await hooks.callHook('request:handle:before', e)
     const res = await handle(e)
     const timeTaken = new Date().getTime() - now
-    logger.debug(`\`${useMethod()} ${e.req.url}\` ${e.req.statusCode || 200} ${typeof res} - ${timeTaken}ms`)
+    logger.debug(`\`${useMethod()} ${e.node.req.url}\` ${e.node.req.statusCode || 200} ${typeof res} - ${timeTaken}ms`)
     await hooks.callHook('response:before', handle, res)
     return res as H3Response
-  }
+  })
 }
 
 /**

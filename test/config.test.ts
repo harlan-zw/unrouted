@@ -1,6 +1,8 @@
 import type { SuperTest, Test } from 'supertest'
 import supertest from 'supertest'
 import { describe, expect, it } from 'vitest'
+import { listen } from 'listhen'
+import { toNodeListener } from 'h3'
 import createApi from './fixtures/api/myApi'
 
 describe('config test', () => {
@@ -10,7 +12,10 @@ describe('config test', () => {
     const api = await createApi({
       prefix: '/my-api/',
     })
-    request = supertest(api.app)
+
+    const server = await listen(toNodeListener(api.app), { open: false })
+
+    request = supertest(server.server)
 
     const res = await request.get('/my-api/greeting')
 

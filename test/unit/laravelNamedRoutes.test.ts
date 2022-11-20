@@ -1,12 +1,16 @@
 import { describe, expect, it } from 'vitest'
 import { useUnrouted } from '@unrouted/core'
 import testKit from '@unrouted/test-kit'
+import { listen } from 'listhen'
+import { toNodeListener } from 'h3'
 import laravelApi from '../fixtures/api/laravelApi'
 
 describe('laravel named routes test', async () => {
   const api = await laravelApi()
 
-  const request = testKit(api.app)
+  const server = await listen(toNodeListener(api.app), { open: false })
+
+  const request = testKit(server.server)
 
   it('named params are substituted', async () => {
     const ctx = useUnrouted()

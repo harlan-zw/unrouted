@@ -1,33 +1,33 @@
 {
   "name": "@unrouted/plugins",
   "version": "0.4.18",
-  "homepage": "https://github.com/harlan-zw/unrouted#readme",
-  "bugs": {
-    "url": "https://github.com/harlan-zw/unrouted/issues"
-  },
-  "license": "MIT",
   "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/harlan-zw/unrouted.git",
     "directory": "packages/plugins"
   },
-  "funding": "https://github.com/sponsors/harlan-zw",
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "files": [
     "dist",
     "*.d.ts"
   ],
-  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
@@ -35,11 +35,11 @@
   "dependencies": {
     "@unrouted/core": "workspace:../core",
     "fs-extra": "^10.1.0",
-    "globby": "^13.1.1",
-    "mlly": "^0.5.2",
-    "pathe": "^0.3.0",
-    "unimport": "^0.2.1",
-    "untyped": "^0.4.4"
+    "globby": "^13.1.2",
+    "mlly": "^1.0.0",
+    "pathe": "^1.0.0",
+    "unimport": "^1.0.1",
+    "untyped": "^1.0.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13"

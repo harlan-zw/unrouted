@@ -71,10 +71,10 @@ export function resource(request: RequestTester<RouteSchema>) {
     `)
   })
 
-  it('can support GET', async () => {
-    const res = await request.get('/any-route')
-    expect(res.text).toEqual('GET')
-  })
+  // it('can support GET', async () => {
+  //   const res = await request.get('/any-route')
+  //   expect(res.text).toEqual('GET')
+  // })
 }
 
 export default resource

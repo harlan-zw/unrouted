@@ -15,23 +15,23 @@
     "test:update": "vitest -u"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^0.23.1",
-    "@types/express": "latest",
-    "@types/koa": "^2.13.4",
-    "@types/node": "17.0.35",
+    "@antfu/eslint-config": "^0.31.0",
+    "@types/express": "^4.17.14",
+    "@types/koa": "^2.13.5",
+    "@types/node": "18.11.9",
     "@unrouted/test-kit": "workspace:*",
-    "@vitest/ui": "^0.12.9",
-    "bumpp": "^7.1.1",
+    "@vitest/ui": "^0.25.2",
+    "bumpp": "^8.2.1",
     "connect": "latest",
-    "eslint": "^8.16.0",
-    "express": "^4.18.1",
-    "h3": "^0.7.8",
+    "eslint": "^8.28.0",
+    "express": "^4.18.2",
+    "h3": "^1.0.1",
     "koa": "^2.13.4",
-    "listhen": "0.2.11",
+    "listhen": "1.0.0",
     "supertest": "^6.2.3",
-    "typescript": "^4.6.4",
-    "unbuild": "^0.7.4",
-    "unstorage": "^0.4.1",
-    "vitest": "^0.12.9"
+    "typescript": "^4.9.3",
+    "unbuild": "^1.0.1",
+    "unstorage": "^1.0.1",
+    "vitest": "^0.25.2"
   }
 }

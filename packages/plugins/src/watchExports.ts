@@ -1,6 +1,6 @@
 import { defineUnroutedPlugin } from '@unrouted/core'
 import type { Import } from 'unimport'
-import { resolveFiles, scanExports } from 'unimport'
+import { scanDirExports } from 'unimport'
 
 interface PluginConfig {
   routesPath: string
@@ -20,14 +20,9 @@ export default defineUnroutedPlugin<PluginConfig>({
 
     hooks.hook('setup:before', async () => {
       // find exports from controller files
-      const files = await resolveFiles(options.routesPath, options.pattern)
-      const imports: Import[] = []
-
-      await Promise.all(
-        files.map(async (path) => {
-          imports.push(...await scanExports(path))
-        }),
-      )
+      const imports: Import[] = await scanDirExports(options.routesPath, {
+        filePatterns: [options.pattern],
+      })
       imports.forEach((e) => {
         // remove extension
         mappedRouteExports[e.name] = e

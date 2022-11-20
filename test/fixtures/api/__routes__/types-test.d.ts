@@ -2,13 +2,7 @@
 declare module '@unrouted/core' {
   type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
   interface _871028989 {
-     id: number,
-
-    title: string,
-
-    postedAt: string,
-
-    description: string,
+     [key: string]: any
   }
 
   interface GetRoutes {

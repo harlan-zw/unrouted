@@ -1,40 +1,41 @@
 {
   "name": "@unrouted/preset-api",
   "version": "0.4.18",
-  "homepage": "https://github.com/harlan-zw/unrouted#readme",
-  "bugs": {
-    "url": "https://github.com/harlan-zw/unrouted/issues"
-  },
-  "license": "MIT",
   "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "homepage": "https://github.com/harlan-zw/unrouted#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/harlan-zw/unrouted.git",
     "directory": "packages/preset-api"
   },
-  "funding": "https://github.com/sponsors/harlan-zw",
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
+  "sideEffects": false,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs"
+    }
+  },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs",
-      "types": "./dist/index.d.ts"
-    }
-  },
   "files": [
     "dist",
     "*.d.ts"
   ],
-  "sideEffects": false,
   "scripts": {
     "build": "unbuild",
     "stub": "unbuild --stub"
   },
   "dependencies": {
     "@unrouted/core": "workspace:../core",
-    "cors": "^2.8.5"
+    "cors": "^2.8.5",
+    "h3": "^1.0.1"
   },
   "devDependencies": {
     "@types/cors": "^2.8.12"

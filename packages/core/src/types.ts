@@ -1,8 +1,7 @@
 import type {
   App,
-  CompatibilityEvent,
-  CompatibilityEventHandler,
   EventHandler,
+  H3Event,
   Router,
   RouterMethod,
 } from 'h3'
@@ -18,11 +17,11 @@ export interface UnroutedHooks {
   'setup:before': (ctx: UnroutedContext) => HookResult
   'setup:routes': (routes: Route[]) => HookResult
   'response:before': (handler: EventHandler, payload: any) => HookResult
-  'request:handle:before': (e: CompatibilityEvent) => HookResult
-  'request:error:404': (e: CompatibilityEvent) => HookResult
+  'request:handle:before': (e: H3Event) => HookResult
+  'request:error:404': (e: H3Event) => HookResult
 }
 
-export type UnroutedEventHandler = CompatibilityEventHandler | string
+export type UnroutedEventHandler = EventHandler | string
 
 export type UnroutedHookable = Hookable<UnroutedHooks>
 
@@ -52,7 +51,7 @@ export interface ResolvedConfig {
 
   presets: ResolvedPlugin[]
   plugins: ResolvedPlugin[]
-  middleware: CompatibilityEventHandler[]
+  middleware: EventHandler[]
   hooks: Partial<UnroutedHooks>
 }
 

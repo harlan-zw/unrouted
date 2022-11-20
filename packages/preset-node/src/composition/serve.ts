@@ -4,17 +4,9 @@ import sirv from 'sirv'
 import { withBase, withLeadingSlash, withTrailingSlash, withoutTrailingSlash } from 'ufo'
 import { registerRoute, resolveStackPrefix, useUnrouted } from '@unrouted/core'
 import { defu } from 'defu'
-import type { CompatibilityEvent } from 'h3'
+import type { H3Event } from 'h3'
 import { dynamicEventHandler } from 'h3'
 
-/*
-@todo fix, this is causing build issues
-declare module '../unrouted' {
-  interface UnroutedHooks {
-    'serve:register': (serveArguments: ServeArguments) => HookResult
-    'serve:before-route': (req: AbstractIncomingMessage) => HookResult
-  }
-} */
 type Arrayable<T> = T | T[]
 
 interface SirvOptions {
@@ -61,9 +53,9 @@ const serve = (path: string, dirname: string, sirvOptions: SirvOptions = {}) => 
   // allow user to configure serve with a hook
   // @ts-expect-error hook type removed temporarily
   ctx.hooks.callHook('serve:register', serveArguments).then(() => {
-    const handle = dynamicEventHandler(async (e: CompatibilityEvent) => {
-      const req = e.req
-      const res = e.res
+    const handle = dynamicEventHandler(async (e: H3Event) => {
+      const req = e.node.req
+      const res = e.node.res
       // we need to strip the path from the req.url for sirv to work
       if (serveArguments.path && serveArguments.path !== '/')
         req.url = withTrailingSlash(req.url?.replace(serveArguments.path, '') || '/')

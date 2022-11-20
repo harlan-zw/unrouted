@@ -4,32 +4,32 @@
   "version": "0.4.13",
   "private": true,
   "description": "Nuxt module for unrouted",
+  "author": "Harlan Wilton <harlan@harlanzw.com>",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/harlan-zw",
+  "homepage": "https://github.com/harlan-zw/unrouted/integrations/nuxt#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harlan-zw/unrouted.git",
+    "directory": "integrations/nuxt"
+  },
+  "bugs": {
+    "url": "https://github.com/harlan-zw/unrouted/issues"
+  },
   "keywords": [
     "unrouted",
     "nuxt-module",
     "nuxt",
     "nuxt3"
   ],
-  "homepage": "https://github.com/harlan-zw/unrouted/integrations/nuxt#readme",
-  "bugs": {
-    "url": "https://github.com/harlan-zw/unrouted/issues"
-  },
-  "license": "MIT",
-  "author": "Harlan Wilton <harlan@harlanzw.com>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/harlan-zw/unrouted.git",
-    "directory": "integrations/nuxt"
-  },
-  "funding": "https://github.com/sponsors/harlan-zw",
-  "main": "./dist/module.cjs",
-  "types": "./dist/types.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/module.mjs",
-      "require": "./dist/module.cjs"
+      "require": "./dist/module.cjs",
+      "import": "./dist/module.mjs"
     }
   },
+  "main": "./dist/module.cjs",
+  "types": "./dist/types.d.ts",
   "files": [
     "dist"
   ],
@@ -41,24 +41,24 @@
     "stub": "nuxt-module-build --stub && nuxi prepare playground"
   },
   "dependencies": {
-    "@nuxt/kit": "3.0.0-rc.2",
+    "@nuxt/kit": "3.0.0",
     "@unrouted/core": "workspace:*",
     "@unrouted/fetch": "workspace:*",
     "@unrouted/plugins": "workspace:*",
     "@unrouted/preset-api": "workspace:*",
     "@unrouted/preset-node": "workspace:*",
     "chokidar": "^3.5.3",
-    "globby": "^13.1.1",
-    "knitwork": "^0.1.1",
-    "magic-string": "^0.26.1",
-    "ohash": "^0.1.0",
-    "pathe": "^0.2.0",
+    "globby": "^13.1.2",
+    "knitwork": "^1.0.0",
+    "magic-string": "^0.26.7",
+    "ohash": "^1.0.0",
+    "pathe": "^1.0.0",
     "unrouted": "workspace:*"
   },
   "devDependencies": {
     "@nuxt/module-builder": "latest",
-    "@nuxt/schema": "^3.0.0-rc.2",
-    "nuxt": "^3.0.0-rc.2",
-    "rollup": "^2.70.1"
+    "@nuxt/schema": "^3.0.0",
+    "nuxt": "^3.0.0",
+    "rollup": "^3.3.0"
   }
 }

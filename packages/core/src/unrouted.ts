@@ -1,6 +1,6 @@
 import { createContext } from 'unctx'
-import type { CompatibilityEvent, CompatibilityEventHandler } from 'h3'
-import { createApp, createRouter, sendError, useBody as useBodyH3 } from 'h3'
+import type { EventHandler, H3Event } from 'h3'
+import { createApp, createRouter, sendError, readBody as useBodyH3 } from 'h3'
 import { createHooks } from 'hookable'
 import type {
   ConfigPartial,
@@ -12,10 +12,10 @@ import { createLogger } from './logger'
 import { resolveConfig } from './config'
 import { useMethod } from './composition'
 
-const eventCtx = createContext<CompatibilityEvent>()
+const eventCtx = createContext<H3Event>()
 const unroutedCtx = createContext<UnroutedContext>()
 
-export const useEvent = eventCtx.use as () => CompatibilityEvent
+export const useEvent = eventCtx.use as () => H3Event
 export const useUnrouted = unroutedCtx.use as () => UnroutedContext
 
 const paramCtx = createContext()
@@ -24,7 +24,7 @@ export const useParams: <T>() => T = paramCtx.use
 export const useBody: <T>() => Nullable<T> = bodyCtx.use
 
 export async function createUnrouted(config: ConfigPartial = {}): Promise<UnroutedContext> {
-  const existingCtx = unroutedCtx.use()
+  const existingCtx = unroutedCtx.tryUse()
   if (existingCtx) {
     existingCtx.logger.debug('Not creating new unrouted instance, we already have an instance.')
     return existingCtx
@@ -66,8 +66,8 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
   if (resolvedConfig.prefix)
     groupStack.push({ prefix: resolvedConfig.prefix })
 
-  // @ts-expect-error Ctx is not available for extra functions
   const ctx: UnroutedContext = {
+    // @ts-expect-error h3 update
     app,
     hooks,
     logger,
@@ -88,7 +88,7 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
     ctx.routes.forEach((route) => {
       // register them with our radix3 router
       route.method.forEach((m) => {
-        ctx.router.add(route.path, route.handle as CompatibilityEventHandler, m)
+        ctx.router.add(route.path, route.handle as EventHandler, m)
       })
     })
     await ctx.hooks.callHook('setup:after', ctx)
@@ -112,6 +112,5 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
   }
 
   unroutedCtx.set(ctx)
-
   return ctx
 }
