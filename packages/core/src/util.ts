@@ -1,5 +1,5 @@
 import { withBase, withLeadingSlash, withoutTrailingSlash } from 'ufo'
-import type { EventHandler, H3Event, H3Response } from 'h3'
+import type { EventHandler, H3Event } from 'h3'
 import { murmurHash } from 'ohash'
 import { defu } from 'defu'
 import { eventHandler } from 'h3'
@@ -12,7 +12,7 @@ import { useMethod } from './composition'
  */
 const normaliseSlashes = (s: string) => withLeadingSlash(withoutTrailingSlash(s))
 
-export const resolveStackPrefix = () => {
+export function resolveStackPrefix() {
   const { groupStack } = useUnrouted()
   let path = ''
   // apply all prefixes from the stack
@@ -26,7 +26,7 @@ export const resolveStackPrefix = () => {
   return path
 }
 
-export const resolveStackRouteMeta = () => {
+export function resolveStackRouteMeta() {
   const { groupStack } = useUnrouted()
   let meta = {}
   // apply all prefixes from the stack
@@ -49,7 +49,7 @@ export function unroutedEventHandler(handle: any): EventHandler {
     const timeTaken = new Date().getTime() - now
     logger.debug(`\`${useMethod()} ${e.node.req.url}\` ${e.node.req.statusCode || 200} ${typeof res} - ${timeTaken}ms`)
     await hooks.callHook('response:before', handle, res)
-    return res as H3Response
+    return res as Response
   })
 }
 

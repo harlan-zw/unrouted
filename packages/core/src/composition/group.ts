@@ -3,7 +3,7 @@ import type { EventHandler } from 'h3'
 import { useUnrouted } from '../unrouted'
 import type { GroupAttributes } from '../types'
 
-const group = (attributes: GroupAttributes, cb: (() => void)) => {
+function group(attributes: GroupAttributes, cb: (() => void)) {
   const ctx = useUnrouted()!
   // handle controllers
   if (attributes.controller)
@@ -16,13 +16,13 @@ const group = (attributes: GroupAttributes, cb: (() => void)) => {
   ctx.groupStack.pop()
 }
 
-const middleware = (middleware: EventHandler[], cb: (() => void)) => {
+function middleware(middleware: EventHandler[], cb: (() => void)) {
   if (!Array.isArray(middleware))
     middleware = [middleware]
   return group({ routeMeta: { middleware } }, cb)
 }
 
-const prefix = (prefix: string, cb: (() => void)) => {
+function prefix(prefix: string, cb: (() => void)) {
   return group({ prefix }, cb)
 }
 

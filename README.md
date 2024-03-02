@@ -33,11 +33,10 @@
 - 🎮 **Controller Support** Create complex API architectures using controller pattern
 
 ### Node Preset
-- 🇹 **Fetch Payload Types** Automatic type definitions for your routes 
+- 🇹 **Fetch Payload Types** Automatic type definitions for your routes
 
 ### API Preset
 - 🏖️ **Easy Prototyping** [cors](https://github.com/expressjs/cors) enabled by default, easy debugging with [consola](https://github.com/unjs/consola) and composable utility for [sirv](https://github.com/lukeed/sirv/tree/master/packages/sirv)
-
 
 ## Getting Started
 
@@ -76,14 +75,14 @@ async function createApi() {
   const { setup, app } = await createUnrouted({
     // options
   })
-  
+
   await setup(() => {
     get('/', 'hello world')
   })
 }
 ```
 
-Note: The `setup` function ensures the unrouted context is used by the utility functions and lets us perform 
+Note: The `setup` function ensures the unrouted context is used by the utility functions and lets us perform
 hooks on the final routes provided by your API, such as generating types.
 
 4. Tell your server to handle the request using `handle`.
@@ -95,12 +94,12 @@ async function createApi() {
   const { setup, app } = await createUnrouted({
     // options
   })
-  
+
   await setup(() => {
     get('/', 'hello world')
   })
-  
-  // app could be h3, koa, connect, express servers 
+
+  // app could be h3, koa, connect, express servers
   app.use(app.nodeHandler)
 }
 ```
@@ -116,7 +115,7 @@ import { createApp } from 'h3'
 import { listen } from 'listhen'
 
 async function createApi() {
-  // ctx is the unrouted context  
+  // ctx is the unrouted context
   const { setup, app } = await createUnrouted({
     // options
   })
@@ -135,7 +134,7 @@ async function boot() {
 }
 
 boot().then(() => {
-    console.log('Ready!')
+  console.log('Ready!')
 })
 ```
 </details>
@@ -147,7 +146,7 @@ import { createUnrouted, get } from 'unrouted'
 import createConnectApp from 'connect'
 
 async function createApi() {
-  // ctx is the unrouted context  
+  // ctx is the unrouted context
   const { setup, app } = await createUnrouted({
     // options
   })
@@ -177,7 +176,7 @@ import { createUnrouted, get } from 'unrouted'
 import createExpressApp from 'express'
 
 async function createApi() {
-  // ctx is the unrouted context  
+  // ctx is the unrouted context
   const { setup, app } = await createUnrouted({
     // options
   })
@@ -255,7 +254,6 @@ Since Unrouted is composable, you may not need to use these arguments.
 get('/', 'hello world')
 ```
 
-
 You can return the following as a primitive or as an async / sync function which returns a primitive:
 
 - `string|boolean` - Will be assumed an HTML response and set the content-type to text/html
@@ -280,15 +278,15 @@ get('/secret-zone', async (req, res) => {
 
   // Example where we use the response directly
   if (!authenticated) {
-      res.statusCode = 401
-      res.end()
-      // we can return void here
-      return
+    res.statusCode = 401
+    res.end()
+    // we can return void here
+    return
   }
 
-  // using the request directly 
+  // using the request directly
   if (!authenticated && req.headers['x-secret-token'] !== 'secret') {
-      // can simply return an integer as the status code response
+    // can simply return an integer as the status code response
     return 401
   }
 
@@ -315,8 +313,8 @@ For example plugins can make use of the defined routes as:
 ```ts
 const { hooks } = useUnrouted()
 
-hooks.hook('setup:after', ctx => {
-    // ctx.routes contains all of the routes defined in the setup function
+hooks.hook('setup:after', (ctx) => {
+  // ctx.routes contains all of the routes defined in the setup function
 })
 ```
 
@@ -353,7 +351,6 @@ console.log(name.toUpperCase())
 
 Note: Unrouted does not come with validation.
 
-
 Most functions provided by [h3](https://github.com/unjs/h3) are exposed on `unrouted` as composable utilities.
 See the [h3 docs](https://www.jsdocs.io/package/h3#package-functions) for more details.
 
@@ -377,7 +374,6 @@ See the [h3 docs](https://www.jsdocs.io/package/h3#package-functions) for more d
 - `sendError(error: Error | H3Error)` - Sends an error response
 - `appendHeader(name: string, value: string)` - Appends a header to the response
 
-
 ### Extending composables
 
 If you'd like to create your own composable utility functions,
@@ -388,7 +384,7 @@ you can use the low-level `registerRoute` or use the existing composable functio
 Using `registerRoute` we create a new composable function to deny certain paths.
 
 ```ts
-export const deny = (route: string) => {
+export function deny(route: string) {
   registerRoute('*', route, () => {
     setStatusCode(400)
     return {
@@ -405,7 +401,7 @@ deny('/private-zone/**')
 We can build on top of existing composable functions to create more complex utilities.
 
 ```ts
-export const resource = (route: string, factory) => {
+export function resource(route: string, factory) {
   get(route, factory.getAll)
   group(`${route}/:id`, () => {
     get('/', factory.getResource)
@@ -413,15 +409,14 @@ export const resource = (route: string, factory) => {
     del('/', factory.deleteResource)
   })
 }
-//...
+// ...
 resource('/posts', factory)
 ```
-
 
 ### Using test-kit with auto-completion
 
 Unrouted comes with package called `@unrouted/test-kit` which provides a simple way to write tests that make use of
-generated types. 
+generated types.
 
 1. Add the dependency
 
@@ -454,7 +449,7 @@ import { test } from '@unrouted/test-kit'
 // this should point to your routes
 import { RequestPathSchema } from '../../routes.d.ts'
 
-// createApi is a function which builds the api and returns the handle function  
+// createApi is a function which builds the api and returns the handle function
 const api = await createApi({ debug: true })
 // tell our server to use the api
 app.use(api)
@@ -484,7 +479,7 @@ Called before the `setup()` function starts. No routes are available yet.
 
 - `setup:after: (ctx: UnroutedContext) => HookResult`
 
-Called after the `setup()` function is finished. At this point, routes are normalised and registered. 
+Called after the `setup()` function is finished. At this point, routes are normalised and registered.
 
 - `setup:routes: (routes: Route[]) => HookResult`
 
@@ -548,7 +543,7 @@ Displays debug logs on the bootstrapping and request life cycles.
   - **Type:** `boolean`
   - **Default:** `false`
 
-Setting the `dev` mode to true allows unrouted to generate types. 
+Setting the `dev` mode to true allows unrouted to generate types.
 
 ### root
 
@@ -589,7 +584,6 @@ Specify the location of a config file.
 ### Unrouted Context
 
 ```ts
-
 export interface UnroutedContext {
   /**
    * Runtime configuration for the current prefix path.
@@ -611,7 +605,7 @@ export interface UnroutedContext {
   /**
    * The routes grouped by method, this is internally used by the handle function for quicker lookups.
    */
-  methodStack: Record<HttpMethod, (RadixRouter<Route>|null)>
+  methodStack: Record<HttpMethod, (RadixRouter<Route> | null)>
   /**
    * The logger instance. Will be Consola if available, otherwise console.
    */

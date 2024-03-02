@@ -1,9 +1,9 @@
 import { $fetch } from 'ohmyfetch'
-import {NuxtModule} from "@nuxt/schema";
+import type { NuxtModule } from '@nuxt/schema'
+
+import { createStorage } from 'unstorage'
 
 const ModulesKey = 'app.modules'
-
-import { createStorage } from 'unstorage';
 
 const moduleStorage = createStorage()
 

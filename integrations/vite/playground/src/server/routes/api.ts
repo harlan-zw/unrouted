@@ -1,8 +1,8 @@
-import {del, get, group, post, prefix, redirect} from 'unrouted'
-import {greeting as test, submitContactForm} from "../controllers/site";
+import { del, get, group, post, prefix, redirect } from 'unrouted'
+import { submitContactForm, greeting as test } from '../controllers/site'
 
 export default () => {
-  /** Simple non-lazy API creation **/
+  /** Simple non-lazy API creation */
   get('/greeting', test)
 
   // redirects
@@ -11,7 +11,7 @@ export default () => {
   // // alternative grouped routes async
   group({
     prefix: '/blog',
-    controller: import('../controllers/blog')
+    controller: import('../controllers/blog'),
   }, () => {
     get('/', 'getArticles')
     get('/:slug', 'getArticle')

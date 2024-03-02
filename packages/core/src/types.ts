@@ -1,12 +1,11 @@
 import type {
-  App,
   EventHandler,
   H3Event,
   Router,
   RouterMethod,
 } from 'h3'
 import type { Hookable } from 'hookable'
-import type { Consola } from 'consola'
+import type { ConsolaInstance} from 'consola'
 import type { Import } from 'unimport'
 
 export type Nullable<T> = { [K in keyof T]: T[K] | null }
@@ -29,7 +28,7 @@ export type SimpleOptions = Record<string, any>
 
 export interface UnroutedPlugin<T> {
   defaults?: T extends any ? (Partial<T> | ((ctx: UnroutedContext) => Partial<T>)) : never
-  meta: { name: string; version?: string }
+  meta: { name: string, version?: string }
   setup: (ctx: UnroutedContext, resolvedOptions: T) => Promise<any> | any
 }
 export interface UnroutedPreset<T> extends UnroutedPlugin<T> {
@@ -38,12 +37,12 @@ export interface UnroutedMiddleware<T> extends UnroutedPlugin<T> {
 }
 
 export interface ResolvedPlugin {
-  meta: { name: string; version?: string }
+  meta: { name: string, version?: string }
   setup: (ctx: UnroutedContext) => Promise<any> | any
 }
 
 export interface ResolvedConfig {
-  app?: App
+  app?: any
 
   prefix: string
   name: string
@@ -82,7 +81,7 @@ export interface UnroutedContext {
    * Function used to handle a request for the Unrouted instance.
    * This should be passed to a server such as h3, connect, express, koa, etc.
    */
-  app: App
+  app: any
   /**
    * A flat copy of the normalised routes being used.
    */
@@ -91,7 +90,7 @@ export interface UnroutedContext {
   /**
    * The logger instance. Will be Consola if available, otherwise console.
    */
-  logger: Consola
+  logger: ConsolaInstance
   /**
    * The hookable instance, allows hooking into core functionality.
    */

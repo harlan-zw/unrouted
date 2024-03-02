@@ -1,5 +1,5 @@
-import { errorNotFound, useParams} from "unrouted";
-import {getModules} from "../../storage/modules";
+import { errorNotFound, useParams } from 'unrouted'
+import { getModules } from '../../storage/modules'
 
 export async function getModule() {
   const { name } = useParams<{ name: string }>()
@@ -7,7 +7,7 @@ export async function getModule() {
   const index = modules.findIndex(m => m?.name === name)
   if (!index) {
     errorNotFound({
-      message: `No module found for name: ${name}.`
+      message: `No module found for name: ${name}.`,
     })
     return
   }

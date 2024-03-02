@@ -1,27 +1,27 @@
-import {del, get, group, middleware, post, prefix, redirect} from 'unrouted'
-import {greeting as test, submitContactForm} from "../controllers/site";
-import lazy from "../controllers/lazy";
+import { del, get, group, post, prefix, redirect } from 'unrouted'
+import { submitContactForm, greeting as test } from '../controllers/site'
+import lazy from '../controllers/lazy'
 
 export default () => {
-  /** Simple non-lazy API creation **/
+  /** Simple non-lazy API creation */
   get('/greeting', test)
-  get('/greeting-2', () =>'welcome 2 :)')
+  get('/greeting-2', () => 'welcome 2 :)')
 
   // redirects
   redirect('/old-url', '/new-url')
   // grouped routes
   group({
     prefix: '/modules',
-    controller: import('../controllers/modules')
+    controller: import('../controllers/modules'),
   }, () => {
     get('/', 'listModules')
     get('/:name', 'getModule')
   })
-  /** Lazy API creation **/
+  /** Lazy API creation */
   // alternative grouped routes async
   group({
     prefix: '/blog',
-    controller: import('../controllers/blog')
+    controller: import('../controllers/blog'),
   }, () => {
     get('/', 'getArticles')
     get('/:slug', 'getArticle')

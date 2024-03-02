@@ -1,6 +1,6 @@
 import consola from 'consola'
 
-export const createLogger = (key = 'unrouted', debug = false) => {
+export function createLogger(key = 'unrouted', debug = false) {
   const logger = consola.withScope(key)
   if (debug) {
     // debug

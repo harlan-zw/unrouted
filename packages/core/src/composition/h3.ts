@@ -1,5 +1,6 @@
 import type {
-  H3Error, HTTPMethod,
+  H3Error,
+  HTTPMethod,
 } from 'h3'
 import {
   appendHeader as h3AppendHeader,

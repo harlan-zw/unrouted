@@ -17,16 +17,16 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "*.d.ts"
+    "*.d.ts",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
@@ -34,14 +34,14 @@
   },
   "dependencies": {
     "@unrouted/core": "workspace:../core",
-    "fs-extra": "^10.1.0",
-    "globby": "^13.1.2",
-    "mlly": "^1.0.0",
-    "pathe": "^1.0.0",
-    "unimport": "^1.0.1",
-    "untyped": "^1.0.0"
+    "fs-extra": "^11.2.0",
+    "globby": "^14.0.1",
+    "mlly": "^1.6.1",
+    "pathe": "^1.1.2",
+    "unimport": "^3.7.1",
+    "untyped": "^1.4.2"
   },
   "devDependencies": {
-    "@types/fs-extra": "^9.0.13"
+    "@types/fs-extra": "^11.0.4"
   }
 }

@@ -1,4 +1,4 @@
-import { join, resolve } from 'path'
+import { join, resolve } from 'node:path'
 import type { ConfigPartial } from '@unrouted/core'
 import {
   any,
@@ -10,7 +10,8 @@ import {
   permanentRedirect,
   post,
   prefix,
-  redirect, setStatusCode,
+  redirect,
+  setStatusCode,
   useBody,
   useParams,
   useQuery,
@@ -52,7 +53,7 @@ export default async (options: ConfigPartial = {}) => {
       const args = {
         greeting: 'Hello',
         smiley: ':)',
-        ...useQuery<{ greeting?: string; smiley?: string }>(),
+        ...useQuery<{ greeting?: string, smiley?: string }>(),
       }
       const { greeting, smiley } = args
       return `${greeting} ${params.name} ${smiley}`

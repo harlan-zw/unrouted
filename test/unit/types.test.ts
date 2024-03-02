@@ -1,5 +1,5 @@
-import { join } from 'path'
-import { describe, expect, test } from 'vitest'
+import { join } from 'node:path'
+import { describe, expect, it } from 'vitest'
 import fse from 'fs-extra'
 import { dirname } from 'pathe'
 import { createUnrouted, get, post } from '@unrouted/core'
@@ -44,7 +44,7 @@ describe('type generation works', async () => {
   }
   const { setup } = await createUnrouted(config)
 
-  test('basic anonymous route types', async () => {
+  it('basic anonymous route types', async () => {
     await setup(() => {
       post('post-test', () => {})
       get('/greeting', () => 'Hello :)')
@@ -75,7 +75,7 @@ describe('type generation works', async () => {
       `)
   })
 
-  test('named route types', async () => {
+  it('named route types', async () => {
     const { setup } = await createUnrouted(config)
     await setup(() => {
       get('/greeting', greeting)
@@ -99,7 +99,7 @@ describe('type generation works', async () => {
     `)
   })
 
-  test('route runtime types', async () => {
+  it('route runtime types', async () => {
     const { setup } = await createUnrouted()
     await setup(() => {
       get('/dynamic-type-return', () => {
@@ -118,7 +118,7 @@ describe('type generation works', async () => {
       declare module '@unrouted/core' {
         type Awaited<T> = T extends PromiseLike<infer U> ? Awaited<U> : T
         interface _871028989 {
-           [key: string]: any
+         [key: string]: any
         }
 
         interface GetRoutes {

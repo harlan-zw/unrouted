@@ -1,9 +1,9 @@
-import { $fetch } from 'ohmyfetch'
-import type { FetchOptions } from 'ohmyfetch'
+import { $fetch } from 'ofetch'
+import type { FetchOptions } from 'ofetch'
 import type { DeleteRoutes, GetRoutes, OptionsRoutes, PatchRoutes, PostRoutes, PutRoutes } from '@unrouted/core'
 import type { TypedInternalResponse } from '../types'
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line unused-imports/no-unused-vars
 async function $_fetchGlobal<R extends string, Default = unknown>(url: R, method: string, opts?: FetchOptions) {
   // @todo do something with Default
   // re-use global fetch instance if available

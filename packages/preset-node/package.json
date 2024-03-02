@@ -17,16 +17,16 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
   "main": "dist/index.cjs",
   "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
-    "dist",
-    "*.d.ts"
+    "*.d.ts",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
@@ -36,13 +36,13 @@
     "@unrouted/core": "workspace:../core",
     "@unrouted/plugins": "workspace:../plugins",
     "compression": "^1.7.4",
-    "defu": "^6.1.1",
-    "h3": "^1.0.1",
-    "pathe": "^1.0.0",
-    "sirv": "^2.0.2",
-    "ufo": "^1.0.0"
+    "defu": "^6.1.4",
+    "h3": "^1.11.1",
+    "pathe": "^1.1.2",
+    "sirv": "^2.0.4",
+    "ufo": "^1.4.0"
   },
   "devDependencies": {
-    "@types/compression": "^1.7.2"
+    "@types/compression": "^1.7.5"
   }
 }

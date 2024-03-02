@@ -8,7 +8,6 @@ The core engine of [Unrouted](https://github.com/harlan-zw/unrouted) without any
 import { createUnrouted } from '@unrouted/core'
 
 const unrouted = await createUnrouted({ /* user options */ }, { /* provider options */ })
-
 ```
 
 ## License

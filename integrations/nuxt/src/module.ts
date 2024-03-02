@@ -1,9 +1,11 @@
 import {
   addAutoImport,
   addPlugin,
-  clearRequireCache, createResolver,
+  clearRequireCache,
+  createResolver,
   defineNuxtModule,
-  importModule, resolveModule,
+  importModule,
+  resolveModule,
 } from '@nuxt/kit'
 import type { ConfigPartial, HookResult } from '@unrouted/core'
 import { createUnrouted, useUnrouted } from '@unrouted/core'

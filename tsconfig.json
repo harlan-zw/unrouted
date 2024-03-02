@@ -1,17 +1,10 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
-    "module": "ESNext",
     "target": "ESNext",
     "lib": ["DOM", "ESNext"],
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
+    "baseUrl": ".",
+    "module": "ESNext",
     "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "noUnusedLocals": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
     "paths": {
       "unrouted": ["./packages/unrouted/src"],
       "@unrouted/core": ["./packages/core/src"],
@@ -19,12 +12,19 @@
       "@unrouted/test-kit": ["./packages/test-kit/src"],
       "@unrouted/plugins": ["./packages/plugins/src"],
       "@unrouted/preset-api": ["./packages/preset-api/src"],
-      "@unrouted/preset-node": ["./packages/preset-node/src"],
-    }
+      "@unrouted/preset-node": ["./packages/preset-node/src"]
+    },
+    "resolveJsonModule": true,
+    "strict": true,
+    "strictNullChecks": true,
+    "noUnusedLocals": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
   },
   "include": [
     "*.d.ts",
-    "**/*.d.ts",
+    "**/*.d.ts"
   ],
   "exclude": [
     "**/test/**",

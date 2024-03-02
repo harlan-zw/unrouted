@@ -55,7 +55,6 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
   const app = config.app || createApp({
     async onError(err, event) {
       // handle 404's
-      // @ts-expect-error missing type
       if (err.statusCode === 404)
         await hooks.callHook('request:error:404', event)
       await sendError(event, err, !!config.debug)
@@ -67,7 +66,6 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
     groupStack.push({ prefix: resolvedConfig.prefix })
 
   const ctx: UnroutedContext = {
-    // @ts-expect-error h3 update
     app,
     hooks,
     logger,
@@ -75,26 +73,25 @@ export async function createUnrouted(config: ConfigPartial = {}): Promise<Unrout
     config: resolvedConfig,
     routes: [],
     groupStack,
-  }
-
-  ctx.setup = async (fn) => {
-    // clear old routes
-    ctx.routes = []
-    await ctx.hooks.callHook('setup:before', ctx)
-    if (fn)
-      await unroutedCtx.call(ctx, fn)
-    await ctx.hooks.callHook('setup:routes', ctx.routes)
-    logger.debug(`Setting up ${ctx.routes.length} routes.`)
-    ctx.routes.forEach((route) => {
-      // register them with our radix3 router
-      route.method.forEach((m) => {
-        ctx.router.add(route.path, route.handle as EventHandler, m)
+    async setup(fn) {
+      // clear old routes
+      ctx.routes = []
+      await ctx.hooks.callHook('setup:before', ctx)
+      if (fn)
+        await unroutedCtx.call(ctx, fn)
+      await ctx.hooks.callHook('setup:routes', ctx.routes)
+      logger.debug(`Setting up ${ctx.routes.length} routes.`)
+      ctx.routes.forEach((route) => {
+        // register them with our radix3 router
+        route.method.forEach((m) => {
+          ctx.router.add(route.path, route.handle as EventHandler, m)
+        })
       })
-    })
-    await ctx.hooks.callHook('setup:after', ctx)
+      await ctx.hooks.callHook('setup:after', ctx)
 
-    if (typeof app.use === 'function')
-      app.use(ctx.router)
+      if (typeof app.use === 'function')
+        app.use(ctx.router)
+    }
   }
 
   for (const preset of ctx.config.presets) {

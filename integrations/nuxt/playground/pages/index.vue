@@ -15,18 +15,18 @@ const name = ref('')
 //   }
 // )
 
-const addModule = async () => {
-  const res = await $post('/api/modules', {
+async function addModule() {
+  await $post('/api/modules', {
     method: 'POST',
     body: {
       description: 'test',
-      name: name.value
-    }
+      name: name.value,
+    },
   })
   modules = await $fetch('/api/modules')
 }
 
-const removeModule = async (m) => {
+async function removeModule(m) {
   await $fetch(`/api/modules/${m.name}`, {
     method: 'DELETE',
   })
@@ -35,21 +35,29 @@ const removeModule = async (m) => {
 </script>
 
 <template>
-<div>
-  <h1>Nuxt modules</h1>
-  <h2>Add module</h2>
-  <form @submit.prevent="addModule">
-    <input name="name" type="text" placeholder="module name" v-model="name">
-    <button type="submit">Submit</button>
-  </form>
-
-  <h2>Search</h2>
-  <input type="search" v-model="search">
-
   <div>
-    <ul>
-      <li v-for="(m, k) in modules" :key="k"><nuxt-link :to="`/module/${m.name}`">{{ m.name }}</nuxt-link> <button @click="removeModule(m)">delete</button></li>
-    </ul>
+    <h1>Nuxt modules</h1>
+    <h2>Add module</h2>
+    <form @submit.prevent="addModule">
+      <input v-model="name" name="name" type="text" placeholder="module name">
+      <button type="submit">
+        Submit
+      </button>
+    </form>
+
+    <h2>Search</h2>
+    <input v-model="search" type="search">
+
+    <div>
+      <ul>
+        <li v-for="(m, k) in modules" :key="k">
+          <nuxt-link :to="`/module/${m.name}`">
+            {{ m.name }}
+          </nuxt-link> <button @click="removeModule(m)">
+            delete
+          </button>
+        </li>
+      </ul>
+    </div>
   </div>
-</div>
 </template>

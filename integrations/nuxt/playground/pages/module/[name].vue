@@ -2,6 +2,7 @@
 const name: string = useRoute().params.name as string
 const module = await $get(`/api/modules/${name}`)
 </script>
+
 <template>
   <div>
     <h1>test</h1>
@@ -9,5 +10,5 @@ const module = await $get(`/api/modules/${name}`)
       {{ module }}
     </code>
   </div>
-<a href="/">Go back</a>
+  <a href="/">Go back</a>
 </template>

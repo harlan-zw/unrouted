@@ -1,5 +1,5 @@
-import type { IncomingMessage, ServerResponse } from 'http'
-import type { Stats } from 'fs'
+import type { IncomingMessage, ServerResponse } from 'node:http'
+import type { Stats } from 'node:fs'
 import sirv from 'sirv'
 import { withBase, withLeadingSlash, withTrailingSlash, withoutTrailingSlash } from 'ufo'
 import { registerRoute, resolveStackPrefix, useUnrouted } from '@unrouted/core'
@@ -33,7 +33,7 @@ export interface ServeArguments {
 /**
  * Serve static files from a directory using sirv.
  */
-const serve = (path: string, dirname: string, sirvOptions: SirvOptions = {}) => {
+function serve(path: string, dirname: string, sirvOptions: SirvOptions = {}) {
   const ctx = useUnrouted()!
 
   sirvOptions = defu(sirvOptions, {

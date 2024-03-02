@@ -17,16 +17,16 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "require": "./dist/index.cjs",
-      "import": "./dist/index.mjs"
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
     }
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "files": [
-    "dist",
-    "*.d.ts"
+    "*.d.ts",
+    "dist"
   ],
   "scripts": {
     "build": "unbuild",
@@ -35,9 +35,9 @@
   "dependencies": {
     "@unrouted/core": "workspace:../core",
     "cors": "^2.8.5",
-    "h3": "^1.0.1"
+    "h3": "^1.11.1"
   },
   "devDependencies": {
-    "@types/cors": "^2.8.12"
+    "@types/cors": "^2.8.17"
   }
 }
