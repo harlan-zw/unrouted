@@ -35,7 +35,7 @@
   "dependencies": {
     "@unrouted/core": "workspace:../core",
     "cors": "^2.8.5",
-    "h3": "^1.11.1"
+    "h3": "^1.15.9"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17"

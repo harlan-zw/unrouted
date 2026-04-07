@@ -36,8 +36,8 @@
     "@unrouted/core": "workspace:../core",
     "@unrouted/plugins": "workspace:../plugins",
     "compression": "^1.7.4",
-    "defu": "^6.1.4",
-    "h3": "^1.11.1",
+    "defu": "^6.1.5",
+    "h3": "^1.15.9",
     "pathe": "^1.1.2",
     "sirv": "^2.0.4",
     "ufo": "^1.4.0"
